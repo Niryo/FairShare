@@ -18,19 +18,31 @@ public class User{
         this.balance = balance;
     }
 
-    public static ArrayList<User> parseUsers(String rawString){
+    public static ArrayList<User> parseUsers(JSONObject jsonUsers){
         ArrayList<User> resultUsers=new ArrayList<>();
         try {
-            JSONObject jsonUsers = new JSONObject(rawString);
             Iterator<?> userNames = jsonUsers.keys();
             while(userNames.hasNext()){
-                String name = (String) userNames.next();
-                int balance= jsonUsers.getInt(name);
+                JSONObject user = jsonUsers.getJSONObject((String) userNames.next());
+                String name= user.getString("name");
+                int balance= user.getInt("balance");
                 resultUsers.add(new User(name,balance));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return resultUsers;
+    }
+
+    public JSONObject toJSON(){
+        JSONObject result = new JSONObject();
+        try {
+            result.put("name", this.name);
+            result.put("balance", this.balance);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }
