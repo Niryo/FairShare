@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -114,8 +115,10 @@ public class Group {
             if(!groupNamesFile.exists()){
                     groupNamesFile.createNewFile();
             }
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(groupNamesFile));
-                    writer.write(this.name+","+this.localGroupKey);
+
+                    BufferedWriter groupsNamesWriter = new BufferedWriter(new FileWriter(groupNamesFile,true));
+                    groupsNamesWriter.write(this.name + "," + this.localGroupKey + "\n");
+                    groupsNamesWriter.close();
 
                 } catch (IOException e) {
                     e.printStackTrace();
