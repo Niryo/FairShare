@@ -22,13 +22,16 @@ import android.widget.Toast;
 
 import com.parse.Parse;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class MainActivity extends FragmentActivity {
 
 
-    ListView lvGroupList;
-    AlertDialog adGroupCreation;
-
-
+    ListView groupList;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +91,8 @@ public class MainActivity extends FragmentActivity {
                 @Override
                 public void onClick(View v) {
                     String name = groupNameEditText.getText().toString();
+                    Group newGroup = new Group(name);
+                    newGroup.saveGroupToStorage(getContext());
                     Log.w("custom", name + " as been created");
                     getDialog().dismiss();
 
