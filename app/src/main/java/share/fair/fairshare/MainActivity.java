@@ -27,7 +27,7 @@ public class MainActivity extends FragmentActivity {
 
 
     ListView groupList;
-    ArrayList<Map<String, String>> groupNames;
+    ArrayList<NameAndKey> groupNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -46,20 +46,18 @@ public class Group {
 
 
 
-    public static ArrayList<Map<String, String>> getSavedGroupNames(Context context){
-        ArrayList<Map<String,String>> groupNames=new ArrayList<>();
+    public static ArrayList<NameAndKey> getSavedGroupNames(Context context){
+        ArrayList<NameAndKey> groupNames=new ArrayList<>();
         File file = new File(context.getFilesDir(),"groups_names");
         if(file.exists()){
             try {
                 BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
-                    Map<String,String> map = new HashMap<>();
                     String[] nameAndKey =line.split(",");
                     String name = nameAndKey[0]; //remove new line character
                     String localGroupKey = nameAndKey[1].replace("(\\r|\\n)", "");
-                    map.put(name, localGroupKey);
-                    groupNames.add(map);
+                    groupNames.add(new NameAndKey(name,localGroupKey));
                 }
                 bufferedReader.close();
             } catch (Exception e) {
