@@ -1,10 +1,12 @@
 package share.fair.fairshare;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,6 +21,7 @@ public class GroupActivity extends FragmentActivity {
     ListView userList;
     Group group;
     UserCheckBoxAdapter userCheckBoxAdapter;
+    Button goOutAllButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,15 @@ public class GroupActivity extends FragmentActivity {
         userList = (ListView) findViewById(R.id.users_list_view);
         userCheckBoxAdapter = new UserCheckBoxAdapter(this,R.layout.user_check_row ,this.users);
         userList.setAdapter(userCheckBoxAdapter);
+
+        goOutAllButton = (Button) findViewById(R.id.bt_go_out_all);
+        goOutAllButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goOut = new Intent(getApplicationContext(),GoOutActivity.class);
+                startActivity(goOut);
+            }
+        });
     }
 
     @Override
@@ -69,4 +81,5 @@ public class GroupActivity extends FragmentActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
