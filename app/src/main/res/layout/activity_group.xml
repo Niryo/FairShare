@@ -1,0 +1,78 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.ori.yakamtsan.GroupActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Group name"
+        android:textSize="40dp"
+        android:id="@+id/tv_grp_name"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:gravity="center"/>
+
+    <Button
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:text="Add a user"
+        android:id="@+id/bt_add_user"
+        android:layout_below="@+id/tv_grp_name"
+        android:layout_margin="20dp"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:text="Back to user info"
+        android:id="@+id/bt_back_to_info"
+        android:layout_below="@+id/bt_add_user"
+        android:layout_alignLeft="@+id/bt_add_user"
+        android:layout_alignStart="@+id/bt_add_user"
+        android:layout_alignRight="@+id/bt_add_user"
+        android:layout_alignEnd="@+id/bt_add_user" />
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="Go out checked!"
+        android:id="@+id/bt_go_out_checked"
+        android:layout_below="@+id/bt_back_to_info"
+        android:layout_alignLeft="@+id/bt_back_to_info"
+        android:layout_alignStart="@+id/bt_back_to_info" />
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="Go out all!"
+        android:id="@+id/bt_go_out_all"
+        android:layout_above="@+id/lv_users"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lv_users"
+        android:layout_below="@+id/bt_go_out_checked"
+        android:layout_alignLeft="@+id/bt_go_out_checked"
+        android:layout_alignStart="@+id/bt_go_out_checked"
+        />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:id="@+id/bt_inst__back_grp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>
