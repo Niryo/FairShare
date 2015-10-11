@@ -53,7 +53,7 @@
         android:layout_height="wrap_content"
         android:text="Go out all!"
         android:id="@+id/bt_go_out_all"
-        android:layout_above="@+id/lv_users"
+        android:layout_above="@+id/users_list_view"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 

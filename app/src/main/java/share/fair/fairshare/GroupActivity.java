@@ -20,6 +20,7 @@ public class GroupActivity extends FragmentActivity {
     ArrayList<User> users;
     ListView userList;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +35,10 @@ public class GroupActivity extends FragmentActivity {
                 dialog.show(getSupportFragmentManager(), "add_new_user");
             }
         });
+
+        userList = (ListView) findViewById(R.id.users_list_view);
+
+
     }
 
     @Override

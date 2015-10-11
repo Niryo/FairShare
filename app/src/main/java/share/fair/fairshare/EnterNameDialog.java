@@ -81,7 +81,6 @@ import android.widget.EditText;
             });
             getDialog().show();
             return dialogLayout;
-
         }
     }
 
