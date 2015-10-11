@@ -23,7 +23,7 @@
         android:layout_width="400dp"
         android:layout_height="wrap_content"
         android:text="Add a user"
-        android:id="@+id/bt_add_user"
+        android:id="@+id/add_user_button"
         android:layout_below="@+id/tv_grp_name"
         android:layout_margin="20dp"
         android:layout_centerHorizontal="true" />
@@ -33,11 +33,11 @@
         android:layout_height="wrap_content"
         android:text="Back to user info"
         android:id="@+id/bt_back_to_info"
-        android:layout_below="@+id/bt_add_user"
-        android:layout_alignLeft="@+id/bt_add_user"
-        android:layout_alignStart="@+id/bt_add_user"
-        android:layout_alignRight="@+id/bt_add_user"
-        android:layout_alignEnd="@+id/bt_add_user" />
+        android:layout_below="@+id/add_user_button"
+        android:layout_alignLeft="@+id/add_user_button"
+        android:layout_alignStart="@+id/add_user_button"
+        android:layout_alignRight="@+id/add_user_button"
+        android:layout_alignEnd="@+id/add_user_button" />
 
     <Button
         android:layout_width="150dp"

@@ -1,5 +1,6 @@
 package share.fair.fairshare;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
@@ -19,6 +20,7 @@ import android.widget.EditText;
     public class EnterNameDialog extends DialogFragment {
         String titleText;
         String hint;
+    Button.OnClickListener buttonListener;
 
         public EnterNameDialog() {
             // Empty constructor required for DialogFragment
@@ -28,6 +30,9 @@ import android.widget.EditText;
     }
     public void setHint(String hint){
         this.hint = hint;
+    }
+    public void setButtonListener(Button.OnClickListener listener){
+        this.buttonListener=listener;
     }
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,9 +52,8 @@ import android.widget.EditText;
                     String name = nameEditText.getText().toString();
                     Group newGroup = new Group(name);
                     newGroup.saveGroupToStorage(getContext());
-                    Log.w("custom", name + " as been created");
+                    Log.w("custom", name + " has been created");
                     getDialog().dismiss();
-
                 }
             });
             cancelButton.setOnClickListener(new View.OnClickListener() {

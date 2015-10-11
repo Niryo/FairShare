@@ -43,6 +43,7 @@ public class MainActivity extends FragmentActivity {
                 dialog.setHint("Group's name");
                 dialog.show(getSupportFragmentManager(), "add_new_group");
 
+
             }
         });
         groupNames = Group.getSavedGroupNames(getApplicationContext());

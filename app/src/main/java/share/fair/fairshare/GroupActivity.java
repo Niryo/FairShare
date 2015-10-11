@@ -25,7 +25,7 @@ public class GroupActivity extends FragmentActivity {
         setContentView(R.layout.activity_group);
         this.group = Group.loadGroupFromStorage(getApplicationContext(),getIntent().getStringExtra("group_key"));
         this.users = group.getUsers();
-        addUserButton = (Button)findViewById(R.id.bt_add_user);
+        addUserButton = (Button)findViewById(R.id.add_user_button);
         addUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
