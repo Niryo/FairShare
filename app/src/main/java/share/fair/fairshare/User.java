@@ -11,12 +11,13 @@ import java.util.Iterator;
  */
 public class User{
     private String name;
-    private int balance;
+    private double balance;
 
-    private User(String name, int balance){
+    public User(String name, double balance){
         this.name=name;
         this.balance = balance;
     }
+
 
     public static ArrayList<User> parseUsers(JSONObject jsonUsers){
         ArrayList<User> resultUsers=new ArrayList<>();
@@ -44,5 +45,11 @@ public class User{
             e.printStackTrace();
         }
         return result;
+    }
+    public String getName(){
+        return this.name;
+    }
+    public double getBalance(){
+        return this.balance;
     }
 }

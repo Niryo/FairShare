@@ -60,7 +60,7 @@
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/lv_users"
+        android:id="@+id/users_list_view"
         android:layout_below="@+id/bt_go_out_checked"
         android:layout_alignLeft="@+id/bt_go_out_checked"
         android:layout_alignStart="@+id/bt_go_out_checked"

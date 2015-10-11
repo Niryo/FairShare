@@ -20,21 +20,19 @@ import java.util.HashMap;
  */
 public class UserCheckBoxAdapter extends ArrayAdapter {
 
-    private ArrayList userList;
+    private ArrayList<User> userList;
     Context context;
-    public HashMap userBalMap;
+//    public HashMap userBalMap;
     public ArrayList<String> goOutNameList;
 
     public UserCheckBoxAdapter(Context context, int textViewResourceId,
-                               ArrayList userList) {
+                               ArrayList<User> userList) {
     super(context, textViewResourceId, userList);
     this.context = context;
-    this.userList = CurGroup.grpUserList;
-    this.userBalMap = CurGroup.grpUserBalMap;
+    this.userList = userList;
+//    this.userBalMap = CurGroup.grpUserBalMap;
     this.goOutNameList = new ArrayList<String>();
-
 }
-
         private class ViewHolder {
             TextView userBalance;
             CheckBox cbUserRow;
@@ -54,9 +52,9 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
                 holder.userBalance = (TextView) convertView.findViewById(R.id.tv_user_balance);
                 holder.cbUserRow = (CheckBox) convertView.findViewById(R.id.cb_user_row);
                 convertView.setTag(holder);
-                holder.cbUserRow.setOnClickListener( new OnClickListener() {
+                holder.cbUserRow.setOnClickListener(new OnClickListener() {
                     public void onClick(View v) {
-                        CheckBox cb = (CheckBox) v ;
+                        CheckBox cb = (CheckBox) v;
                         Log.d("user", "Clicked on Checkbox: " + cb.getText() + " is " + cb.isChecked());
                     }
                 });
@@ -64,36 +62,13 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
             else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            holder.cbUserRow.setText(userList.get(position).toString()+"   ");
-            holder.hUserName = userList.get(position).toString();
-            String userN = (userList.get(position)).toString();
+            holder.cbUserRow.setText(userList.get(position).getName()+"   ");
+//            String userN = (userList.get(position)).getName();
+//            holder.hUserName = userN;
 
 //            userBalMap.get(userN).toString();
-            holder.userBalance.setText(new DecimalFormat("##.##").format(userBalMap.get(userN)));
-            final ViewHolder holderFinal = holder;
-            holder.cbUserRow.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    CheckBox cb = (CheckBox) v;
-                    Boolean contains = false;
-
-                    if(cb.isChecked()){
-                        if(! (contains = goOutNameList.contains( holderFinal.hUserName )) ) {
-                            goOutNameList.add(holderFinal.hUserName);
-                            CurGroup.grpGoOutList = goOutNameList;
-                        }
-                    }
-                    if(!cb.isChecked()){
-                        if((contains = goOutNameList.contains(holderFinal.hUserName) ) ){
-                            goOutNameList.remove(holderFinal.hUserName);
-                            CurGroup.grpGoOutList = goOutNameList;
-                        }
-                    }
-
-                }
-            });
+            holder.userBalance.setText(new DecimalFormat("##.##").format(userList.get(position).getBalance()));
             return convertView;
-
         }
     private void toastGen(Context context,String msg){
         Log.d("user", "in toastGen: " + msg);

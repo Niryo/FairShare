@@ -16,11 +16,11 @@ import android.widget.EditText;
  */
 
 
-    public class EnterNameDialog extends DialogFragment {
+    public class GroupNameDialog extends DialogFragment {
         String titleText;
         String hint;
 
-        public EnterNameDialog() {
+        public GroupNameDialog() {
             // Empty constructor required for DialogFragment
         }
     public void setTitle(String title){
