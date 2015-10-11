@@ -44,7 +44,9 @@ public class Group {
         this.localGroupKey = "";
     }
 
-
+public ArrayList<User> getUsers(){
+    return this.users;
+}
 
     public static ArrayList<NameAndKey> getSavedGroupNames(Context context){
         ArrayList<NameAndKey> groupNames=new ArrayList<>();

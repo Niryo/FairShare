@@ -1,8 +1,6 @@
 package share.fair.fairshare;
 
-import android.app.Activity;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,12 +17,15 @@ public class GroupActivity extends FragmentActivity {
     Button addUserButton;
     ArrayList<User> users;
     ListView userList;
+    Group group;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
+        this.group = Group.loadGroupFromStorage(getApplicationContext(),getIntent().getStringExtra("group_key"));
+        this.users = group.getUsers();
         addUserButton = (Button)findViewById(R.id.bt_add_user);
         addUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
