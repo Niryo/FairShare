@@ -29,8 +29,11 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 
 
     ListView groupList;
-    ArrayList<Map<String, String>> groupNames;
+
     GroupsAdapter groupAdapter;
+
+    ArrayList<NameAndKey> groupNames;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
