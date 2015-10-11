@@ -26,13 +26,11 @@ import java.util.ArrayList;
 import java.util.Map;
 
 
-public class MainActivity extends FragmentActivity implements AdapterView.OnItemClickListener {
+public class MainActivity extends FragmentActivity {
 
 
     ListView groupList;
-
     GroupsAdapter groupAdapter;
-
     ArrayList<NameAndKey> groupNames;
 
 
@@ -40,7 +38,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button createNewGroupButton =(Button) findViewById(R.id.create_new_group_button);
+        Button createNewGroupButton = (Button) findViewById(R.id.create_new_group_button);
         createNewGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,21 +50,20 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
             }
         });
         groupNames = Group.getSavedGroupNames(getApplicationContext());
-        groupNames.add(new NameAndKey("GROUPYAIR","123"));
+        groupNames.add(new NameAndKey("GROUPYAIR", "123"));
         groupList = (ListView) findViewById(R.id.groups_list);
-        groupAdapter = new GroupsAdapter(this,R.id.info, groupNames);
+        groupAdapter = new GroupsAdapter(this, R.id.info, groupNames);
         groupList.setAdapter(groupAdapter);
-        groupList.setOnItemClickListener(this);
+        groupList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                             @Override
+                                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                                                 Intent openGroup = new Intent(getApplicationContext(), GroupActivity.class);
+                                                 startActivity(openGroup);
+                                                 finish();
+
+                                             }
+                                         });
 
     }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent openGroup = new Intent(this, GroupActivity.class);
-        startActivity(openGroup);
-        finish();
-    }
-
-
-
 }
