@@ -25,13 +25,11 @@ import java.util.ArrayList;
 import java.util.Map;
 
 
-public class MainActivity extends FragmentActivity implements AdapterView.OnItemClickListener {
+public class MainActivity extends FragmentActivity  {
 
 
     ListView groupList;
-
     GroupsAdapter groupAdapter;
-
     ArrayList<NameAndKey> groupNames;
 
 
@@ -52,15 +50,17 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
         groupList = (ListView) findViewById(R.id.groups_list);
         groupAdapter = new GroupsAdapter(this,R.id.info, groupNames);
         groupList.setAdapter(groupAdapter);
-        groupList.setOnItemClickListener(this);
+        groupList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //todo;
+
+            }
+        });
 
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-    }
-
+    
 
     public static class AddNewGroupDialog extends DialogFragment {
         public AddNewGroupDialog() {
