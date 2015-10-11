@@ -1,41 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    >
 
     <TextView
         android:id="@+id/tv_go_out_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:text="userName"
-        android:layout_alignBottom="@+id/tv_go_out_user_balance"
-        android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/tv_go_out_user_balance"
-        android:layout_toLeftOf="@+id/tv_go_out_user_balance"
         android:textSize="18dp"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="test1" />
 
     <TextView
         android:id="@+id/tv_go_out_user_balance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="userBal"
-        android:layout_alignBottom="@+id/et_paid"
-        android:layout_alignParentTop="true"
         android:textSize="18dp"
-        android:layout_toLeftOf="@+id/et_paid"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="test2" />
+
     <EditText
         android:id="@+id/et_paid"
         android:inputType="numberDecimal"
         android:hint="sum paid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/et_special_share"
-        android:layout_toStartOf="@+id/et_special_share"
         android:imeOptions="actionDone"
-        />
+        android:textColor="#000000" />
 
     <EditText
         android:id="@+id/et_special_share"
@@ -43,20 +36,9 @@
         android:hint="user's share"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-    <!--<Button-->
-        <!--style="?android:attr/buttonStyleSmall"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="update info"-->
-        <!--android:id="@+id/bt_update_info"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:layout_alignBottom="@+id/et_special_share"-->
-        <!--android:layout_toRightOf="@+id/et_special_share"-->
-        <!--android:layout_toEndOf="@+id/et_special_share" />-->
+        android:imeOptions="actionDone"
+        android:textColor="#000000" />
 
 
-</RelativeLayout>
+
+</LinearLayout>

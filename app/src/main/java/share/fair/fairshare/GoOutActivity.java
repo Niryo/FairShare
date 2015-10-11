@@ -1,18 +1,26 @@
 package share.fair.fairshare;
 
+import android.app.Activity;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class GoOutActivity extends AppCompatActivity {
+public class GoOutActivity extends Activity {
 
     TextView title;
     Button backToGroup;
@@ -25,7 +33,6 @@ public class GoOutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_go_out);
-        title = (TextView)findViewById(R.id.go_out_title);
         backToGroup = (Button)findViewById(R.id.back_to_group_button);
         backToGroup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,30 +51,27 @@ public class GoOutActivity extends AppCompatActivity {
         nameList.add(new User("kipi7", -1.23));
         nameList.add(new User("kipi8", -1.23));
         nameList.add(new User("kipi9", -1.23));
+        nameList.add(new User("kipi10", -1.23));
+        nameList.add(new User("kipi11", -1.23));
+        nameList.add(new User("kipi12", -1.23));
+        nameList.add(new User("kipi13", -1.23));
 
-        goOutList = (ListView) findViewById(R.id.go_out_list_view);
-        goOutAdpater = new GoOutAdapter(this, R.layout.user_go_out_row ,nameList);
-        goOutList.setAdapter(goOutAdpater);
-    }
+        ArrayList<View> viewsList = new ArrayList<>();
+        LinearLayout list= (LinearLayout) findViewById(R.id.list_of_users);
+        LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        for(User user: nameList){
+        View newView = vi.inflate(R.layout.user_go_out_row, null);
+            ((TextView)newView.findViewById(R.id.tv_go_out_user_name)).setText(user.getName());
+            String textBalance = Double.toString(user.getBalance());
+            ((TextView)newView.findViewById(R.id.tv_go_out_user_balance)).setText(textBalance);
+            list.addView(newView);
+            viewsList.add(newView);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_go_out, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
         }
-        return super.onOptionsItemSelected(item);
+
+
     }
+
+
+
 }
