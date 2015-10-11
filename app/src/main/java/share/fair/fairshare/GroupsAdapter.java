@@ -19,7 +19,7 @@ import java.util.HashMap;
 public class GroupsAdapter extends ArrayAdapter {
 
 
-    private ArrayList userList;
+    private ArrayList<NameAndKey> nameAndKeys;
     Context context;
     public HashMap userBalMap;
     public ArrayList<String> goOutNameList;
@@ -28,7 +28,7 @@ public class GroupsAdapter extends ArrayAdapter {
                          ArrayList userList) {
         super(context, textViewResourceId, userList);
         this.context = context;
-        this.userList = userList;
+        this.nameAndKeys = userList;
 
     }
 
@@ -54,7 +54,7 @@ public class GroupsAdapter extends ArrayAdapter {
         else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.tvGrpName.setText( (HashMap)(userList.get(position)) );
+        holder.tvGrpName.setText( nameAndKeys.get(position).getName());
         return convertView;
     }
     private void toastGen(Context context,String msg){

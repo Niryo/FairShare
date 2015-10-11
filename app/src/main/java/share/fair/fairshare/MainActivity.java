@@ -48,6 +48,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
             }
         });
         groupNames = Group.getSavedGroupNames(getApplicationContext());
+        groupNames.add(new NameAndKey("GROUPYAIR","123"));
         groupList = (ListView) findViewById(R.id.groups_list);
         groupAdapter = new GroupsAdapter(this,R.id.info, groupNames);
         groupList.setAdapter(groupAdapter);
