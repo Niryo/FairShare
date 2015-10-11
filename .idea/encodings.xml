@@ -3,6 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/app/src/main/java/share/fair/fairshare/GroupsAdapter.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/layout/group_row.xml" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/user_check_row.xml" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/grp_icon1.png" charset="windows-1252" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
