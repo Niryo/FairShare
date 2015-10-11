@@ -15,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -23,11 +25,12 @@ import java.util.ArrayList;
 import java.util.Map;
 
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements AdapterView.OnItemClickListener {
 
 
     ListView groupList;
     ArrayList<Map<String, String>> groupNames;
+    GroupsAdapter groupAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +45,17 @@ public class MainActivity extends FragmentActivity {
             }
         });
         groupNames = Group.getSavedGroupNames(getApplicationContext());
+        groupList = (ListView) findViewById(R.id.groups_list);
+        groupAdapter = new GroupsAdapter(this,R.id.info, groupNames);
+        groupList.setAdapter(groupAdapter);
+        groupList.setOnItemClickListener(this);
 
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-
+    }
 
 
     public static class AddNewGroupDialog extends DialogFragment {
