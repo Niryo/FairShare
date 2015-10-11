@@ -24,6 +24,12 @@
             android:name=".GroupActivity"
             android:label="@string/title_activity_group" >
         </activity>
+        <activity
+            android:name=".GoOutActivity"
+            android:label="@string/title_activity_go_out"
+            android:windowSoftInputMode="adjustPan"
+            >
+        </activity>
     </application>
 
 </manifest>
