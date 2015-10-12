@@ -75,7 +75,6 @@ public class GoOutActivity extends Activity {
                 for(View row: viewsList){
                     double paidInput = Double.parseDouble(((EditText)row.findViewById(R.id.et_paid)).getText().toString());
 
-
                 }
 
 

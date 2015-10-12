@@ -26,22 +26,20 @@ import java.util.Map;
 public class Group {
     private String name;
     private ArrayList<User> users;
-    private String id;
-    private String localGroupKey;
-    private String cloudGroupKey;
+    private String localGroupKey="";
+    private String cloudGroupKey="";
 
-    private Group(String name, String id, ArrayList<User> users,String localGroupKey){
+
+    private Group(String name, ArrayList<User> users,String localGroupKey, String cloudGroupKey){
     this.name= name;
         this.users=users;
-        this.id=id;
         this.localGroupKey = localGroupKey;
+        this.cloudGroupKey = cloudGroupKey;
     }
 
     public Group(String name){
         this.name= name;
         this.users=new ArrayList<>();
-        this.id="";
-        this.localGroupKey = "";
     }
 
 public ArrayList<User> getUsers(){
@@ -73,13 +71,12 @@ public ArrayList<User> getUsers(){
         if (file.exists()) {
             try {
                 BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-                StringBuilder stringBuilder = new StringBuilder();
                 String rawLine = bufferedReader.readLine();
                 JSONObject jsonGroup = new JSONObject(rawLine);
-                String id = jsonGroup.getString("id");
                 String name = jsonGroup.getString("name");
+                String cloudGroupKey= jsonGroup.getString("cloudGroupKey");
                 ArrayList<User> users = User.parseUsers(jsonGroup.getJSONObject("users"));
-                return new Group(name, id, users, localGroupKey);
+                return new Group(name, users, localGroupKey, cloudGroupKey);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -90,7 +87,7 @@ public ArrayList<User> getUsers(){
     private JSONObject toJSONObject(){
         JSONObject jsonGroup= new JSONObject();
         try {
-            jsonGroup.put("id", this.id);
+            jsonGroup.put("cloudGroupKey", this.cloudGroupKey);
             jsonGroup.put("name", this.name);
             jsonGroup.put("localGroupKey",this.localGroupKey);
 
@@ -148,12 +145,22 @@ public ArrayList<User> getUsers(){
 public String getName(){
         return this.name;
     }
-    public void addUser(Context context,String name){
-        this.users.add(new User(name,0));
+    public void addUser(Context context,User user){
+        this.users.add(user);
         saveGroupToStorage(context);
+    }
+    public String getCloudGroupKey(){
+        return this.cloudGroupKey;
+
     }
 
 
+    public void setCloudKey(String cloudKey) {
+        this.cloudGroupKey = cloudKey;
+    }
+    public String getLocalGroupKey(){
+        return this.localGroupKey;
+    }
 }
 
 

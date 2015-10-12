@@ -14,6 +14,15 @@
         android:maxLength="15"
         android:hint="User's name" />
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/user_mail_edit_text"
+        android:autoText="true"
+        android:hint="Optional: Invite user by email" />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

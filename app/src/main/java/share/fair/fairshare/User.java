@@ -3,17 +3,19 @@ package share.fair.fairshare;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
  * Created by Nir on 09/10/2015.
  */
-public class User{
+public class User {
     private String name;
     private double balance;
     private double paid;
     private double share;
+    private String email;
 
     public User(String name, double balance){
         this.name=name;
@@ -66,4 +68,7 @@ public class User{
     }
     public double getPaid(){ return this.paid;}
     public double getShare(){ return this.share;}
+    public  void setEmail(String email){
+        this.email=email;
+    }
 }
