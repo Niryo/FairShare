@@ -57,7 +57,6 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
                 Intent goOut = new Intent(getApplicationContext(),GoOutActivity.class);
                 goOut.putExtra("goOutList", users );
                 startActivityForResult(goOut, GO_OUT_REQUEST);
-                finish();
             }
         });
     }
