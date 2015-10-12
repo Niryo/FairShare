@@ -100,7 +100,7 @@ public class GoOutActivity extends Activity {
                     return;
                 }
                 double splitEvenShare = 0.0;
-                if (noShareUsers <= 0) {
+                if (noShareUsers > 0) {
                     splitEvenShare = totalPaidWithoutShares / noShareUsers;
                 }
                 for (User user : nameList) {
@@ -111,6 +111,9 @@ public class GoOutActivity extends Activity {
                     }
                 }
 
+                for(User user: nameList ){
+                    toastGen(getApplicationContext(),"usernameGo: "+ user.getName()+" balGo: "+user.getBalance());
+                }
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("result", nameList);
                 setResult(RESULT_OK, returnIntent);
@@ -121,6 +124,6 @@ public class GoOutActivity extends Activity {
     }
     private void toastGen(Context context,String msg){
         Log.w("user", "in toastGen: " + msg);
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+//        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 }

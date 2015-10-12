@@ -89,13 +89,12 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
                 for(User user: resultList){
                     toastGen(getApplicationContext(),"username:"+ user.getName()+" bal: "+user.getBalance());
                 }
-
             }
         }
     }
     private void toastGen(Context context,String msg){
         Log.w("user", "in toastGen: " + msg);
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+//        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 }
 
