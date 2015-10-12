@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class GroupActivity extends FragmentActivity {
+public class GroupActivity extends FragmentActivity implements UserNameDialog.UserAddedListener {
 
     TextView groupNameTextView;
     Button addUserButton;
@@ -36,17 +36,10 @@ public class GroupActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 UserNameDialog dialog = new UserNameDialog();
-                dialog.setTitle("Choose user name:");
-                dialog.setHint("User's name");
                 dialog.show(getSupportFragmentManager(), "add_new_user");
             }
         });
 
-        ArrayList<User> tempUsers = new ArrayList<User>();
-        tempUsers.add(new User("ori1", -1.0));
-        tempUsers.add(new User("ori2", -1.1));
-        tempUsers.add(new User("ori3", -1.0));
-        this.users = tempUsers;
         userList = (ListView) findViewById(R.id.users_list_view);
         userCheckBoxAdapter = new UserCheckBoxAdapter(this,R.layout.user_check_row ,this.users);
         userList.setAdapter(userCheckBoxAdapter);
@@ -57,29 +50,15 @@ public class GroupActivity extends FragmentActivity {
             public void onClick(View v) {
                 Intent goOut = new Intent(getApplicationContext(),GoOutActivity.class);
                 startActivity(goOut);
+                finish();
             }
         });
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_group, menu);
-        return true;
+    public void notifyUserAdded(String name) {
+        this.group.addUser(getApplicationContext(),name);
+        users= group.getUsers();
+        userCheckBoxAdapter.notifyDataSetChanged();
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 }

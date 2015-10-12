@@ -143,16 +143,15 @@ public ArrayList<User> getUsers(){
                 e.printStackTrace();
             }
     }
+
+
 public String getName(){
         return this.name;
     }
-
-//        public void setName(String name){
-//        this.name=name;
-//    }
-//    public void setUsers(ArrayList<User> users ){
-//        this.users=users;
-//    }
+    public void addUser(Context context,String name){
+        this.users.add(new User(name,0));
+        saveGroupToStorage(context);
+    }
 
 
 }
