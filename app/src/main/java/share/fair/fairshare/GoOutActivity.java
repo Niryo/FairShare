@@ -2,6 +2,7 @@ package share.fair.fairshare;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,22 +42,7 @@ public class GoOutActivity extends Activity {
                 //todo: go back to the last screen(group screen)
             }
         });
-
-        nameList = new ArrayList<User>();
-        nameList.add(new User("kipi1", -1.23));
-        nameList.add(new User("kipi2", -1.23));
-        nameList.add(new User("kipi3", -1.23));
-        nameList.add(new User("kipi4", -1.23));
-        nameList.add(new User("kipi5", -1.23));
-        nameList.add(new User("kipi6", -1.23));
-        nameList.add(new User("kipi7", -1.23));
-        nameList.add(new User("kipi8", -1.23));
-        nameList.add(new User("kipi9", -1.23));
-        nameList.add(new User("kipi10", -1.23));
-        nameList.add(new User("kipi11", -1.23));
-        nameList.add(new User("kipi12", -1.23));
-        nameList.add(new User("kipi13", -1.23));
-
+        nameList = (ArrayList<User>)getIntent().getSerializableExtra("goOutList");
         final ArrayList<View> viewsList = new ArrayList<>();
         LinearLayout list= (LinearLayout) findViewById(R.id.list_of_users);
         LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -76,30 +62,30 @@ public class GoOutActivity extends Activity {
                 double totalPaid = 0.0;
                 double totalShare = 0.0;
                 int noShareUsers = 0;
-                for(int i=0; i < nameList.size(); i++){
+                for (int i = 0; i < nameList.size(); i++) {
                     double paidInput;
-                    String paidInputStr = ((EditText)(viewsList.get(i)).findViewById(R.id.et_paid)).getText().toString();
-                    if (paidInputStr.isEmpty()){
+                    String paidInputStr = ((EditText) (viewsList.get(i)).findViewById(R.id.et_paid)).getText().toString();
+                    if (paidInputStr.isEmpty()) {
                         paidInput = 0.0;
-                    } else{
+                    } else {
                         paidInput = Double.parseDouble(paidInputStr);
-                        if(paidInput < 0){
-                           //todo: Error case: negative paid value
-                            toastGen(getApplicationContext(),"Invalid value: negative paid value");
+                        if (paidInput < 0) {
+                            //todo: Error case: negative paid value
+                            toastGen(getApplicationContext(), "Invalid value: negative paid value");
                             return;
                         }
                         totalPaid += paidInput;
                     }
                     double shareInput;
-                    String shareInputStr = ((EditText)(viewsList.get(i)).findViewById(R.id.et_special_share)).getText().toString();
-                    if (shareInputStr.isEmpty()){
+                    String shareInputStr = ((EditText) (viewsList.get(i)).findViewById(R.id.et_special_share)).getText().toString();
+                    if (shareInputStr.isEmpty()) {
                         shareInput = -1.0;
                         noShareUsers++;
-                    } else{
+                    } else {
                         shareInput = Double.parseDouble(shareInputStr);
-                        if(shareInput < 0){
+                        if (shareInput < 0) {
                             //todo: Error case: negative share value
-                            toastGen(getApplicationContext(),"Invalid value: negative share value");
+                            toastGen(getApplicationContext(), "Invalid value: negative share value");
                             return;
                         }
                         totalShare += shareInput;
@@ -108,28 +94,33 @@ public class GoOutActivity extends Activity {
                     nameList.get(i).setShare(shareInput);
                 }
                 double totalPaidWithoutShares = totalPaid - totalShare;
-                if(totalPaidWithoutShares < 0){
+                if (totalPaidWithoutShares < 0) {
                     //todo: Other solution for error(unable to press calculate while share is bigger than paid)
-                    toastGen(getApplicationContext(),"Invalid input(Share sum is larger than paid)");
+                    toastGen(getApplicationContext(), "Invalid input(Share sum is larger than paid)");
                     return;
                 }
                 double splitEvenShare = 0.0;
-                if(noShareUsers <= 0) {
+                if (noShareUsers <= 0) {
                     splitEvenShare = totalPaidWithoutShares / noShareUsers;
                 }
-                for(User user:nameList){
-                    if(user.getShare() < 0){
+                for (User user : nameList) {
+                    if (user.getShare() < 0) {
                         user.addToBalance(user.getPaid() - splitEvenShare);
-                    } else{
+                    } else {
                         user.addToBalance(user.getPaid() - user.getShare());
                     }
                 }
+
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("result", nameList);
+                setResult(RESULT_OK, returnIntent);
+                finish();
             }
         });
+
     }
     private void toastGen(Context context,String msg){
         Log.w("user", "in toastGen: " + msg);
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
-
 }

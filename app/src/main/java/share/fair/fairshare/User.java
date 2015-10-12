@@ -1,15 +1,19 @@
 package share.fair.fairshare;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
  * Created by Nir on 09/10/2015.
  */
-public class User{
+public class User implements Serializable{
     private String name;
     private double balance;
     private double paid;
@@ -69,4 +73,5 @@ public class User{
     public void addToBalance(double val){
         this.balance += val;
     }
+
 }
