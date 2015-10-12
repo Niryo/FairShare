@@ -3,6 +3,7 @@ package share.fair.fairshare;
 
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 
 
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements GroupNameDialog.GroupCreatedListener {
 
 
     ListView groupList;
@@ -28,15 +29,12 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button createNewGroupButton = (Button) findViewById(R.id.create_new_group_button);
+
         createNewGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 GroupNameDialog dialog = new GroupNameDialog();
-                dialog.setTitle("Choose group name:");
-                dialog.setHint("Group's name");
                 dialog.show(getSupportFragmentManager(), "add_new_group");
-
-
             }
         });
         groupNames = Group.getSavedGroupNames(getApplicationContext());
@@ -54,5 +52,11 @@ public class MainActivity extends FragmentActivity {
             }
         });
 
+    }
+
+    @Override
+    public void notifyGroupCreated(String name) {
+        groupNames.add(new NameAndKey(name,""));
+        groupAdapter.notifyDataSetChanged();
     }
 }
