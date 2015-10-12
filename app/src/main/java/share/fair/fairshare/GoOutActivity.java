@@ -19,15 +19,14 @@ import android.widget.TextView;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GoOutActivity extends Activity {
 
-    TextView title;
-    Button backToGroup;
-    ListView goOutList;
-    ArrayAdapter goOutAdpater;
-    ArrayList<User> nameList;
 
+    Button backToGroup;
+    Button calculateButton;
+    ArrayList<User> nameList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,7 @@ public class GoOutActivity extends Activity {
         nameList.add(new User("kipi12", -1.23));
         nameList.add(new User("kipi13", -1.23));
 
-        ArrayList<View> viewsList = new ArrayList<>();
+        final ArrayList<View> viewsList = new ArrayList<>();
         LinearLayout list= (LinearLayout) findViewById(R.id.list_of_users);
         LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         for(User user: nameList){
@@ -66,12 +65,22 @@ public class GoOutActivity extends Activity {
             ((TextView)newView.findViewById(R.id.tv_go_out_user_balance)).setText(textBalance);
             list.addView(newView);
             viewsList.add(newView);
-
+            user.resetPaidAndShare();
         }
+        calculateButton = (Button) findViewById(R.id.calculate_button);
+        calculateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                for(View row: viewsList){
+                    double paidInput = Double.parseDouble(((EditText)row.findViewById(R.id.et_paid)).getText().toString());
+
+
+                }
+
+
+            }
+        });
 
     }
-
-
-
 }

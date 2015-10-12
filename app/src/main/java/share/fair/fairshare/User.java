@@ -12,6 +12,8 @@ import java.util.Iterator;
 public class User{
     private String name;
     private double balance;
+    private double paid;
+    private double share;
 
     public User(String name, double balance){
         this.name=name;
@@ -52,4 +54,16 @@ public class User{
     public double getBalance(){
         return this.balance;
     }
+    public void setPaid(double paid){
+        this.paid = paid;
+    }
+    public void setShare(double share){
+        this.share = share;
+    }
+    public void resetPaidAndShare(){
+        this.paid = 0.0;
+        this.share = 0.0;
+    }
+    public double getPaid(){ return this.paid;}
+    public double getShare(){ return this.share;}
 }
