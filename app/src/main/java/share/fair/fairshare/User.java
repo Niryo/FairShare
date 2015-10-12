@@ -68,7 +68,12 @@ public class User {
     }
     public double getPaid(){ return this.paid;}
     public double getShare(){ return this.share;}
+
     public  void setEmail(String email){
-        this.email=email;
+        this.email=email;}
+
+    public void addToBalance(double val){
+        this.balance += val;
+
     }
 }
