@@ -71,7 +71,7 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
             return convertView;
         }
     private void toastGen(Context context,String msg){
-        Log.d("user", "in toastGen: " + msg);
+        Log.w("user", "in toastGen: " + msg);
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 }

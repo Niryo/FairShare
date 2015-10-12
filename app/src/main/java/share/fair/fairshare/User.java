@@ -66,4 +66,7 @@ public class User{
     }
     public double getPaid(){ return this.paid;}
     public double getShare(){ return this.share;}
+    public void addToBalance(double val){
+        this.balance += val;
+    }
 }
