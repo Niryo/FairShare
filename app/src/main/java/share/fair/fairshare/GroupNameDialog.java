@@ -42,8 +42,9 @@ import android.widget.EditText;
                     String name = nameEditText.getText().toString();
                     Group newGroup = new Group(name);
                     newGroup.saveGroupToStorage(getContext());
+                    String localGroupKey= newGroup.getLocalGroupKey();
                     Log.w("custom", name + " has been created");
-                    ((GroupCreatedListener) getActivity()).notifyGroupCreated(name);
+                    ((GroupCreatedListener) getActivity()).notifyGroupCreated(name,localGroupKey);
                     getDialog().dismiss();
                 }
             });
@@ -79,7 +80,7 @@ import android.widget.EditText;
         }
 
     public interface GroupCreatedListener{
-        public void notifyGroupCreated(String name);
+        public void notifyGroupCreated(String name, String localGroupKey);
     }
     }
 

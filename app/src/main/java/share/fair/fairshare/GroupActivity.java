@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,6 +39,7 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
             @Override
             public void onClick(View v) {
                 UserNameDialog dialog = new UserNameDialog();
+                dialog.setGroup(group);
                 dialog.show(getSupportFragmentManager(), "add_new_user");
             }
         });
@@ -64,8 +64,14 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
 
 
     @Override
-    public void notifyUserAdded(String name) {
-        this.group.addUser(getApplicationContext(), name);
+//<<<<<<< HEAD
+//    public void notifyUserAdded(String name) {
+//        this.group.addUser(getApplicationContext(), name);
+//=======
+    public void notifyUserAdded(String name, String emailAddress) {
+       User newUser= new User(name,0);
+        newUser.setEmail(emailAddress);
+        this.group.addUser(getApplicationContext(),newUser);
         users= group.getUsers();
         userCheckBoxAdapter.notifyDataSetChanged();
     }
@@ -93,3 +99,13 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 }
+
+
+
+
+
+
+
+
+
+

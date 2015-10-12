@@ -13,11 +13,14 @@ import java.util.Iterator;
 /**
  * Created by Nir on 09/10/2015.
  */
+
 public class User implements Serializable{
+
     private String name;
     private double balance;
     private double paid;
     private double share;
+    private String email;
 
     public User(String name, double balance){
         this.name=name;
@@ -70,8 +73,13 @@ public class User implements Serializable{
     }
     public double getPaid(){ return this.paid;}
     public double getShare(){ return this.share;}
+
+    public  void setEmail(String email){
+        this.email=email;}
+
     public void addToBalance(double val){
         this.balance += val;
+
     }
 
 }
