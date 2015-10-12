@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class GroupActivity extends FragmentActivity {
+public class GroupActivity extends FragmentActivity implements UserNameDialog.UserAddedListener {
 
     TextView groupNameTextView;
     Button addUserButton;
@@ -36,17 +36,10 @@ public class GroupActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 UserNameDialog dialog = new UserNameDialog();
-                dialog.setTitle("Choose user name:");
-                dialog.setHint("User's name");
                 dialog.show(getSupportFragmentManager(), "add_new_user");
             }
         });
 
-        ArrayList<User> tempUsers = new ArrayList<User>();
-        tempUsers.add(new User("ori1", -1.0));
-        tempUsers.add(new User("ori2", -1.1));
-        tempUsers.add(new User("ori3", -1.0));
-        this.users = tempUsers;
         userList = (ListView) findViewById(R.id.users_list_view);
         userCheckBoxAdapter = new UserCheckBoxAdapter(this,R.layout.user_check_row ,this.users);
         userList.setAdapter(userCheckBoxAdapter);
@@ -62,4 +55,10 @@ public class GroupActivity extends FragmentActivity {
         });
     }
 
+    @Override
+    public void notifyUserAdded(String name) {
+        this.group.addUser(getApplicationContext(),name);
+        users= group.getUsers();
+        userCheckBoxAdapter.notifyDataSetChanged();
+    }
 }

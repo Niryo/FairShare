@@ -17,35 +17,29 @@ import android.widget.EditText;
 
 
     public class UserNameDialog extends DialogFragment {
-        String titleText;
-        String hint;
 
         public UserNameDialog() {
             // Empty constructor required for DialogFragment
         }
-    public void setTitle(String title){
-        this.titleText = title;
-    }
-    public void setHint(String hint){
-        this.hint = hint;
-    }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View dialogLayout = inflater.inflate(R.layout.new_group_dialog_layout, container);
             setCancelable(false);
             getDialog().setContentView(R.layout.new_group_dialog_layout);
-            getDialog().setTitle(titleText);
+            getDialog().setTitle("Choose user name:");
 
             final EditText nameEditText = (EditText) dialogLayout.findViewById(R.id.group_name_edit_text);
-            nameEditText.setHint(this.hint);
+            nameEditText.setHint("User's name");
             final Button createButton = (Button) dialogLayout.findViewById(R.id.create_button);
             final Button cancelButton = (Button) dialogLayout.findViewById(R.id.cancel_button);
             createButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String name = nameEditText.getText().toString();
-                    //todo:
+                    ((UserAddedListener) getActivity()).notifyUserAdded(name);
+                    getDialog().dismiss();
                 }
             });
             cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -78,6 +72,10 @@ import android.widget.EditText;
             getDialog().show();
             return dialogLayout;
         }
+
+    public interface UserAddedListener{
+        public void notifyUserAdded(String name);
+    }
     }
 
 
