@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +61,7 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
                 Intent goOut = new Intent(getApplicationContext(),GoOutActivity.class);
                 goOut.putExtra("goOutList", users);
                 startActivityForResult(goOut, GO_OUT_REQUEST);
+                clearCheked();
             }
         });
         goOutCheckedButton = (Button) findViewById(R.id.bt_go_out_checked);
@@ -76,6 +78,7 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
                     goOut.putExtra("goOutList", checkedUsers);
                     startActivityForResult(goOut, GO_OUT_REQUEST);
                 }
+                clearCheked();
             }
         });
     }
@@ -100,8 +103,8 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
                 }
                 //users = resultList; //todo: problem if checked list was sent
                 uniteLists(resultList);
-                userCheckBoxAdapter = new UserCheckBoxAdapter(this,R.layout.user_check_row ,this.users);
-                userListView.setAdapter(userCheckBoxAdapter);
+                userCheckBoxAdapter.notifyDataSetChanged();
+                this.group.saveGroupToStorage(getApplicationContext());
 
 
             }
@@ -114,11 +117,19 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
     private void uniteLists(ArrayList<User> resultList){
         for(int i =0; i< users.size(); i++){
             for(int j =0; j<resultList.size(); j++){
-                if ( users.get(i).getName().equals(resultList.get(j).getName()) ){
+                if ( users.get(i).getId().equals(resultList.get(j).getId()) ){
                     users.set(i, resultList.get(j));
                 }
             }
         }
+    }
+
+    private void clearCheked(){
+       for(int i=0; i< this.userListView.getChildCount(); i++){
+           CheckBox checkBox= (CheckBox) this.userListView.getChildAt(i).findViewById(R.id.cb_user_row);
+           checkBox.setChecked(false);
+       }
+        this.userCheckBoxAdapter.clearChecked();
     }
 }
 

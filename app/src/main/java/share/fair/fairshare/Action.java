@@ -12,19 +12,17 @@ import java.util.Iterator;
  */
 public class Action implements Serializable {
     private String description;
-    private HashMap<String, Double> operations; //<userId, value to add to balance>
+    private HashMap<String, Double> operations=new HashMap<>(); //<userId, value to add to balance>
 
     public Action() {
         this.description = "...";
     }
-
     public Action(String description) {
         this.description = description;
     }
     public Action(JSONObject jsonAction){
             try {
         String description= jsonAction.getString("description");
-        HashMap<String, Double>  operations  = new HashMap();
         Iterator keys = jsonAction.keys();
         while (keys.hasNext()) {
             String key = (String) keys.next();

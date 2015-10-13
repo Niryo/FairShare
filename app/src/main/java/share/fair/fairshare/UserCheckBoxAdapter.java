@@ -70,5 +70,8 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
     public ArrayList<User> getCheckedArray(){
         return checkedUsers;
     }
+    public void clearChecked(){
+        this.checkedUsers.clear();
+    }
 }
 
