@@ -16,7 +16,7 @@ public class User implements Serializable{
     private String name;
     private double balance;
     private String email;
-    private int id;
+    private String id;
 
     public User(String name, double balance){
         this.name=name;
@@ -31,7 +31,7 @@ public class User implements Serializable{
                 JSONObject user = jsonUsers.getJSONObject((String) userNames.next());
                 String name= user.getString("name");
                 int balance= user.getInt("balance");
-                int id = user.getInt("id");
+                String id = user.getString("id");
                 String email = user.has("email")? user.getString("email") : "";
                 User newUser= new User(name,balance);
                 newUser.setEmail(email);
@@ -44,11 +44,11 @@ public class User implements Serializable{
         return resultUsers;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

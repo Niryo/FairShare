@@ -61,6 +61,7 @@ public class GoOutActivity extends Activity {
                 //todo: log: group name, name : paid - share
                 double totalPaid = 0.0;
                 double totalShare = 0.0;
+                Action action= new Action();//todo: take description
 
                 ArrayList<Integer>  noShareUsersIndexes= new ArrayList<Integer>();
 
@@ -81,6 +82,7 @@ public class GoOutActivity extends Activity {
                         totalShare += shareInput;
                         //if user have share, we can calculate it's balance right now;
                         nameList.get(i).addToBalance(paidInput-shareInput); //todo: check this line
+                        action.addOperation(nameList.get(i).getId(),paidInput-shareInput);
                     }
 
 
@@ -103,6 +105,7 @@ public class GoOutActivity extends Activity {
                         paidInput = Double.parseDouble(paidInputStr);
                     }
                     nameList.get(index).addToBalance(paidInput - splitEvenShare);
+                    action.addOperation(nameList.get(index).getId(), paidInput - splitEvenShare);
                 }
 
                 for(User user: nameList ){
@@ -110,6 +113,7 @@ public class GoOutActivity extends Activity {
                 }
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("result", nameList);
+                returnIntent.putExtra("action", action);
                 setResult(RESULT_OK, returnIntent);
                 finish();
             }

@@ -23,14 +23,14 @@ public class Group {
     private String name;
 
 
-    private ArrayList<User> users;
+    private ArrayList<User> users= new ArrayList<>();
     private String localGroupKey = "";
     private String cloudGroupKey = "";
-    private int userIdCounter;
+    private int userIdCounter=0;
+    private GroupLog groupLog= new GroupLog();
 
     public Group(String name) {
         this.name = name;
-        this.users = new ArrayList<>();
     }
 
     public static ArrayList<NameAndKey> getSavedGroupNames(Context context) {
@@ -65,11 +65,14 @@ public class Group {
                 String cloudGroupKey = jsonGroup.getString("cloudGroupKey");
                 ArrayList<User> users = User.parseUsers(jsonGroup.getJSONObject("users"));
                 int userIdCounter = jsonGroup.getInt("userIdCounter");
+                GroupLog groupLog= new GroupLog(jsonGroup.getJSONObject("groupLog"));
+
                 Group loadedGroup = new Group(name);
                 loadedGroup.setCloudGroupKey(cloudGroupKey);
                 loadedGroup.setUsers(users);
                 loadedGroup.setLocalGroupKey(localGroupKey);
                 loadedGroup.setUserIdCounter(userIdCounter);
+                loadedGroup.setGroupLog(groupLog);
 
                 return loadedGroup;
             } catch (Exception e) {
@@ -78,6 +81,14 @@ public class Group {
 
         }
         return null;
+    }
+
+    public GroupLog getGroupLog() {
+        return groupLog;
+    }
+
+    public void setGroupLog(GroupLog groupLog) {
+        this.groupLog = groupLog;
     }
 
     public int getUserIdCounter() {
@@ -103,6 +114,7 @@ public class Group {
             jsonGroup.put("name", this.name);
             jsonGroup.put("localGroupKey", this.localGroupKey);
             jsonGroup.put("userIdCounter", this.userIdCounter);
+            jsonGroup.put("groupLog", this.groupLog.toJSON());
 
             JSONObject users = new JSONObject();
             for (int i = 0; i < this.users.size(); i++) {
@@ -119,7 +131,6 @@ public class Group {
         //if this is a new group:
         if (this.localGroupKey == "") {
             try {
-                this.userIdCounter=0;
                 this.localGroupKey = Long.toString(System.currentTimeMillis());
                 File groupNamesFile = new File(context.getFilesDir(), "groups_names");
                 if (!groupNamesFile.exists()) {
@@ -160,7 +171,7 @@ public class Group {
     }
 
     public void addUser(Context context, User user) {
-        user.setId(this.userIdCounter++);
+        user.setId(String.valueOf(this.userIdCounter++));
         this.users.add(user);
         saveGroupToStorage(context);
     }

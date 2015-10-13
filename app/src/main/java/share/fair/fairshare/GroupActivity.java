@@ -103,7 +103,6 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
                 userCheckBoxAdapter = new UserCheckBoxAdapter(this,R.layout.user_check_row ,this.users);
                 userListView.setAdapter(userCheckBoxAdapter);
 
-
                 users = resultList;
                 userCheckBoxAdapter = new UserCheckBoxAdapter(this,R.layout.user_check_row ,this.users);
                 userListView.setAdapter(userCheckBoxAdapter);
