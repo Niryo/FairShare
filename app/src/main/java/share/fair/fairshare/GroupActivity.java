@@ -63,10 +63,6 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
 
 
     @Override
-//<<<<<<< HEAD
-//    public void notifyUserAdded(String name) {
-//        this.group.addUser(getApplicationContext(), name);
-//=======
     public void notifyUserAdded(String name, String emailAddress) {
        User newUser= new User(name,0);
         newUser.setEmail(emailAddress);
@@ -81,15 +77,10 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
         if (requestCode == GO_OUT_REQUEST) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                // The user picked a contact.
-                // The Intent's data Uri identifies which contact was selected.
-
-                // Do something with the contact here (bigger example below)
                 ArrayList<User> resultList = (ArrayList<User>) data.getSerializableExtra("result");
                 for(User user: resultList){
                     toastGen(getApplicationContext(),"username:"+ user.getName()+" bal: "+user.getBalance());
                 }
-
             }
         }
     }

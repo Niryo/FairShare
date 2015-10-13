@@ -62,20 +62,16 @@ public class GoOutActivity extends Activity {
                 double totalPaid = 0.0;
                 double totalShare = 0.0;
                 int noShareUsers = 0;
+
                 for (int i = 0; i < nameList.size(); i++) {
-                    double paidInput;
+                    double paidInput=0.0;
                     String paidInputStr = ((EditText) (viewsList.get(i)).findViewById(R.id.et_paid)).getText().toString();
-                    if (paidInputStr.isEmpty()) {
-                        paidInput = 0.0;
-                    } else {
+                    if (!paidInputStr.isEmpty()) {
                         paidInput = Double.parseDouble(paidInputStr);
-                        if (paidInput < 0) {
-                            //todo: Error case: negative paid value
-                            toastGen(getApplicationContext(), "Invalid value: negative paid value");
-                            return;
-                        }
                         totalPaid += paidInput;
+
                     }
+
                     double shareInput;
                     String shareInputStr = ((EditText) (viewsList.get(i)).findViewById(R.id.et_special_share)).getText().toString();
                     if (shareInputStr.isEmpty()) {
@@ -83,11 +79,6 @@ public class GoOutActivity extends Activity {
                         noShareUsers++;
                     } else {
                         shareInput = Double.parseDouble(shareInputStr);
-                        if (shareInput < 0) {
-                            //todo: Error case: negative share value
-                            toastGen(getApplicationContext(), "Invalid value: negative share value");
-                            return;
-                        }
                         totalShare += shareInput;
                     }
                     nameList.get(i).setPaid(paidInput);

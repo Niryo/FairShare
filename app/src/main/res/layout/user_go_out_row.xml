@@ -30,7 +30,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:imeOptions="actionDone"
-        android:textColorHint="#d0151515" />
+        android:textColorHint="#d0151515"
+        android:digits="0123456789."
+        />
 
     <EditText
         android:id="@+id/et_special_share"
@@ -39,7 +41,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:imeOptions="actionDone"
-        android:textColorHint="#d0151515" />
+        android:textColorHint="#d0151515"
+        android:digits="0123456789."/>
 
 
 
