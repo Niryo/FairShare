@@ -46,11 +46,11 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
                         Log.w("user", "Clicked on Checkbox: " + cb.getText() + " is " + cb.isChecked());
                         if(cb.isChecked()){
                                 checkedUsers.add(userList.get(position));
-                                toastGen(getContext(),userList.get(position).getName()+" was adeed to checked.(" + position + ")");
+
 
                         }else{
                             checkedUsers.remove(userList.get(position));
-                            toastGen(getContext(),userList.get(position).getName()+" was removed from checked.(" + position + ")"); //debug
+
                         }
                     }
                 });

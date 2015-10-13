@@ -9,19 +9,17 @@
         android:id="@+id/tv_go_out_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18dp"
         android:gravity="center"
-        android:text="test1"
-        android:textColor="#d0151515" />
+        android:textColor="#d0151515"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/tv_go_out_user_balance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18dp"
         android:gravity="center"
-        android:text="test2"
-        android:textColor="#a4084753" />
+        android:textColor="#a4084753"
+        android:textSize="14sp" />
 
     <EditText
         android:id="@+id/et_paid"
@@ -34,7 +32,7 @@
         android:singleLine="false"
         android:textColor="#b33b3b3b"
         android:digits="0123456789."
-        />
+        android:textSize="14sp" />
 
 
     <EditText
@@ -46,6 +44,7 @@
         android:imeOptions="actionDone"
         android:textColorHint="#d0151515"
         android:textColor="#b33b3b3b"
-        android:digits="0123456789."/>
+        android:digits="0123456789."
+        android:textSize="14sp" />
 
 </LinearLayout>

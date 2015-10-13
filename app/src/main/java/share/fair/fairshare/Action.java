@@ -22,11 +22,12 @@ public class Action implements Serializable {
     }
     public Action(JSONObject jsonAction){
             try {
-        String description= jsonAction.getString("description");
-        Iterator keys = jsonAction.keys();
+       this.description= jsonAction.getString("description");
+        JSONObject jsonOperations= jsonAction.getJSONObject("operations");
+        Iterator keys = jsonOperations.keys();
         while (keys.hasNext()) {
             String key = (String) keys.next();
-                operations.put(key, (double)(jsonAction.get(key)));
+                operations.put(key, (jsonOperations.getDouble(key)));
         }
             } catch (JSONException e) {
                 e.printStackTrace();

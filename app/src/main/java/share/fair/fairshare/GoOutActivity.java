@@ -112,7 +112,7 @@ public class GoOutActivity extends Activity {
                     toastGen(getApplicationContext(),"usernameGo: "+ user.getName()+" balGo: "+user.getBalance());
                 }
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("result", nameList);
+                returnIntent.putExtra("resultUserList", nameList);
                 returnIntent.putExtra("action", action);
                 setResult(RESULT_OK, returnIntent);
                 finish();

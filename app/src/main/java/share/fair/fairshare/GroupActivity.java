@@ -97,7 +97,9 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == GO_OUT_REQUEST) {
             if (resultCode == RESULT_OK) {
-                ArrayList<User> resultList = (ArrayList<User>) data.getSerializableExtra("result");
+                ArrayList<User> resultList = (ArrayList<User>) data.getSerializableExtra("resultUserList");
+                Action action = (Action) data.getSerializableExtra("action");
+                this.group.getGroupLog().AddAction(action);
                 for(User user: resultList){
                     toastGen(getApplicationContext(),"username:"+ user.getName()+" bal: "+user.getBalance());
                 }
