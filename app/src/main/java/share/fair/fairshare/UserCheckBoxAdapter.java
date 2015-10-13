@@ -21,13 +21,12 @@ import java.util.HashMap;
 public class UserCheckBoxAdapter extends ArrayAdapter {
 
     private ArrayList<User> userList;
-    boolean[] checkedPositions;
+    ArrayList<User> checkedUsers;
     public UserCheckBoxAdapter(Context context, int textViewResourceId,
                                ArrayList<User> userList) {
     super(context, textViewResourceId, userList);
     this.userList = userList;
-    checkedPositions = new boolean[userList.size()];
-
+    checkedUsers = new ArrayList<User>();
 }
         private class ViewHolder {
             TextView userBalance;
@@ -47,12 +46,21 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
                 holder.userBalance = (TextView) convertView.findViewById(R.id.tv_user_balance);
                 holder.cbUserRow = (CheckBox) convertView.findViewById(R.id.cb_user_row);
                 convertView.setTag(holder);
-                checkedPositions[position] = holder.cbUserRow.isChecked();
                 holder.cbUserRow.setOnClickListener(new OnClickListener() {
                     public void onClick(View v) {
                         CheckBox cb = (CheckBox) v;
                         Log.w("user", "Clicked on Checkbox: " + cb.getText() + " is " + cb.isChecked());
-                        checkedPositions[position] = cb.isChecked();
+                        if(cb.isChecked()){
+                            if(! checkedUsers.contains(userList.get(position))){
+                                checkedUsers.add(userList.get(position));
+                                toastGen(getContext(),userList.get(position).getName()+" was adeed to checked.(" + position + ")");
+                            }else{
+                                toastGen(getContext(), "Warning: tried to add user "+userList.get(position).getName()+" to the go out checked list(" + position + ")");//debug
+                            }
+                        }else{
+                            checkedUsers.remove(userList.get(position));
+                            toastGen(getContext(),userList.get(position).getName()+" was removed from checked.(" + position + ")"); //debug
+                        }
                     }
                 });
             }
@@ -71,9 +79,8 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
         Log.w("user", "in toastGen: " + msg);
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
-    public boolean[] getCheckedArray(){
-        return checkedPositions;
+    public ArrayList<User> getCheckedArray(){
+        return checkedUsers;
     }
 }
-
 
