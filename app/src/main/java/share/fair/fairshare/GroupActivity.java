@@ -82,10 +82,6 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
 
 
     @Override
-//<<<<<<< HEAD
-//    public void notifyUserAdded(String name) {
-//        this.group.addUser(getApplicationContext(), name);
-//=======
     public void notifyUserAdded(String name, String emailAddress) {
        User newUser= new User(name,0);
         newUser.setEmail(emailAddress);
@@ -106,6 +102,14 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
                 uniteLists(resultList);
                 userCheckBoxAdapter = new UserCheckBoxAdapter(this,R.layout.user_check_row ,this.users);
                 userListView.setAdapter(userCheckBoxAdapter);
+
+
+                users = resultList;
+                userCheckBoxAdapter = new UserCheckBoxAdapter(this,R.layout.user_check_row ,this.users);
+                userListView.setAdapter(userCheckBoxAdapter);
+
+
+
             }
         }
     }

@@ -47,7 +47,6 @@ public class GroupsAdapter extends ArrayAdapter {
             LayoutInflater vi = (LayoutInflater)this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = vi.inflate(R.layout.group_row, null);
             holder = new ViewHolder();
-            holder.ivImageGrp = (ImageView) convertView.findViewById(R.id.iv_grp_img);
             holder.tvGrpName = (TextView) convertView.findViewById(R.id.tv_row_grp_name);
             convertView.setTag(holder);
         }
