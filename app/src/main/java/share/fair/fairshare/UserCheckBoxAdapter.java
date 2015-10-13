@@ -21,26 +21,21 @@ import java.util.HashMap;
 public class UserCheckBoxAdapter extends ArrayAdapter {
 
     private ArrayList<User> userList;
-    Context context;
-//    public HashMap userBalMap;
-    public ArrayList<String> goOutNameList;
-
+    boolean[] checkedPositions;
     public UserCheckBoxAdapter(Context context, int textViewResourceId,
                                ArrayList<User> userList) {
     super(context, textViewResourceId, userList);
-    this.context = context;
     this.userList = userList;
-//    this.userBalMap = CurGroup.grpUserBalMap;
-    this.goOutNameList = new ArrayList<String>();
+    checkedPositions = new boolean[userList.size()];
+
 }
         private class ViewHolder {
             TextView userBalance;
             CheckBox cbUserRow;
             String hUserName;
         }
-
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
 
             ViewHolder holder = null;
             Log.d("user", "ConvertView " + String.valueOf(position));
@@ -52,10 +47,12 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
                 holder.userBalance = (TextView) convertView.findViewById(R.id.tv_user_balance);
                 holder.cbUserRow = (CheckBox) convertView.findViewById(R.id.cb_user_row);
                 convertView.setTag(holder);
+                checkedPositions[position] = holder.cbUserRow.isChecked();
                 holder.cbUserRow.setOnClickListener(new OnClickListener() {
                     public void onClick(View v) {
                         CheckBox cb = (CheckBox) v;
-                        Log.d("user", "Clicked on Checkbox: " + cb.getText() + " is " + cb.isChecked());
+                        Log.w("user", "Clicked on Checkbox: " + cb.getText() + " is " + cb.isChecked());
+                        checkedPositions[position] = cb.isChecked();
                     }
                 });
             }
@@ -73,6 +70,9 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
     private void toastGen(Context context,String msg){
         Log.w("user", "in toastGen: " + msg);
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+    }
+    public boolean[] getCheckedArray(){
+        return checkedPositions;
     }
 }
 

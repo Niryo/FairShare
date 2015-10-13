@@ -22,7 +22,7 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
     Group group;
     UserCheckBoxAdapter userCheckBoxAdapter;
     Button goOutAllButton;
-
+    Button goOutCheckedButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +54,30 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
                 startActivityForResult(goOut, GO_OUT_REQUEST);
             }
         });
+        goOutCheckedButton = (Button) findViewById(R.id.bt_go_out_checked);
+        goOutCheckedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<User> checkedUsers = new ArrayList<User>();
+                boolean[] checkedPositionsArray = userCheckBoxAdapter.getCheckedArray();
+                for(int i=0; i < users.size(); i++) {
+                    if (checkedPositionsArray[i]){
+                        checkedUsers.add(users.get(i));
+                    }
+                }
+                if(checkedUsers.isEmpty()){
+                    //todo: other way to handle error?
+                    toastGen(getApplicationContext(),"No user is checked!");
+                    return;
+                }else{
+                    Intent goOut = new Intent(getApplicationContext(),GoOutActivity.class);
+                    goOut.putExtra("goOutList", checkedUsers);
+                    startActivityForResult(goOut, GO_OUT_REQUEST);
+                }
+
+
+            }
+        });
     }
 
 
@@ -61,21 +85,24 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
     public void notifyUserAdded(String name, String emailAddress) {
        User newUser= new User(name,0);
         newUser.setEmail(emailAddress);
-        this.group.addUser(getApplicationContext(),newUser);
+        this.group.addUser(getApplicationContext(), newUser);
         users= group.getUsers();
         userCheckBoxAdapter.notifyDataSetChanged();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
         if (requestCode == GO_OUT_REQUEST) {
-            // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 ArrayList<User> resultList = (ArrayList<User>) data.getSerializableExtra("result");
                 for(User user: resultList){
                     toastGen(getApplicationContext(),"username:"+ user.getName()+" bal: "+user.getBalance());
                 }
+                //users = resultList; //todo: problem if checked list was sent
+                uniteLists(resultList);
+                userCheckBoxAdapter = new UserCheckBoxAdapter(this,R.layout.user_check_row ,this.users);
+                userListView.setAdapter(userCheckBoxAdapter);
+
 
                 users = resultList;
                 userCheckBoxAdapter = new UserCheckBoxAdapter(this,R.layout.user_check_row ,this.users);
@@ -89,6 +116,15 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
     private void toastGen(Context context,String msg){
         Log.w("user", "in toastGen: " + msg);
 //        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+    }
+    private void uniteLists(ArrayList<User> resultList){
+        for(int i =0; i< users.size(); i++){
+            for(int j =0; j<resultList.size(); j++){
+                if ( users.get(i).getName().equals(resultList.get(j).getName()) ){
+                    users.set(i, resultList.get(j));
+                }
+            }
+        }
     }
 }
 

@@ -58,6 +58,7 @@ public class GoOutActivity extends Activity {
         calculateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //todo: log: group name, name : paid - share
                 double totalPaid = 0.0;
                 double totalShare = 0.0;
 
@@ -113,6 +114,7 @@ public class GoOutActivity extends Activity {
                 finish();
             }
         });
+
 
     }
     private void toastGen(Context context,String msg){

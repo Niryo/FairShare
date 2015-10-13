@@ -31,8 +31,11 @@
         android:layout_height="wrap_content"
         android:imeOptions="actionDone"
         android:textColorHint="#d0151515"
+        android:singleLine="false"
+        android:textColor="#b33b3b3b"
         android:digits="0123456789."
         />
+
 
     <EditText
         android:id="@+id/et_special_share"
@@ -42,8 +45,7 @@
         android:layout_height="wrap_content"
         android:imeOptions="actionDone"
         android:textColorHint="#d0151515"
+        android:textColor="#b33b3b3b"
         android:digits="0123456789."/>
-
-
 
 </LinearLayout>
