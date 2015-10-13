@@ -5,13 +5,10 @@ import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -21,7 +18,7 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
     TextView groupNameTextView;
     Button addUserButton;
     ArrayList<User> users;
-    ListView userList;
+    ListView userListView;
     Group group;
     UserCheckBoxAdapter userCheckBoxAdapter;
     Button goOutAllButton;
@@ -44,18 +41,16 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
             }
         });
 
-        userList = (ListView) findViewById(R.id.users_list_view);
+        userListView = (ListView) findViewById(R.id.users_list_view);
         userCheckBoxAdapter = new UserCheckBoxAdapter(this,R.layout.user_check_row ,this.users);
-        userList.setAdapter(userCheckBoxAdapter);
-
-
+        userListView.setAdapter(userCheckBoxAdapter);
 
         goOutAllButton = (Button) findViewById(R.id.bt_go_out_all);
         goOutAllButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent goOut = new Intent(getApplicationContext(),GoOutActivity.class);
-                goOut.putExtra("goOutList", users );
+                goOut.putExtra("goOutList", users);
                 startActivityForResult(goOut, GO_OUT_REQUEST);
             }
         });
@@ -81,12 +76,19 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
                 for(User user: resultList){
                     toastGen(getApplicationContext(),"username:"+ user.getName()+" bal: "+user.getBalance());
                 }
+
+                users = resultList;
+                userCheckBoxAdapter = new UserCheckBoxAdapter(this,R.layout.user_check_row ,this.users);
+                userListView.setAdapter(userCheckBoxAdapter);
+
+
+
             }
         }
     }
     private void toastGen(Context context,String msg){
         Log.w("user", "in toastGen: " + msg);
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+//        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 }
 
