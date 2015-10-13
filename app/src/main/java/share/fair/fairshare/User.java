@@ -1,8 +1,5 @@
 package share.fair.fairshare;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,12 +16,12 @@ public class User implements Serializable{
     private String name;
     private double balance;
     private String email;
+    private int id;
 
     public User(String name, double balance){
         this.name=name;
         this.balance = balance;
     }
-
 
     public static ArrayList<User> parseUsers(JSONObject jsonUsers){
         ArrayList<User> resultUsers=new ArrayList<>();
@@ -34,7 +31,12 @@ public class User implements Serializable{
                 JSONObject user = jsonUsers.getJSONObject((String) userNames.next());
                 String name= user.getString("name");
                 int balance= user.getInt("balance");
-                resultUsers.add(new User(name,balance));
+                int id = user.getInt("id");
+                String email = user.has("email")? user.getString("email") : "";
+                User newUser= new User(name,balance);
+                newUser.setEmail(email);
+                newUser.setId(id);
+                resultUsers.add(newUser);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -42,11 +44,21 @@ public class User implements Serializable{
         return resultUsers;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public JSONObject toJSON(){
         JSONObject result = new JSONObject();
         try {
             result.put("name", this.name);
             result.put("balance", this.balance);
+            result.put("email",this.email);
+            result.put("id",this.id);
 
         } catch (JSONException e) {
             e.printStackTrace();
