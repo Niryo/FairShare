@@ -18,8 +18,6 @@ public class User implements Serializable{
 
     private String name;
     private double balance;
-    private double paid;
-    private double share;
     private String email;
 
     public User(String name, double balance){
@@ -61,18 +59,8 @@ public class User implements Serializable{
     public double getBalance(){
         return this.balance;
     }
-    public void setPaid(double paid){
-        this.paid = paid;
-    }
-    public void setShare(double share){
-        this.share = share;
-    }
-    public void resetPaidAndShare(){
-        this.paid = 0.0;
-        this.share = 0.0;
-    }
-    public double getPaid(){ return this.paid;}
-    public double getShare(){ return this.share;}
+
+
 
     public  void setEmail(String email){
         this.email=email;}

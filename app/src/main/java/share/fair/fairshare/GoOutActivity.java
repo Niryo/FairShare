@@ -53,7 +53,6 @@ public class GoOutActivity extends Activity {
             ((TextView)newView.findViewById(R.id.tv_go_out_user_balance)).setText(textBalance);
             list.addView(newView);
             viewsList.add(newView);
-            user.resetPaidAndShare();
         }
         calculateButton = (Button) findViewById(R.id.calculate_button);
         calculateButton.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +60,8 @@ public class GoOutActivity extends Activity {
             public void onClick(View v) {
                 double totalPaid = 0.0;
                 double totalShare = 0.0;
-                int noShareUsers = 0;
+
+                ArrayList<Integer>  noShareUsersIndexes= new ArrayList<Integer>();
 
                 for (int i = 0; i < nameList.size(); i++) {
                     double paidInput=0.0;
@@ -69,20 +69,20 @@ public class GoOutActivity extends Activity {
                     if (!paidInputStr.isEmpty()) {
                         paidInput = Double.parseDouble(paidInputStr);
                         totalPaid += paidInput;
-
                     }
 
                     double shareInput;
                     String shareInputStr = ((EditText) (viewsList.get(i)).findViewById(R.id.et_special_share)).getText().toString();
                     if (shareInputStr.isEmpty()) {
-                        shareInput = -1.0;
-                        noShareUsers++;
+                        noShareUsersIndexes.add(i);
                     } else {
                         shareInput = Double.parseDouble(shareInputStr);
                         totalShare += shareInput;
+                        //if user have share, we can calculate it's balance right now;
+                        nameList.get(i).addToBalance(paidInput-shareInput); //todo: check this line
                     }
-                    nameList.get(i).setPaid(paidInput);
-                    nameList.get(i).setShare(shareInput);
+
+
                 }
                 double totalPaidWithoutShares = totalPaid - totalShare;
                 if (totalPaidWithoutShares < 0) {
@@ -91,15 +91,17 @@ public class GoOutActivity extends Activity {
                     return;
                 }
                 double splitEvenShare = 0.0;
+                int noShareUsers = noShareUsersIndexes.size();
                 if (noShareUsers > 0) {
                     splitEvenShare = totalPaidWithoutShares / noShareUsers;
                 }
-                for (User user : nameList) {
-                    if (user.getShare() < 0) {
-                        user.addToBalance(user.getPaid() - splitEvenShare);
-                    } else {
-                        user.addToBalance(user.getPaid() - user.getShare());
+                for (int index : noShareUsersIndexes) {
+                    String paidInputStr = ((EditText) (viewsList.get(index)).findViewById(R.id.et_paid)).getText().toString();
+                    double paidInput=0.0;
+                    if (!paidInputStr.isEmpty()) {
+                        paidInput = Double.parseDouble(paidInputStr);
                     }
+                    nameList.get(index).addToBalance(paidInput - splitEvenShare);
                 }
 
                 for(User user: nameList ){
