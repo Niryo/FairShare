@@ -63,7 +63,7 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
                 holder = (ViewHolder) convertView.getTag();
             }
             holder.cbUserRow.setText(userList.get(position).getName()+"   ");
-//            String userN = (userList.get(position)).getName();
+//            String userN = (userListView.get(position)).getName();
 //            holder.hUserName = userN;
 
 //            userBalMap.get(userN).toString();
