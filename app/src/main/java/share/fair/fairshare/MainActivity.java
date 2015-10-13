@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -59,7 +58,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
                 String groupName = uri.getQueryParameter("groupName");
                 String groupCloudKey = uri.getQueryParameter("groupCloudKey");
                 Group newGroup = new Group(groupName);
-                newGroup.setCloudKey(groupCloudKey);
+                newGroup.setCloudGroupKey(groupCloudKey);
                 newGroup.saveGroupToStorage(getApplicationContext());
                 notifyGroupCreated(groupName, newGroup.getLocalGroupKey());
                 Log.w("custom", "group name: " + groupName);

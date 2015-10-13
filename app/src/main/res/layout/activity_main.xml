@@ -6,12 +6,22 @@
     android:weightSum="20">
 
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4"
         android:background="#45da8f"
+        android:orientation="vertical"
         >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:text="FairShare"
+            android:layout_gravity="center_horizontal|top"
+            android:textSize="50sp"
+            android:textColor="#ffffffff" />
 
         <Button
             android:id="@+id/create_new_group_button"
@@ -23,15 +33,7 @@
             android:layout_gravity="center_horizontal|bottom"
             android:textSize="15sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="FairShare"
-            android:layout_gravity="center_horizontal|top"
-            android:textSize="50sp"
-            android:textColor="#ffffffff" />
-    </FrameLayout>
+    </LinearLayout>
 
     <ListView
         android:id="@+id/groups_list"
