@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -23,6 +24,9 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
     UserCheckBoxAdapter userCheckBoxAdapter;
     Button goOutAllButton;
     Button goOutCheckedButton;
+    Button backToMain;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +35,11 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
         groupNameTextView = (TextView)findViewById(R.id.tv_grp_name);
         groupNameTextView.setText(group.getName());
         this.users = group.getUsers();
+
+        userListView = (ListView) findViewById(R.id.users_list_view);
+        userCheckBoxAdapter = new UserCheckBoxAdapter(this,R.layout.user_check_row ,this.users);
+        userListView.setAdapter(userCheckBoxAdapter);
+
         addUserButton = (Button)findViewById(R.id.add_user_button);
         addUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,12 +47,11 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
                 UserNameDialog dialog = new UserNameDialog();
                 dialog.setGroup(group);
                 dialog.show(getSupportFragmentManager(), "add_new_user");
+
             }
         });
 
-        userListView = (ListView) findViewById(R.id.users_list_view);
-        userCheckBoxAdapter = new UserCheckBoxAdapter(this,R.layout.user_check_row ,this.users);
-        userListView.setAdapter(userCheckBoxAdapter);
+
 
         goOutAllButton = (Button) findViewById(R.id.bt_go_out_all);
         goOutAllButton.setOnClickListener(new View.OnClickListener() {
@@ -58,14 +66,8 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
         goOutCheckedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<User> checkedUsers = new ArrayList<User>();
-                boolean[] checkedPositionsArray = userCheckBoxAdapter.getCheckedArray();
-                for(int i=0; i < users.size(); i++) {
-                    if (checkedPositionsArray[i]){
-                        checkedUsers.add(users.get(i));
-                    }
-                }
-                if(checkedUsers.isEmpty()){
+                ArrayList<User> checkedUsers = userCheckBoxAdapter.getCheckedArray();
+                if(checkedUsers.isEmpty()) {
                     //todo: other way to handle error?
                     toastGen(getApplicationContext(),"No user is checked!");
                     return;
@@ -74,12 +76,9 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
                     goOut.putExtra("goOutList", checkedUsers);
                     startActivityForResult(goOut, GO_OUT_REQUEST);
                 }
-
-
             }
         });
     }
-
 
     @Override
     public void notifyUserAdded(String name, String emailAddress) {
@@ -88,6 +87,7 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
         this.group.addUser(getApplicationContext(), newUser);
         users= group.getUsers();
         userCheckBoxAdapter.notifyDataSetChanged();
+
     }
 
     @Override
@@ -103,18 +103,13 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
                 userCheckBoxAdapter = new UserCheckBoxAdapter(this,R.layout.user_check_row ,this.users);
                 userListView.setAdapter(userCheckBoxAdapter);
 
-                users = resultList;
-                userCheckBoxAdapter = new UserCheckBoxAdapter(this,R.layout.user_check_row ,this.users);
-                userListView.setAdapter(userCheckBoxAdapter);
-
-
 
             }
         }
     }
     private void toastGen(Context context,String msg){
         Log.w("user", "in toastGen: " + msg);
-//        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
     private void uniteLists(ArrayList<User> resultList){
         for(int i =0; i< users.size(); i++){

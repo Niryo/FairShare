@@ -32,28 +32,22 @@ public class GroupsAdapter extends ArrayAdapter {
 
     }
 
-    private class ViewHolder {
-        ImageView ivImageGrp;
-        TextView tvGrpName;
-    }
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        ViewHolder holder = null;
+
         Log.d("user", "ConvertView " + String.valueOf(position));
 
         if (convertView == null) {
             LayoutInflater vi = (LayoutInflater)this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = vi.inflate(R.layout.group_row, null);
-            holder = new ViewHolder();
-            holder.tvGrpName = (TextView) convertView.findViewById(R.id.tv_row_grp_name);
-            convertView.setTag(holder);
         }
-        else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-        holder.tvGrpName.setText( nameAndKeys.get(position).getName());
+        TextView tvGrpName = (TextView) convertView.findViewById(R.id.tv_row_grp_name);
+
+
+        tvGrpName.setText( nameAndKeys.get(position).getName());
         return convertView;
     }
     private void toastGen(Context context,String msg){
