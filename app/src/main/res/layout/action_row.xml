@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+
+    <TextView
+        android:layout_width="105dp"
+        android:layout_height="70dp"
+        android:text="date"
+        android:id="@+id/date"
+        android:textSize="25dp"
+        android:layout_gravity="left" />
+
+    <TextView
+        android:layout_width="105dp"
+        android:layout_height="70dp"
+        android:text="hour"
+        android:id="@+id/hour"
+        android:layout_gravity="left"
+        android:textSize="25dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:text="description"
+        android:id="@+id/description"
+        android:layout_alignParentRight="@+id/date"
+        android:layout_gravity="left"
+        android:textSize="25dp"/>
+</LinearLayout>

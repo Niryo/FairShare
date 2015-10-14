@@ -3,6 +3,7 @@ package share.fair.fairshare;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,7 +11,7 @@ import java.util.Iterator;
 /**
  * Created by Nir on 13/10/2015.
  */
-public class GroupLog {
+public class GroupLog implements Serializable {
     ArrayList<Action> actions=new ArrayList<>();
 
     public GroupLog(){
