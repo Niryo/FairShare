@@ -39,11 +39,10 @@ public class GoOutActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //todo: go back to the last screen(group screen)
-                Intent group = new Intent(getApplicationContext(), GroupActivity.class);
-                setResult(RESULT_CANCELED);
-                startActivity(group);
-
+                Intent returnIntent = new Intent();
+                setResult(RESULT_CANCELED, returnIntent);
                 finish();
+
             }
         });
         nameList = (ArrayList<User>)getIntent().getSerializableExtra("goOutList");

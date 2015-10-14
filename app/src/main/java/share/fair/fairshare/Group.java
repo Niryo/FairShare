@@ -3,6 +3,10 @@ package share.fair.fairshare;
 import android.content.Context;
 import android.util.Log;
 
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,6 +18,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Nir on 09/10/2015.
@@ -28,7 +33,27 @@ public class Group {
     private String localGroupKey = "";
     private String cloudGroupKey = "";
     private int userIdCounter=0;
+
     private GroupLog groupLog= new GroupLog();
+
+    public Group(JSONObject jsonGroup){
+        try {
+            String name = jsonGroup.getString("name");
+            String cloudGroupKey = jsonGroup.getString("cloudGroupKey");
+            ArrayList<User> users = User.parseUsers(jsonGroup.getJSONObject("users"));
+            int userIdCounter = jsonGroup.getInt("userIdCounter");
+            GroupLog groupLog = new GroupLog(jsonGroup.getJSONObject("groupLog"));
+
+
+            this.setCloudGroupKey(cloudGroupKey);
+            this.setUsers(users);
+            this.setLocalGroupKey(localGroupKey);
+            this.setUserIdCounter(userIdCounter);
+            this.setGroupLog(groupLog);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     public Group(String name) {
         this.name = name;
@@ -56,36 +81,16 @@ public class Group {
     }
 
     public static Group loadGroupFromStorage(Context context, String localGroupKey) {
-        File file = new File(context.getFilesDir(), localGroupKey);
-        if (file.exists()) {
-            try {
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-                String rawLine = bufferedReader.readLine();
-                JSONObject jsonGroup = new JSONObject(rawLine);
-                String name = jsonGroup.getString("name");
-                String cloudGroupKey = jsonGroup.getString("cloudGroupKey");
-                ArrayList<User> users = User.parseUsers(jsonGroup.getJSONObject("users"));
-                int userIdCounter = jsonGroup.getInt("userIdCounter");
-                GroupLog groupLog= new GroupLog(jsonGroup.getJSONObject("groupLog"));
-
-                Group loadedGroup = new Group(name);
-                loadedGroup.setCloudGroupKey(cloudGroupKey);
-                loadedGroup.setUsers(users);
-                loadedGroup.setLocalGroupKey(localGroupKey);
-                loadedGroup.setUserIdCounter(userIdCounter);
-                loadedGroup.setGroupLog(groupLog);
-
-                return loadedGroup;
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+        Group loadedGroup=null;
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(localGroupKey);
+        query.fromLocalDatastore();
+        try {
+             List<ParseObject> object =  query.find();
+             loadedGroup = new Group(object.get(0).getJSONObject("group"));
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        return null;
+        return  loadedGroup;
     }
 
     public GroupLog getGroupLog() {
@@ -150,25 +155,17 @@ public class Group {
                 e.printStackTrace();
             }
         }
-        File oldFile = new File(context.getFilesDir(), this.localGroupKey);
-        File newFile = new File(context.getFilesDir(), "tempFile");
+
+        ParseObject groupToSave = new ParseObject(this.localGroupKey);
+        groupToSave.put("group", toJSONObject());
         try {
-            newFile.createNewFile();
-            BufferedWriter writer = new BufferedWriter(new FileWriter(newFile));
-            writer.write(toJSONObject().toString());
-            writer.close();
-            if (oldFile.exists()) {
-                oldFile.delete();
-            }
-            boolean successful = newFile.renameTo(oldFile);
-            if (!successful) {
-                //todo: handle problem;
-                Log.w("custom", "can't rename file");
-                throw new Exception();
-            }
-        } catch (Exception e) {
+            groupToSave.pin();
+        } catch (ParseException e) {
             e.printStackTrace();
         }
+
+            groupToSave.saveInBackground();
+
     }
 
     public String getName() {
