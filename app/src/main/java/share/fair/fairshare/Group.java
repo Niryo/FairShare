@@ -28,6 +28,7 @@ public class Group {
     private String localGroupKey = "";
     private String cloudGroupKey = "";
     private int userIdCounter=0;
+    
     private GroupLog groupLog= new GroupLog();
 
     public Group(String name) {
