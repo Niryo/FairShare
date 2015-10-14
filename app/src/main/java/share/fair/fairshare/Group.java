@@ -82,8 +82,9 @@ public class Group {
 
     public static Group loadGroupFromStorage(Context context, String localGroupKey) {
         Group loadedGroup=null;
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(localGroupKey);
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Group");
         query.fromLocalDatastore();
+        query.whereEqualTo("localGroupKey", loadedGroup);
         try {
              List<ParseObject> object =  query.find();
              loadedGroup = new Group(object.get(0).getJSONObject("group"));
@@ -156,8 +157,9 @@ public class Group {
             }
         }
 
-        ParseObject groupToSave = new ParseObject(this.localGroupKey);
-        groupToSave.put("group", toJSONObject());
+        ParseObject groupToSave = new ParseObject("Group");
+        groupToSave.put("localGroupKey", localGroupKey);
+        groupToSave.put("jsonGroup", toJSONObject());
         try {
             groupToSave.pin();
         } catch (ParseException e) {
