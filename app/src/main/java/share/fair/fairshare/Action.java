@@ -13,6 +13,7 @@ import java.util.Iterator;
 public class Action implements Serializable {
     private String description;
     private HashMap<String, Double> operations=new HashMap<>(); //<userId, value to add to balance>
+    private String creatorId;
 
     public Action() {
         this.description = "...";

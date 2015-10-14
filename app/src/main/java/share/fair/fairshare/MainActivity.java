@@ -12,6 +12,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 
@@ -29,6 +35,22 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        ParseObject testObject = new ParseObject("TestObject");
+        testObject.put("foo", "bar");
+        testObject.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e!=null){
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "can't save to parse", Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getApplicationContext(), "saved!", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
         Button createNewGroupButton = (Button) findViewById(R.id.create_new_group_button);
         createNewGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
