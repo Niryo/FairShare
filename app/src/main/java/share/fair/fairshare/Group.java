@@ -6,6 +6,7 @@ import android.util.Log;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -81,17 +82,36 @@ public class Group {
     }
 
     public static Group loadGroupFromStorage(Context context, String localGroupKey) {
-        Group loadedGroup=null;
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Group");
-        query.fromLocalDatastore();
-        query.whereEqualTo("localGroupKey", loadedGroup);
-        try {
-             List<ParseObject> object =  query.find();
-             loadedGroup = new Group(object.get(0).getJSONObject("group"));
-        } catch (ParseException e) {
-            e.printStackTrace();
+        File file = new File(context.getFilesDir(), localGroupKey);
+        if (file.exists()) {
+            try {
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+                String rawLine = bufferedReader.readLine();
+                JSONObject jsonGroup = new JSONObject(rawLine);
+                String name = jsonGroup.getString("name");
+                String cloudGroupKey = jsonGroup.getString("cloudGroupKey");
+                ArrayList<User> users = User.parseUsers(jsonGroup.getJSONObject("users"));
+                int userIdCounter = jsonGroup.getInt("userIdCounter");
+                GroupLog groupLog= new GroupLog(jsonGroup.getJSONObject("groupLog"));
+
+                Group loadedGroup = new Group(name);
+                loadedGroup.setCloudGroupKey(cloudGroupKey);
+                loadedGroup.setUsers(users);
+                loadedGroup.setLocalGroupKey(localGroupKey);
+                loadedGroup.setUserIdCounter(userIdCounter);
+                loadedGroup.setGroupLog(groupLog);
+
+                return loadedGroup;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
-        return  loadedGroup;
+        return null;
     }
 
     public GroupLog getGroupLog() {
@@ -138,10 +158,11 @@ public class Group {
         return jsonGroup;
     }
 
+
     public void saveGroupToStorage(Context context) {
         //if this is a new group:
         if (this.localGroupKey == "") {
-            try {
+                try {
                 this.localGroupKey = Long.toString(System.currentTimeMillis());
                 File groupNamesFile = new File(context.getFilesDir(), "groups_names");
                 if (!groupNamesFile.exists()) {
@@ -156,18 +177,25 @@ public class Group {
                 e.printStackTrace();
             }
         }
-
-        ParseObject groupToSave = new ParseObject("Group");
-        groupToSave.put("localGroupKey", localGroupKey);
-        groupToSave.put("jsonGroup", toJSONObject());
+        File oldFile = new File(context.getFilesDir(), this.localGroupKey);
+        File newFile = new File(context.getFilesDir(), "tempFile");
         try {
-            groupToSave.pin();
-        } catch (ParseException e) {
+            newFile.createNewFile();
+            BufferedWriter writer = new BufferedWriter(new FileWriter(newFile));
+            writer.write(toJSONObject().toString());
+            writer.close();
+            if (oldFile.exists()) {
+                oldFile.delete();
+            }
+            boolean successful = newFile.renameTo(oldFile);
+            if (!successful) {
+                //todo: handle problem;
+                Log.w("custom", "can't rename file");
+                throw new Exception();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-            groupToSave.saveInBackground();
-
     }
 
     public String getName() {
