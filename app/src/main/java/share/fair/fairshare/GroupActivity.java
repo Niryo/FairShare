@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
@@ -38,6 +39,7 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
         userListView = (ListView) findViewById(R.id.users_list_view);
         userCheckBoxAdapter = new UserCheckBoxAdapter(this, R.layout.user_check_row, this.users);
         userListView.setAdapter(userCheckBoxAdapter);
+        registerForContextMenu(userListView);
 
         addUserButton = (Button) findViewById(R.id.add_user_button);
         addUserButton.setOnClickListener(new View.OnClickListener() {
@@ -112,8 +114,6 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
                 uniteLists(resultList);
                 userCheckBoxAdapter.notifyDataSetChanged();
                 this.group.saveGroupToStorage(getApplicationContext());
-
-
             }
         }
     }
