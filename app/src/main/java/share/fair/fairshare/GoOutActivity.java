@@ -40,7 +40,9 @@ public class GoOutActivity extends Activity {
             public void onClick(View v) {
                 //todo: go back to the last screen(group screen)
                 Intent group = new Intent(getApplicationContext(), GroupActivity.class);
+                setResult(RESULT_CANCELED);
                 startActivity(group);
+
                 finish();
             }
         });
@@ -106,7 +108,6 @@ public class GoOutActivity extends Activity {
                     nameList.get(index).addToBalance(paidInput - splitEvenShare);
                     action.addOperation(nameList.get(index).getId(), paidInput - splitEvenShare);
                 }
-
                 for(User user: nameList ){
                     toastGen(getApplicationContext(),"usernameGo: "+ user.getName()+" balGo: "+user.getBalance());
                 }
@@ -117,8 +118,6 @@ public class GoOutActivity extends Activity {
                 finish();
             }
         });
-
-
     }
     private void toastGen(Context context,String msg){
         Log.w("user", "in toastGen: " + msg);
