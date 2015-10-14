@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -26,6 +29,7 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
     Button goOutAllButton;
     Button goOutCheckedButton;
     Button backToMain;
+    Button toActionsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +92,14 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
                 finish();
             }
         });
+        toActionsButton =(Button) findViewById(R.id.to_actions_button);
+        toActionsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent actions = new Intent(getApplicationContext(),ActionsActivity.class);
+                startActivity(actions);
+            }
+        });
     }
 
     @Override
@@ -138,6 +150,34 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
        }
         this.userCheckBoxAdapter.clearChecked();
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        if (v.getId()==R.id.users_list_view) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+            menu.setHeaderTitle( users.get(info.position).getName() );
+            String[] menuItems = {"Notify me by mail","Nir, for real???", "It cant be true"};
+            for (int i = 0; i<menuItems.length; i++) {
+                menu.add(Menu.NONE, i, i, menuItems[i]);
+            }
+        }
+    }
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        int menuItemIndex = item.getItemId();
+        String[] menuItems = {"menu1","menu2", "menu3"};
+        String menuItemName = menuItems[menuItemIndex];
+        String listItemName = users.get(info.position).getName();
+
+//        TextView text = (TextView)findViewById(R.id.footer);
+//        text.setText(String.format("Selected %s for item %s", menuItemName, listItemName));
+        toastGen(this,String.format("Selected %s for item %s", menuItemName, listItemName));
+        return true;
+    }
+
+
 }
 
 

@@ -15,18 +15,21 @@
             android:name=".MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
-            <action android:name="android.intent.action.MAIN"  />
-            <category android:name="android.intent.category.DEFAULT"/>
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"></action>
-                <category android:name="android.intent.category.DEFAULT"></category>
-                <category android:name="android.intent.category.BROWSABLE"></category>
-                <data android:scheme="http" android:host="fair.share.fairshare"></data>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="fair.share.fairshare"
+                    android:scheme="http" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".GroupActivity"
@@ -34,8 +37,11 @@
         </activity>
         <activity
             android:name=".GoOutActivity"
-            android:label="@string/title_activity_go_out"
-            >
+            android:label="@string/title_activity_go_out" >
+        </activity>
+        <activity
+            android:name=".ActionsActivity"
+            android:label="@string/title_activity_actions" >
         </activity>
     </application>
 

@@ -29,6 +29,7 @@ public class GoOutActivity extends Activity {
     Button backToGroup;
     Button calculateButton;
     ArrayList<User> nameList;
+    EditText description;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,8 @@ public class GoOutActivity extends Activity {
                 double totalPaid = 0.0;
                 double totalShare = 0.0;
                 Action action= new Action();//todo: take description
+                String descriptionStr = description.getText().toString();
+                action.setDescription(descriptionStr);
 
                 ArrayList<Integer>  noShareUsersIndexes= new ArrayList<Integer>();
 
@@ -117,6 +120,7 @@ public class GoOutActivity extends Activity {
                 finish();
             }
         });
+        description = (EditText) findViewById(R.id.description);
     }
     private void toastGen(Context context,String msg){
         Log.w("user", "in toastGen: " + msg);
