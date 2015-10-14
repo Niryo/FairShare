@@ -11,7 +11,6 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 
 public class GroupActivity extends FragmentActivity implements UserNameDialog.UserAddedListener {
@@ -27,21 +26,20 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
     Button goOutCheckedButton;
     Button backToMain;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
-        this.group = Group.loadGroupFromStorage(getApplicationContext(),getIntent().getStringExtra("group_key"));
-        groupNameTextView = (TextView)findViewById(R.id.tv_grp_name);
+        this.group = Group.loadGroupFromStorage(getApplicationContext(), getIntent().getStringExtra("group_key"));
+        groupNameTextView = (TextView) findViewById(R.id.tv_grp_name);
         groupNameTextView.setText(group.getName());
         this.users = group.getUsers();
 
         userListView = (ListView) findViewById(R.id.users_list_view);
-        userCheckBoxAdapter = new UserCheckBoxAdapter(this,R.layout.user_check_row ,this.users);
+        userCheckBoxAdapter = new UserCheckBoxAdapter(this, R.layout.user_check_row, this.users);
         userListView.setAdapter(userCheckBoxAdapter);
 
-        addUserButton = (Button)findViewById(R.id.add_user_button);
+        addUserButton = (Button) findViewById(R.id.add_user_button);
         addUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,16 +50,14 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
             }
         });
 
-
-
         goOutAllButton = (Button) findViewById(R.id.bt_go_out_all);
         goOutAllButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent goOut = new Intent(getApplicationContext(),GoOutActivity.class);
+                Intent goOut = new Intent(getApplicationContext(), GoOutActivity.class);
                 goOut.putExtra("goOutList", users);
                 startActivityForResult(goOut, GO_OUT_REQUEST);
-                clearCheked();
+                clearChecked();
             }
         });
         goOutCheckedButton = (Button) findViewById(R.id.bt_go_out_checked);
@@ -69,16 +65,25 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
             @Override
             public void onClick(View v) {
                 ArrayList<User> checkedUsers = userCheckBoxAdapter.getCheckedArray();
-                if(checkedUsers.isEmpty()) {
+                if (checkedUsers.isEmpty()) {
                     //todo: other way to handle error?
-                    toastGen(getApplicationContext(),"No user is checked!");
+                    toastGen(getApplicationContext(), "No user is checked!");
                     return;
-                }else{
-                    Intent goOut = new Intent(getApplicationContext(),GoOutActivity.class);
+                } else {
+                    Intent goOut = new Intent(getApplicationContext(), GoOutActivity.class);
                     goOut.putExtra("goOutList", checkedUsers);
                     startActivityForResult(goOut, GO_OUT_REQUEST);
                 }
-                clearCheked();
+                clearChecked();
+            }
+        });
+        backToMain = (Button) findViewById(R.id.bt_back_to_info);
+        backToMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent main = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(main);
+                finish();
             }
         });
     }
@@ -126,7 +131,7 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
         }
     }
 
-    private void clearCheked(){
+    private void clearChecked(){
        for(int i=0; i< this.userListView.getChildCount(); i++){
            CheckBox checkBox= (CheckBox) this.userListView.getChildAt(i).findViewById(R.id.cb_user_row);
            checkBox.setChecked(false);
@@ -134,12 +139,6 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
         this.userCheckBoxAdapter.clearChecked();
     }
 }
-
-
-
-
-
-
 
 
 

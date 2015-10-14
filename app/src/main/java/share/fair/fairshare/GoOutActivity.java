@@ -26,7 +26,6 @@ import java.util.HashMap;
 
 public class GoOutActivity extends Activity {
 
-
     Button backToGroup;
     Button calculateButton;
     ArrayList<User> nameList;
@@ -40,6 +39,11 @@ public class GoOutActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //todo: go back to the last screen(group screen)
+                Intent group = new Intent(getApplicationContext(), GroupActivity.class);
+                setResult(RESULT_CANCELED);
+                startActivity(group);
+
+                finish();
             }
         });
         nameList = (ArrayList<User>)getIntent().getSerializableExtra("goOutList");
@@ -72,7 +76,6 @@ public class GoOutActivity extends Activity {
                         paidInput = Double.parseDouble(paidInputStr);
                         totalPaid += paidInput;
                     }
-
                     double shareInput;
                     String shareInputStr = ((EditText) (viewsList.get(i)).findViewById(R.id.et_special_share)).getText().toString();
                     if (shareInputStr.isEmpty()) {
@@ -82,10 +85,8 @@ public class GoOutActivity extends Activity {
                         totalShare += shareInput;
                         //if user have share, we can calculate it's balance right now;
                         nameList.get(i).addToBalance(paidInput-shareInput); //todo: check this line
-                        action.addOperation(nameList.get(i).getId(),paidInput-shareInput);
+                        action.addOperation(nameList.get(i).getId(), paidInput - shareInput);
                     }
-
-
                 }
                 double totalPaidWithoutShares = totalPaid - totalShare;
                 if (totalPaidWithoutShares < 0) {
@@ -107,7 +108,6 @@ public class GoOutActivity extends Activity {
                     nameList.get(index).addToBalance(paidInput - splitEvenShare);
                     action.addOperation(nameList.get(index).getId(), paidInput - splitEvenShare);
                 }
-
                 for(User user: nameList ){
                     toastGen(getApplicationContext(),"usernameGo: "+ user.getName()+" balGo: "+user.getBalance());
                 }
@@ -118,8 +118,6 @@ public class GoOutActivity extends Activity {
                 finish();
             }
         });
-
-
     }
     private void toastGen(Context context,String msg){
         Log.w("user", "in toastGen: " + msg);
