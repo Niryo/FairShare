@@ -3,33 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/">
-
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Calculate debts/credits"
-        android:id="@+id/calculate_button"
-        />
-
+    >
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Back to Group"
         android:id="@+id/back_to_group_button"
-        />
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/description"
-        android:hint="Description of event"
+
         />
 
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
 
         >
 
@@ -42,8 +27,6 @@
 
         </LinearLayout>
     </ScrollView>
-
-
 
 
 </LinearLayout>
