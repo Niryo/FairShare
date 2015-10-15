@@ -40,10 +40,8 @@ import android.widget.EditText;
                 @Override
                 public void onClick(View v) {
                     String name = nameEditText.getText().toString();
-                    Group newGroup = new Group(name);
-                    newGroup.saveGroupToStorage(getContext());
+                    Group newGroup = Group.groupBuilder(getContext(),name);
                     String localGroupKey= newGroup.getLocalGroupKey();
-                    Log.w("custom", name + " has been created");
                     ((GroupCreatedListener) getActivity()).notifyGroupCreated(name,localGroupKey);
                     getDialog().dismiss();
                 }

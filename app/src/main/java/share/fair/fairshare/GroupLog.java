@@ -1,5 +1,7 @@
 package share.fair.fairshare;
 
+import com.parse.ParseObject;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,7 +43,12 @@ public class GroupLog {
         }
         return jsonObject;
     }
-
+//public ParseObject toParseObject(){
+//    ParseObject groupLogParse = new ParseObject("GroupLog");
+//    for(Action action : this.actions){
+//            action.toParseObject();
+//    }
+//}
 public void AddAction(Action action){
     this.actions.add(action);
 }

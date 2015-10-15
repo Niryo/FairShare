@@ -49,11 +49,7 @@ import android.widget.EditText;
                 public void onClick(View v) {
                     String name = nameEditText.getText().toString();
                     String email = emailEditText.getText().toString();
-                    Log.w("custom", "email is: "+ email);
-                            ((UserAddedListener) getActivity()).notifyUserAdded(name,email);
-                    if(!email.isEmpty()){
-                        inviteByMail(email);
-                    }
+                   ((UserAddedListener) getActivity()).notifyUserAdded(name,email);
                     getDialog().dismiss();
                 }
             });
@@ -84,7 +80,6 @@ import android.widget.EditText;
                 }
 
             });
-            getDialog().show();
             return dialogLayout;
         }
 
@@ -92,26 +87,7 @@ import android.widget.EditText;
         public void notifyUserAdded(String name,String emailAddress);
     }
 
-    private void inviteByMail(String emailAddrress){
-        Uri.Builder uriBuilder= new Uri.Builder();
-        uriBuilder.scheme("http");
-        uriBuilder.authority("fair.share.fairshare");
-        uriBuilder.appendPath("");
-        uriBuilder.appendQueryParameter("groupName", group.getName());
-        uriBuilder.appendQueryParameter("groupCloudKey", group.getCloudGroupKey());
 
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("message/rfc822");
-        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{emailAddrress});
-        i.putExtra(Intent.EXTRA_SUBJECT, "FairShare: invitation to join to a new group");
-        i.putExtra(Intent.EXTRA_TEXT   ,  uriBuilder.build().toString());
-
-        try {
-            startActivity(Intent.createChooser(i, "Send mail..."));
-        } catch (android.content.ActivityNotFoundException ex) {
-            Log.w("custom", "cant start activity to send mail");
-        }
-    }
 
     }
 

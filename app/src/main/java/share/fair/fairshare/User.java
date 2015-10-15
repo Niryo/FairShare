@@ -17,7 +17,6 @@ public class User implements Serializable{
     private double balance;
     private String email;
     private String id;
-
     public User(String name, double balance){
         this.name=name;
         this.balance = balance;
@@ -44,6 +43,13 @@ public class User implements Serializable{
         return resultUsers;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public  void setEmail(String email){
+        this.email=email;}
+
     public String getId() {
         return id;
     }
@@ -65,17 +71,14 @@ public class User implements Serializable{
         }
         return result;
     }
+
     public String getName(){
         return this.name;
     }
+
     public double getBalance(){
         return this.balance;
     }
-
-
-
-    public  void setEmail(String email){
-        this.email=email;}
 
     public void addToBalance(double val){
         this.balance += val;

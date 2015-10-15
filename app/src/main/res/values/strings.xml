@@ -6,4 +6,5 @@
     <string name="title_activity_group">GroupActivity</string>
     <string name="title_activity_go_out">GoOutActivity</string>
     <string name="title_activity_actions">ActionsActivity</string>
+    <string name="title_activity_fast_chekcout_dialog">FastChekcoutDialog</string>
 </resources>

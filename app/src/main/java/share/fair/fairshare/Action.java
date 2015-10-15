@@ -1,5 +1,7 @@
 package share.fair.fairshare;
 
+import com.parse.ParseObject;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,7 +36,11 @@ public class Action implements Serializable {
                 e.printStackTrace();
             }
     }
-    
+    public ParseObject toParseObject(){
+        ParseObject action = new ParseObject("Action");
+        action.put("jsonAction", this.toJSON());
+        return  action;
+    }
     public String getDescription() {
         return description;
     }
@@ -65,7 +71,10 @@ public class Action implements Serializable {
         }
         return jsonObject;
     }
-    
-  
+
+
 }
+
+
+
 

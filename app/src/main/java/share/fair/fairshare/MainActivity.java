@@ -14,13 +14,14 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.parse.Parse;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
 import java.util.ArrayList;
-
+import java.util.List;
 
 
 public class MainActivity extends FragmentActivity implements GroupNameDialog.GroupCreatedListener {
@@ -37,19 +38,51 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
         setContentView(R.layout.activity_main);
 
 
-        ParseObject testObject = new ParseObject("TestObject");
-        testObject.put("foo", "bar");
-        testObject.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if(e!=null){
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "can't save to parse", Toast.LENGTH_LONG).show();
-                }else{
-                    Toast.makeText(getApplicationContext(), "saved!", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+//        ParseObject testObject = new ParseObject("TestObject");
+//        testObject.put("foo","bar");
+//        try {
+//            testObject.save();
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        ParseObject testObject2 = new ParseObject("TestObject");
+//        testObject2.put("foo", "bar2");
+//        try {
+//            testObject2.save();
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+
+//        ParseQuery<ParseObject> testObject = ParseQuery.getQuery("TestObject");
+//
+//           testObject.findInBackground(new FindCallback<ParseObject>() {
+//                @Override
+//                public void done(List<ParseObject> list, ParseException e) {
+//                    Log.w("custom", "test");
+//                }
+//            });
+
+
+//        ParseObject banana = new ParseObject("banana");
+//        banana.put("banana", "nir10");
+
+//        testObject.getRelation("likes").add(new ParseObject("banana"));
+
+//        ParseObject testRelation = new ParseObject("TestObject");
+//       ParseObject wtf= testRelation.getParseObject("likes");
+//        String test= wtf.getString("banana");
+//
+//        testObject.saveInBackground(new SaveCallback() {
+//            @Override
+//            public void done(ParseException e) {
+//                if (e != null) {
+//                    e.printStackTrace();
+//                    Toast.makeText(getApplicationContext(), "can't save to parse", Toast.LENGTH_LONG).show();
+//                } else {
+//                    Toast.makeText(getApplicationContext(), "saved!", Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        });
 
         Button createNewGroupButton = (Button) findViewById(R.id.create_new_group_button);
         createNewGroupButton.setOnClickListener(new View.OnClickListener() {
@@ -79,13 +112,9 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
                 Uri uri = intent.getData();
                 String groupName = uri.getQueryParameter("groupName");
                 String groupCloudKey = uri.getQueryParameter("groupCloudKey");
-                Group newGroup = new Group(groupName);
-                newGroup.setCloudGroupKey(groupCloudKey);
-                newGroup.saveGroupToStorage(getApplicationContext());
+                String cloudLogKey = uri.getQueryParameter("cloudLogKey");
+                Group newGroup =Group.joinGroupWithKey(getApplicationContext(), groupName,groupCloudKey,cloudLogKey);
                 notifyGroupCreated(groupName, newGroup.getLocalGroupKey());
-                Log.w("custom", "group name: " + groupName);
-//                Toast toast = Toast.makeText(getApplicationContext(), "group name: " + groupName, Toast.LENGTH_LONG);
-//                toast.show();
             }
         }
 

@@ -2,6 +2,7 @@ package share.fair.fairshare;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -100,10 +101,39 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
                 startActivity(actions);
             }
         });
+
+        if( this.group.syncUsers()){
+            notifyUserListChanged();
+        }
     }
+    private void inviteByMail(String emailAddress){
+        Uri.Builder uriBuilder= new Uri.Builder();
+        uriBuilder.scheme("http");
+        uriBuilder.authority("fair.share.fairshar");
+        uriBuilder.appendPath("");
+        uriBuilder.appendQueryParameter("groupName", group.getName());
+        uriBuilder.appendQueryParameter("groupCloudKey", group.getCloudGroupKey());
+        uriBuilder.appendQueryParameter("cloudLogKey", group.getCloudLogKey());
+
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("message/rfc822");
+        i.putExtra(Intent.EXTRA_EMAIL, new String[]{emailAddress});
+        i.putExtra(Intent.EXTRA_SUBJECT, "FairShare: invitation to join to a new group");
+        i.putExtra(Intent.EXTRA_TEXT, uriBuilder.build().toString());
+
+        try {
+            startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Log.w("custom", "cant start activity to send mail");
+        }
+    }
+
 
     @Override
     public void notifyUserAdded(String name, String emailAddress) {
+        if(!emailAddress.isEmpty()){
+            inviteByMail(emailAddress);
+        }
        User newUser= new User(name,0);
         newUser.setEmail(emailAddress);
         this.group.addUser(getApplicationContext(), newUser);
@@ -125,7 +155,7 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
                 //users = resultList; //todo: problem if checked list was sent
                 uniteLists(resultList);
                 userCheckBoxAdapter.notifyDataSetChanged();
-                this.group.saveGroupToStorage(getApplicationContext());
+                this.group.saveGroupToStorage();
             }
         }
     }
@@ -143,6 +173,9 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
         }
     }
 
+    public void notifyUserListChanged(){
+        userCheckBoxAdapter.notifyDataSetChanged();
+    }
     private void clearChecked(){
        for(int i=0; i< this.userListView.getChildCount(); i++){
            CheckBox checkBox= (CheckBox) this.userListView.getChildAt(i).findViewById(R.id.cb_user_row);
@@ -156,8 +189,17 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
                                     ContextMenu.ContextMenuInfo menuInfo) {
         if (v.getId()==R.id.users_list_view) {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
-            menu.setHeaderTitle( users.get(info.position).getName() );
-            String[] menuItems = {"Notify me by mail","Nir, for real???", "It cant be true"};
+            menu.setHeaderTitle(users.get(info.position).getName());
+            ArrayList<String> menuItemsList= new ArrayList<>();
+            menuItemsList.add("Fast");
+
+            if(users.get(info.position).getEmail().isEmpty()){
+                menuItemsList.add("Invite by email");
+            }else{
+                menuItemsList.add("Edit email or send invitation again");
+            }
+            String[] menuItems= new String[menuItemsList.size()];
+            menuItems = menuItemsList.toArray(menuItems);
             for (int i = 0; i<menuItems.length; i++) {
                 menu.add(Menu.NONE, i, i, menuItems[i]);
             }
@@ -166,14 +208,19 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-        int menuItemIndex = item.getItemId();
-        String[] menuItems = {"menu1","menu2", "menu3"};
-        String menuItemName = menuItems[menuItemIndex];
-        String listItemName = users.get(info.position).getName();
+        if(item.getTitle().equals("Edit email or send invitation again")){
+            //inviteByMail( users.get(info.position).getEmail());
+            //toastGen(getApplicationContext(), "Invitation sent to: " + users.get(info.position).getEmail());
+        }
 
-//        TextView text = (TextView)findViewById(R.id.footer);
-//        text.setText(String.format("Selected %s for item %s", menuItemName, listItemName));
-        toastGen(this,String.format("Selected %s for item %s", menuItemName, listItemName));
+        if(item.getTitle().equals("Fast")){
+            FastCheckoutDialog dialog = new FastCheckoutDialog();
+            dialog.setUser(users.get(info.position));
+            dialog.show(getSupportFragmentManager(), "FastCheckout");
+
+        }
+
+
         return true;
     }
 

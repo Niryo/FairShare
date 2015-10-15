@@ -3,6 +3,8 @@ package share.fair.fairshare;
 import android.content.Context;
 import android.util.Log;
 
+import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -18,8 +20,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Nir on 09/10/2015.
@@ -28,36 +36,73 @@ import java.util.List;
 
 public class Group {
     private String name;
-
-
     private ArrayList<User> users= new ArrayList<>();
     private String localGroupKey = "";
     private String cloudGroupKey = "";
-    private int userIdCounter=0;
-
+    private String cloudLogKey="";
+    private int userIdCounter=1;
     private GroupLog groupLog= new GroupLog();
+    private Context context;
 
-    public Group(JSONObject jsonGroup){
+    public Group(Context context, JSONObject jsonGroup){
         try {
+            this.context=context;
             String name = jsonGroup.getString("name");
             String cloudGroupKey = jsonGroup.getString("cloudGroupKey");
+            String cloudLogKey = jsonGroup.getString("cloudLogKey");
+            String localGroupKey= jsonGroup.getString("localGroupKey");
             ArrayList<User> users = User.parseUsers(jsonGroup.getJSONObject("users"));
             int userIdCounter = jsonGroup.getInt("userIdCounter");
             GroupLog groupLog = new GroupLog(jsonGroup.getJSONObject("groupLog"));
 
 
+            this.name=name;
             this.setCloudGroupKey(cloudGroupKey);
             this.setUsers(users);
             this.setLocalGroupKey(localGroupKey);
             this.setUserIdCounter(userIdCounter);
             this.setGroupLog(groupLog);
+            this.setCloudLogKey(cloudLogKey);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public Group(String name) {
+    private Group(Context context,String name) {
         this.name = name;
+        this.context=context;
+    }
+
+    private static String createLocalKey(Context context, String name){
+        String localGroupKey = Long.toString(System.currentTimeMillis());
+        try {
+            File groupNamesFile = new File(context.getFilesDir(), "groups_names");
+            if (!groupNamesFile.exists()) {
+                groupNamesFile.createNewFile();
+            }
+
+            BufferedWriter groupsNamesWriter = new BufferedWriter(new FileWriter(groupNamesFile, true));
+            groupsNamesWriter.write(name + "," + localGroupKey + "\n");
+            groupsNamesWriter.close();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return localGroupKey;
+    }
+
+    public static Group groupBuilder(Context context, String name){
+        Group group = new Group(context,name);
+       group.setLocalGroupKey(createLocalKey(context, name));
+        String cloudGroupKey = new BigInteger(130, new SecureRandom()).toString(32);
+        String cloudLogKey= new BigInteger(130, new SecureRandom()).toString(32);
+        group.setCloudGroupKey(cloudGroupKey);
+        group.setCloudLogKey(cloudLogKey);
+        initializeCloud(cloudGroupKey, cloudLogKey);
+        group.saveGroupToStorage();
+
+       return group;
     }
 
     public static ArrayList<NameAndKey> getSavedGroupNames(Context context) {
@@ -81,6 +126,53 @@ public class Group {
         return groupNames;
     }
 
+    public void syncUsers(){
+        final ArrayList<User> usersCopy= new ArrayList<>(users); //a copy so we wan't run on mutable list;
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(this.cloudGroupKey);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (e == null && list!=null) {
+                    boolean dirty=false;
+                Hashtable<String, String> currentUserTable = new Hashtable<String, String>();
+                Hashtable<String, String> cloudUserTable = new Hashtable<String, String>();
+                for (User user : usersCopy) {
+                    currentUserTable.put(user.getId(), ""); //name is not relevant here
+                }
+                for (ParseObject parseObject : list) {
+                  String userId = parseObject.getString("userId");
+                    String userName =parseObject.getString("userName");
+                    if(userId!=null&& userName!=null) {
+                        cloudUserTable.put(parseObject.getString("userId"), parseObject.getString("userName"));
+                    }
+                    }
+
+                for (User user : usersCopy) {
+                    if (!cloudUserTable.containsKey(user.getId())) {
+                        users.remove(user);
+                        dirty = true;
+                    }
+                }
+                Enumeration<String> keys = cloudUserTable.keys();
+                while (keys.hasMoreElements()) {
+                    String id = keys.nextElement();
+                    if (!currentUserTable.containsKey(id)) {
+                        User newUser = new User(cloudUserTable.get(id), 0);
+                        newUser.setId(id);
+                        users.add(newUser);
+                        dirty = true;
+                    }
+                }
+                    if(dirty){
+                        saveGroupToStorage();
+                    }
+            }
+
+            }
+        });
+    }
+
+
     public static Group loadGroupFromStorage(Context context, String localGroupKey) {
         File file = new File(context.getFilesDir(), localGroupKey);
         if (file.exists()) {
@@ -88,20 +180,9 @@ public class Group {
                 BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
                 String rawLine = bufferedReader.readLine();
                 JSONObject jsonGroup = new JSONObject(rawLine);
-                String name = jsonGroup.getString("name");
-                String cloudGroupKey = jsonGroup.getString("cloudGroupKey");
-                ArrayList<User> users = User.parseUsers(jsonGroup.getJSONObject("users"));
-                int userIdCounter = jsonGroup.getInt("userIdCounter");
-                GroupLog groupLog= new GroupLog(jsonGroup.getJSONObject("groupLog"));
-
-                Group loadedGroup = new Group(name);
-                loadedGroup.setCloudGroupKey(cloudGroupKey);
-                loadedGroup.setUsers(users);
-                loadedGroup.setLocalGroupKey(localGroupKey);
-                loadedGroup.setUserIdCounter(userIdCounter);
-                loadedGroup.setGroupLog(groupLog);
-
+              Group loadedGroup= new Group(context,jsonGroup);
                 return loadedGroup;
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
@@ -112,6 +193,34 @@ public class Group {
 
         }
         return null;
+    }
+
+    private static void initializeCloud(String cloudGroupKey, String cloudLogKey){
+        ParseObject parseGroup= new ParseObject(cloudGroupKey);
+        parseGroup.pinInBackground();
+        parseGroup.saveEventually();
+        ParseObject parseLog = new ParseObject(cloudLogKey);
+        parseLog.pinInBackground();
+        parseLog.saveEventually();
+    }
+
+public static Group joinGroupWithKey(Context context,String name, String cloudGroupKey,String cloudLogKey){
+    Group group = new Group(context,name);
+    group.setLocalGroupKey(createLocalKey(context, name));
+    group.setCloudGroupKey(cloudGroupKey);
+    initializeCloud(cloudGroupKey, cloudLogKey);
+    group.saveGroupToStorage();
+    return group;
+}
+
+
+
+    public String getCloudLogKey() {
+        return cloudLogKey;
+    }
+
+    public void setCloudLogKey(String cloudLogKey) {
+        this.cloudLogKey = cloudLogKey;
     }
 
     public GroupLog getGroupLog() {
@@ -144,8 +253,10 @@ public class Group {
             jsonGroup.put("cloudGroupKey", this.cloudGroupKey);
             jsonGroup.put("name", this.name);
             jsonGroup.put("localGroupKey", this.localGroupKey);
+            jsonGroup.put("cloudLogKey", this.cloudLogKey);
             jsonGroup.put("userIdCounter", this.userIdCounter);
             jsonGroup.put("groupLog", this.groupLog.toJSON());
+
 
             JSONObject users = new JSONObject();
             for (int i = 0; i < this.users.size(); i++) {
@@ -158,25 +269,7 @@ public class Group {
         return jsonGroup;
     }
 
-
-    public void saveGroupToStorage(Context context) {
-        //if this is a new group:
-        if (this.localGroupKey == "") {
-                try {
-                this.localGroupKey = Long.toString(System.currentTimeMillis());
-                File groupNamesFile = new File(context.getFilesDir(), "groups_names");
-                if (!groupNamesFile.exists()) {
-                    groupNamesFile.createNewFile();
-                }
-
-                BufferedWriter groupsNamesWriter = new BufferedWriter(new FileWriter(groupNamesFile, true));
-                groupsNamesWriter.write(this.name + "," + this.localGroupKey + "\n");
-                groupsNamesWriter.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public void saveGroupToStorage() {
         File oldFile = new File(context.getFilesDir(), this.localGroupKey);
         File newFile = new File(context.getFilesDir(), "tempFile");
         try {
@@ -205,7 +298,13 @@ public class Group {
     public void addUser(Context context, User user) {
         user.setId(String.valueOf(this.userIdCounter++));
         this.users.add(user);
-        saveGroupToStorage(context);
+            ParseObject parseGroup= new ParseObject(this.cloudGroupKey);
+
+       parseGroup.put("userId", user.getId());
+        parseGroup.put("userName", user.getName());
+        parseGroup.put("userEmail", user.getEmail());
+       parseGroup.saveEventually();
+        saveGroupToStorage();
     }
 
     public String getCloudGroupKey() {

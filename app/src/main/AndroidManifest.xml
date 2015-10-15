@@ -43,6 +43,11 @@
             android:name=".ActionsActivity"
             android:label="@string/title_activity_actions" >
         </activity>
+        <activity
+            android:name=".FastCheckoutDialog"
+            android:label="@string/title_activity_fast_chekcout_dialog"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>
