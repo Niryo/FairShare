@@ -43,6 +43,10 @@
             android:name=".ActionsActivity"
             android:label="@string/title_activity_actions" >
         </activity>
+        <activity
+            android:name=".ActionEditActivity"
+            android:label="@string/title_activity_action_edit" >
+        </activity>
     </application>
 
 </manifest>
