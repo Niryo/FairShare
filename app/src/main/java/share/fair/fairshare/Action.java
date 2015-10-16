@@ -6,7 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -14,33 +14,33 @@ import java.util.Iterator;
  */
 public class Action implements Serializable {
     private String description;
-    private HashMap<String, Double> operations=new HashMap<>(); //<userId, value to add to balance>
+    ArrayList<Operation> operations;
     private String creatorId;
+
 
     public Action() {
         this.description = "...";
+        this.operations = new ArrayList<Operation>();
     }
     public Action(String description) {
         this.description = description;
+        this.operations = new ArrayList<Operation>();
     }
     public Action(JSONObject jsonAction){
-            try {
-       this.description= jsonAction.getString("description");
-        JSONObject jsonOperations= jsonAction.getJSONObject("operations");
-        Iterator keys = jsonOperations.keys();
-        while (keys.hasNext()) {
-            String key = (String) keys.next();
-                operations.put(key, (jsonOperations.getDouble(key)));
-        }
-            } catch (JSONException e) {
-                e.printStackTrace();
+        try {
+            this.description= jsonAction.getString("description");
+            JSONObject jsonOperations= jsonAction.getJSONObject("operations");
+            Iterator keys = jsonOperations.keys();
+            while (keys.hasNext()) {
+                String key = (String) keys.next();
+                operations.add(new Operation(jsonOperations.getJSONObject(key)));
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
-    public ParseObject toParseObject(){
-        ParseObject action = new ParseObject("Action");
-        action.put("jsonAction", this.toJSON());
-        return  action;
-    }
+
+
     public String getDescription() {
         return description;
     }
@@ -49,23 +49,27 @@ public class Action implements Serializable {
         this.description = description;
     }
 
-    public HashMap<String, Double> getOperations() {
+    public ArrayList<Operation> getOperations() {
         return operations;
     }
 
-    public void setOperations(HashMap<String, Double> operations) {
+    public void setOperations(ArrayList<Operation> operations) {
         this.operations = operations;
     }
 
-    public void addOperation(String id, double value) {
-        this.operations.put(id, value);
+    public void addOperation(String id, String username, double paid, double share) {
+        this.operations.add(new Operation(id, username, paid,share) );
     }
 
     public JSONObject toJSON() {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("description", this.description);
-            jsonObject.put("operations", new JSONObject(this.operations));
+            JSONObject jsonOperations= new JSONObject();
+            for(int i=0; i< operations.size(); i++){
+                jsonOperations.put("operation"+i, operations.get(i).toJSON());
+            }
+            jsonObject.put("operations", jsonOperations);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -73,8 +77,7 @@ public class Action implements Serializable {
     }
 
 
+
+
 }
-
-
-
 

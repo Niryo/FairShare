@@ -1,10 +1,9 @@
 <resources>
     <string name="app_name">FairShare</string>
-
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_group">GroupActivity</string>
     <string name="title_activity_go_out">GoOutActivity</string>
     <string name="title_activity_actions">ActionsActivity</string>
-    <string name="title_activity_fast_chekcout_dialog">FastChekcoutDialog</string>
+    <string name="title_activity_action_edit">ActionEditActivity</string>
 </resources>

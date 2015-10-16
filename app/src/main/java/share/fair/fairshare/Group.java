@@ -21,9 +21,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.text.DateFormat;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -37,7 +40,7 @@ import java.util.Random;
  */
 
 
-public class Group {
+public class Group implements Serializable {
     private String name;
     private ArrayList<User> users= new ArrayList<>();
     private String localGroupKey = "";

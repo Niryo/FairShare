@@ -98,8 +98,10 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
         toActionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent actions = new Intent(getApplicationContext(), ActionsActivity.class);
-                actions.putExtra("groupLog", group.getGroupLog());
+
+                Intent actions = new Intent(getApplicationContext(),ActionsActivity.class);
+                actions.putExtra("group", group);
+                actions.putExtra("groupLog",group.getGroupLog());
                 startActivity(actions);
             }
         });
