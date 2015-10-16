@@ -38,7 +38,8 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
         setContentView(R.layout.activity_main);
 
 
-//        ParseObject testObject = new ParseObject("TestObject");
+        ParseObject testObject = new ParseObject("TestObject");
+
 //        testObject.put("foo","bar");
 //        try {
 //            testObject.save();

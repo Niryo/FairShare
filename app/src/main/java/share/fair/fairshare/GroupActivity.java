@@ -1,5 +1,6 @@
 package share.fair.fairshare;
 
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -44,7 +45,7 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
         userListView = (ListView) findViewById(R.id.users_list_view);
         userCheckBoxAdapter = new UserCheckBoxAdapter(this, R.layout.user_check_row, this.users);
         userListView.setAdapter(userCheckBoxAdapter);
-        registerForContextMenu(userListView);
+       // registerForContextMenu(userListView);
 
         addUserButton = (Button) findViewById(R.id.add_user_button);
         addUserButton.setOnClickListener(new View.OnClickListener() {
@@ -97,20 +98,29 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
         toActionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent actions = new Intent(getApplicationContext(),ActionsActivity.class);
-                actions.putExtra("groupLog",group.getGroupLog());
+                Intent actions = new Intent(getApplicationContext(), ActionsActivity.class);
+                actions.putExtra("groupLog", group.getGroupLog());
                 startActivity(actions);
             }
         });
 
-        if( this.group.syncUsers()){
-            notifyUserListChanged();
-        }
+        this.group.syncUsers();
+        notifyUserListChanged();
+this.userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        UserContextMenuDialog dialog = new UserContextMenuDialog();
+        dialog.setUser(users.get(position));
+        dialog.show(getFragmentManager(), "UserContextMenuDialog");
+    }
+});
+
+
     }
     private void inviteByMail(String emailAddress){
         Uri.Builder uriBuilder= new Uri.Builder();
         uriBuilder.scheme("http");
-        uriBuilder.authority("fair.share.fairshar");
+        uriBuilder.authority("fair.share.fairshare");
         uriBuilder.appendPath("");
         uriBuilder.appendQueryParameter("groupName", group.getName());
         uriBuilder.appendQueryParameter("groupCloudKey", group.getCloudGroupKey());
@@ -214,12 +224,7 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
             //toastGen(getApplicationContext(), "Invitation sent to: " + users.get(info.position).getEmail());
         }
 
-        if(item.getTitle().equals("Fast")){
-            FastCheckoutDialog dialog = new FastCheckoutDialog();
-            dialog.setUser(users.get(info.position));
-            dialog.show(getSupportFragmentManager(), "FastCheckout");
-
-        }
+   
 
 
         return true;
