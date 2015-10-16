@@ -3,6 +3,8 @@ package share.fair.fairshare;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +40,27 @@ public class UserContextMenuDialog extends DialogFragment {
         final EditText inputEditText = (EditText) dialogLayout.findViewById(R.id.edit_text_user_context_menu);
         inputEditText.setHint("Enter amount paid");
         final Button doneButton = (Button) dialogLayout.findViewById(R.id.done_button_user_context_menu);
-        Button nextButton = (Button) dialogLayout.findViewById(R.id.next_button_user_context_menu);
+        final Button nextButton = (Button) dialogLayout.findViewById(R.id.next_button_user_context_menu);
+        nextButton.setEnabled(false);
+        inputEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (inputEditText.getText().toString().length() > 0) {
+                    nextButton.setEnabled(true);
+                } else {
+                    nextButton.setEnabled(false);
+                }
+            }
+
+        });
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,7 +68,7 @@ public class UserContextMenuDialog extends DialogFragment {
                 doneButton.setVisibility(View.VISIBLE);
                 paid = inputEditText.getText().toString().isEmpty()?  0.0: Double.parseDouble(inputEditText.getText().toString());
                 inputEditText.setText("");
-                inputEditText.setHint("Enter amount share");
+                inputEditText.setHint("Enter user's share");
             }
         });
         doneButton.setOnClickListener(new View.OnClickListener() {
