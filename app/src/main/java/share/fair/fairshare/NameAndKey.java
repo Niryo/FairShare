@@ -6,14 +6,17 @@ package share.fair.fairshare;
 public class NameAndKey {
     String name;
     String key;
-    public NameAndKey(String name,String key){
-        this.name=name;
-        this.key=key;
+
+    public NameAndKey(String name, String key) {
+        this.name = name;
+        this.key = key;
     }
-    public String getName(){
+
+    public String getName() {
         return name;
     }
-    public String getKey(){
+
+    public String getKey() {
         return key;
     }
 }

@@ -1,40 +1,43 @@
 package share.fair.fairshare;
 
-import com.parse.ParseObject;
-
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Created by Nir on 13/10/2015.
  */
 public class Action implements Serializable {
+    ArrayList<Operation> operations = new ArrayList<Operation>();
+    long timeStamp;
     private String description;
-    ArrayList<Operation> operations;
     private String creatorId;
 
 
     public Action() {
+        this.timeStamp = System.currentTimeMillis();
         this.description = "...";
-        this.operations = new ArrayList<Operation>();
+
     }
+
     public Action(String description) {
+        this.timeStamp = System.currentTimeMillis();
         this.description = description;
-        this.operations = new ArrayList<Operation>();
+
     }
-    public Action(JSONObject jsonAction){
+
+    public Action(JSONObject jsonAction) {
         try {
-            this.description= jsonAction.getString("description");
-            JSONObject jsonOperations= jsonAction.getJSONObject("operations");
-            Iterator keys = jsonOperations.keys();
-            while (keys.hasNext()) {
-                String key = (String) keys.next();
-                operations.add(new Operation(jsonOperations.getJSONObject(key)));
+            this.description = jsonAction.getString("description");
+            this.timeStamp = jsonAction.getLong("timeStamp");
+            JSONArray jsonOperations = jsonAction.getJSONArray("operations");
+            for (int i = 0; i < jsonOperations.length(); i++) {
+                operations.add(new Operation(jsonOperations.getJSONObject(i)));
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -58,16 +61,17 @@ public class Action implements Serializable {
     }
 
     public void addOperation(String id, String username, double paid, double share) {
-        this.operations.add(new Operation(id, username, paid,share) );
+        this.operations.add(new Operation(id, username, paid, share));
     }
 
     public JSONObject toJSON() {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("description", this.description);
-            JSONObject jsonOperations= new JSONObject();
-            for(int i=0; i< operations.size(); i++){
-                jsonOperations.put("operation"+i, operations.get(i).toJSON());
+            jsonObject.put("timeStamp", this.timeStamp);
+            JSONArray jsonOperations = new JSONArray();
+            for (Operation operation : operations) {
+                jsonOperations.put(operation.toJSON());
             }
             jsonObject.put("operations", jsonOperations);
         } catch (JSONException e) {
@@ -77,7 +81,8 @@ public class Action implements Serializable {
     }
 
 
-
-
+    public long getTimeStamp() {
+        return timeStamp;
+    }
 }
 

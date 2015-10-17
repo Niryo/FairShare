@@ -2,7 +2,6 @@ package share.fair.fairshare;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -12,8 +11,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-
-import java.util.Dictionary;
 
 /**
  * Created by Nir on 16/10/2015.
@@ -66,7 +63,7 @@ public class UserContextMenuDialog extends DialogFragment {
             public void onClick(View v) {
                 v.setVisibility(View.GONE);
                 doneButton.setVisibility(View.VISIBLE);
-                paid = inputEditText.getText().toString().isEmpty()?  0.0: Double.parseDouble(inputEditText.getText().toString());
+                paid = inputEditText.getText().toString().isEmpty() ? 0.0 : Double.parseDouble(inputEditText.getText().toString());
                 inputEditText.setText("");
                 inputEditText.setHint("Enter user's share");
             }
@@ -74,7 +71,7 @@ public class UserContextMenuDialog extends DialogFragment {
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                share = inputEditText.getText().toString().isEmpty()?  0.0: Double.parseDouble(inputEditText.getText().toString());
+                share = inputEditText.getText().toString().isEmpty() ? 0.0 : Double.parseDouble(inputEditText.getText().toString());
                 InputMethodManager imm = (InputMethodManager) getDialog().getContext().getSystemService(getDialog().getContext().INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getDialog().getCurrentFocus().getWindowToken(), 0);
                 getDialog().dismiss();

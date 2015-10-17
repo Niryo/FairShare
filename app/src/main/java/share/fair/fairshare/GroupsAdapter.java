@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,10 +18,10 @@ import java.util.HashMap;
 public class GroupsAdapter extends ArrayAdapter {
 
 
-    private ArrayList<NameAndKey> nameAndKeys;
-    Context context;
     public HashMap userBalMap;
     public ArrayList<String> goOutNameList;
+    Context context;
+    private ArrayList<NameAndKey> nameAndKeys;
 
     public GroupsAdapter(Context context, int textViewResourceId,
                          ArrayList userList) {
@@ -33,7 +32,6 @@ public class GroupsAdapter extends ArrayAdapter {
     }
 
 
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -41,16 +39,17 @@ public class GroupsAdapter extends ArrayAdapter {
         Log.d("user", "ConvertView " + String.valueOf(position));
 
         if (convertView == null) {
-            LayoutInflater vi = (LayoutInflater)this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater vi = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = vi.inflate(R.layout.group_row, null);
         }
         TextView tvGrpName = (TextView) convertView.findViewById(R.id.tv_row_grp_name);
 
 
-        tvGrpName.setText( nameAndKeys.get(position).getName());
+        tvGrpName.setText(nameAndKeys.get(position).getName());
         return convertView;
     }
-    private void toastGen(Context context,String msg){
+
+    private void toastGen(Context context, String msg) {
         Log.d("user", "in toastGen: " + msg);
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }

@@ -1,27 +1,18 @@
 package share.fair.fairshare;
 
 
-
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.SaveCallback;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivity extends FragmentActivity implements GroupNameDialog.GroupCreatedListener {
@@ -107,14 +98,14 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
                 finish();
             }
         });
-        if(getIntent()!=null){
-            Intent intent= getIntent();
+        if (getIntent() != null) {
+            Intent intent = getIntent();
             if (Intent.ACTION_VIEW.equals(intent.getAction())) {
                 Uri uri = intent.getData();
                 String groupName = uri.getQueryParameter("groupName");
                 String groupCloudKey = uri.getQueryParameter("groupCloudKey");
                 String cloudLogKey = uri.getQueryParameter("cloudLogKey");
-                Group newGroup =Group.joinGroupWithKey(getApplicationContext(), groupName,groupCloudKey,cloudLogKey);
+                Group newGroup = Group.joinGroupWithKey(getApplicationContext(), groupName, groupCloudKey, cloudLogKey);
                 notifyGroupCreated(groupName, newGroup.getLocalGroupKey());
             }
         }
@@ -123,7 +114,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
 
     @Override
     public void notifyGroupCreated(String name, String localGroupKey) {
-        groupNames.add(new NameAndKey(name,localGroupKey));
+        groupNames.add(new NameAndKey(name, localGroupKey));
         groupAdapter.notifyDataSetChanged();
     }
 }
