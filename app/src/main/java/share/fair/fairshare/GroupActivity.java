@@ -105,7 +105,14 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
                 startActivity(actions);
             }
         });
-
+        Button syncButton= (Button) findViewById(R.id.sync_button);
+        syncButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                group.syncUsers(getApplicationContext());
+                group.getGroupLog().syncActions(getApplicationContext());
+            }
+        });
         this.group.syncUsers(getApplicationContext());
         notifyUserListChanged();
         this.userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -161,7 +168,7 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
         if (requestCode == GO_OUT_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Action action = (Action) data.getSerializableExtra("action");
-                this.group.getGroupLog().addAction(action);
+                this.group.getGroupLog().addAction(getApplicationContext(),action);//todo: find a way to remove the context
                 this.group.consumeAction(action);
                 //users = resultList; //todo: problem if checked list was sent
                 userCheckBoxAdapter.notifyDataSetChanged();

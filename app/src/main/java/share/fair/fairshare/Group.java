@@ -2,11 +2,13 @@ package share.fair.fairshare;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,7 +53,7 @@ public class Group implements Serializable {
 
             ArrayList<User> users = User.parseUsers(jsonGroup.getJSONObject("users"));
             int userIdCounter = jsonGroup.getInt("userIdCounter");
-            GroupLog groupLog = new GroupLog(jsonGroup.getJSONObject("groupLog"));
+            GroupLog groupLog = new GroupLog(this,jsonGroup.getJSONObject("groupLog"));
 
 
             this.name = name;
@@ -66,7 +68,7 @@ public class Group implements Serializable {
         }
     }
 
-    private Group(Context context, String name) {
+    private Group(String name) {
         this.name = name;
     }
 
@@ -79,7 +81,7 @@ public class Group implements Serializable {
             }
 
             BufferedWriter groupsNamesWriter = new BufferedWriter(new FileWriter(groupNamesFile, true));
-            groupsNamesWriter.write(name + "," + localGroupKey + "\n");
+            groupsNamesWriter.write(name + "," + localGroupKey + System.getProperty("line.separator"));
             groupsNamesWriter.close();
 
 
@@ -90,15 +92,15 @@ public class Group implements Serializable {
     }
 
     public static Group groupBuilder(Context context, String name) {
-        Group group = new Group(context, name);
+        Group group = new Group(name);
         Date zeroDate = new Date();
         zeroDate.setTime(0);
         group.setLocalGroupKey(createLocalKey(context, name));
-        String cloudGroupKey = new BigInteger(130, new SecureRandom()).toString(32);
-        String cloudLogKey = new BigInteger(130, new SecureRandom()).toString(32);
+        String cloudGroupKey = "a" + new BigInteger(130, new SecureRandom()).toString(32);
+        String cloudLogKey = "a"+ new BigInteger(130, new SecureRandom()).toString(32);
         group.setCloudGroupKey(cloudGroupKey);
         group.setCloudLogKey(cloudLogKey);
-        group.setGroupLog(new GroupLog(cloudLogKey));
+        group.setGroupLog(new GroupLog(group,cloudLogKey));
         initializeCloud(cloudGroupKey, cloudLogKey);
         group.saveGroupToStorage(context);
 
@@ -108,6 +110,7 @@ public class Group implements Serializable {
     public static ArrayList<NameAndKey> getSavedGroupNames(Context context) {
         ArrayList<NameAndKey> groupNames = new ArrayList<>();
         File file = new File(context.getFilesDir(), "groups_names");
+        Log.w("custom",file.getAbsolutePath().toString());
         if (file.exists()) {
             try {
                 BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
@@ -158,8 +161,8 @@ public class Group implements Serializable {
     }
 
     public static Group joinGroupWithKey(Context context, String name, String cloudGroupKey, String cloudLogKey) {
-        Group group = new Group(context, name);
-        group.setGroupLog(new GroupLog(cloudLogKey));
+        Group group = new Group(name);
+        group.setGroupLog(new GroupLog(group, cloudLogKey));
         group.setLocalGroupKey(createLocalKey(context, name));
         group.setCloudGroupKey(cloudGroupKey);
         initializeCloud(cloudGroupKey, cloudLogKey);
@@ -167,12 +170,23 @@ public class Group implements Serializable {
         return group;
     }
 
-    public void addUserToCloud(Context context, User user) {
+    public void addUserToCloud(final Context context, User user) {
         ParseObject parseGroup = new ParseObject(this.cloudGroupKey);
         parseGroup.put("userId", user.getId());
         parseGroup.put("userName", user.getName());
         parseGroup.put("userEmail", user.getEmail());
-        parseGroup.saveEventually();
+        parseGroup.saveEventually(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e==null){
+                    Toast.makeText(context, "user saved in cloud", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    e.printStackTrace();
+                    Toast.makeText(context, "user hasn't been saved in cloud", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
         saveGroupToStorage(context);
     }
 
@@ -227,7 +241,7 @@ public class Group implements Serializable {
     }
 
     public void setCloudLogKey(String cloudLogKey) {
-        this.cloudLogKey = cloudLogKey;
+        this.cloudLogKey =  cloudLogKey;
     }
 
     public GroupLog getGroupLog() {
