@@ -1,5 +1,7 @@
 package share.fair.fairshare;
 
+import android.content.Context;
+
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -21,15 +23,18 @@ public class GroupLog implements Serializable {
     String cloudLogKey;
     ArrayList<Action> actions = new ArrayList<>();
     private Date lastActionTimestamp;
+    private Group parentGroup;
 
-    public GroupLog(String cloudLogKey) {
+    public GroupLog(Group parentGroup, String cloudLogKey) {
+        this.parentGroup=parentGroup;
         this.cloudLogKey = cloudLogKey;
         this.lastActionTimestamp = new Date();
         this.lastActionTimestamp.setTime(0);
     }
 
-    public GroupLog(JSONObject jsonLog) {
+    public GroupLog(Group parentGroup, JSONObject jsonLog) {
         try {
+            this.parentGroup=parentGroup;
             this.lastActionTimestamp = new Date(jsonLog.getLong("lastActionTimestamp"));
             this.cloudLogKey = jsonLog.getString("cloudLogKey");
             JSONArray actionArray = jsonLog.getJSONArray("actions");
@@ -64,24 +69,30 @@ public class GroupLog implements Serializable {
 //    }
 //}
 
-    public void syncActions() {
+    public void syncActions(final Context context) {
         ParseQuery<ParseObject> query = ParseQuery.getQuery(this.cloudLogKey);
         query.whereGreaterThan("createdAt", lastActionTimestamp);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, ParseException e) {
-                if (e != null && list != null) {
+                if (e == null && list != null) {
                     for (ParseObject parseObject : list) {
-                        Action newAction = new Action(parseObject.getJSONObject("description"));
+                       JSONObject jsonObject= parseObject.getJSONObject("jsonAction");
+                        if(jsonObject!=null){
+                        Action newAction = new Action(jsonObject);
                         actions.add(newAction);
+                        parentGroup.consumeAction(newAction);
+                        parentGroup.saveGroupToStorage(context);}
+
                     }
                 }
             }
         });
     }
 
-    public void addAction(Action action) {
+    public void addAction(Context context,Action action) {
         this.actions.add(action);
+        parentGroup.saveGroupToStorage(context);
         sendActionToCloud(action);
     }
 
