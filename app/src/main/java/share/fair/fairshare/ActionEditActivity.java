@@ -120,8 +120,6 @@ public class ActionEditActivity extends AppCompatActivity {
         backToActionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent actions = new Intent(getApplicationContext(), ActionsActivity.class);
-                startActivity(actions);
                 finish();
             }
         });
