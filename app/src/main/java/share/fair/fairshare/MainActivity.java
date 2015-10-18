@@ -66,7 +66,6 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
                 notifyGroupCreated(groupName, newGroup.getLocalGroupKey());
             }
         }
-
     }
 
     @Override
