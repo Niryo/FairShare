@@ -125,6 +125,7 @@ public class GroupActivity extends FragmentActivity {
             }
         });
         this.group.syncUsers(getApplicationContext());
+        group.getGroupLog().syncActions(getApplicationContext());
         notifyUserListChanged();
         this.userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -340,6 +340,11 @@ public class Group implements Serializable {
         for (Operation operation : action.getOperations()) {
             usersTable.get(operation.userId).addToBalance(operation.getPaid() - operation.getShare());//todo: check!!
         }
+        //report user changed to notify the adapter:
+        Message msg;
+        msg = Message.obtain();
+        parentActivityMessageHandler.sendMessage(msg);
+
     }
 
     public String getLocalGroupKey() {
