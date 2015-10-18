@@ -40,6 +40,7 @@ public class ActionsActivity extends AppCompatActivity {
         LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final ArrayList<View> viewsList = new ArrayList<>();
         group = (Group) getIntent().getSerializableExtra("group");
+
 //        groupLog = (GroupLog) getIntent().getSerializableExtra("groupLog");
 
 //        for(Action act : groupLog.actions){
