@@ -12,6 +12,7 @@
         android:layout_weight="4"
         android:background="#45da8f"
         android:orientation="vertical"
+        android:id="@+id/main_activity_header_container"
         >
 
         <TextView
@@ -20,7 +21,7 @@
             android:layout_weight="3"
             android:text="FairShare"
             android:layout_gravity="center_horizontal|top"
-            android:textSize="50sp"
+            android:id="@+id/main_activity_title"
             android:textColor="#ffffffff" />
 
         <Button

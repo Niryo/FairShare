@@ -1,11 +1,16 @@
 package share.fair.fairshare;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +46,7 @@ public class GroupsAdapter extends ArrayAdapter {
         if (convertView == null) {
             LayoutInflater vi = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = vi.inflate(R.layout.group_row, null);
+            initLayoutPreferences(convertView);
         }
         TextView tvGrpName = (TextView) convertView.findViewById(R.id.tv_row_grp_name);
 
@@ -48,6 +54,18 @@ public class GroupsAdapter extends ArrayAdapter {
         tvGrpName.setText(nameAndKeys.get(position).getName());
         return convertView;
     }
+
+    private void initLayoutPreferences(View convertView){
+        WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+        TextView textView = (TextView) convertView.findViewById(R.id.tv_row_grp_name);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (height / 40));
+
+    }
+
 
     private void toastGen(Context context, String msg) {
         Log.d("user", "in toastGen: " + msg);

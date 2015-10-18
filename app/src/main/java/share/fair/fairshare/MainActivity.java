@@ -3,13 +3,21 @@ package share.fair.fairshare;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.support.v4.app.FragmentActivity;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.parse.ParseObject;
 
@@ -28,6 +36,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initLayoutPreferences();
         SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
         String name = settings.getString("name", "");
         if(name.isEmpty()){
@@ -66,6 +75,16 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
                 notifyGroupCreated(groupName, newGroup.getLocalGroupKey());
             }
         }
+    }
+    private void initLayoutPreferences(){
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+        TextView textView = (TextView) findViewById(R.id.main_activity_title);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (height/9.5));
+        Button newGroupButton = (Button) findViewById(R.id.create_new_group_button);
+        newGroupButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (height/40));
     }
 
     @Override
