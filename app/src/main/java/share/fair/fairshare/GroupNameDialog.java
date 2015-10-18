@@ -71,7 +71,6 @@ public class GroupNameDialog extends DialogFragment {
             }
 
         });
-        getDialog().show();
         return dialogLayout;
     }
 

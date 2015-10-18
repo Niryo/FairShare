@@ -3,6 +3,7 @@ package share.fair.fairshare;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,9 +56,12 @@ public class GoOutActivity extends Activity {
                 //todo: log: group name, name : paid - share
                 double totalPaid = 0.0;
                 double totalShare = 0.0;
-                Action action = new Action();
+                SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
+                String name = settings.getString("name", "");
+                String id = settings.getString("id", "");
                 String descriptionStr = description.getText().toString();
-                action.setDescription(descriptionStr);
+                Action action = new Action(name,id,descriptionStr);
+
 
                 ArrayList<Integer> noShareUsersIndexes = new ArrayList<Integer>();
 

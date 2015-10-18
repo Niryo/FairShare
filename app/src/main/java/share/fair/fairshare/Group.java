@@ -43,7 +43,6 @@ public class Group implements Serializable {
     private String localGroupKey = "";
     private String cloudGroupKey = "";
     private String cloudLogKey = "";
-    private int userIdCounter = 1;
     private GroupLog groupLog;
     private transient Handler parentActivityMessageHandler;
 
@@ -55,7 +54,6 @@ public class Group implements Serializable {
             String localGroupKey = jsonGroup.getString("localGroupKey");
 
             ArrayList<User> users = User.parseUsers(jsonGroup.getJSONObject("users"));
-            int userIdCounter = jsonGroup.getInt("userIdCounter");
             GroupLog groupLog = new GroupLog(this,jsonGroup.getJSONObject("groupLog"));
 
 
@@ -63,7 +61,6 @@ public class Group implements Serializable {
             this.setCloudGroupKey(cloudGroupKey);
             this.setUsers(users);
             this.setLocalGroupKey(localGroupKey);
-            this.setUserIdCounter(userIdCounter);
             this.setGroupLog(groupLog);
             this.setCloudLogKey(cloudLogKey);
         } catch (JSONException e) {
@@ -263,13 +260,7 @@ public class Group implements Serializable {
         this.groupLog = groupLog;
     }
 
-    public int getUserIdCounter() {
-        return userIdCounter;
-    }
 
-    public void setUserIdCounter(int userIdCounter) {
-        this.userIdCounter = userIdCounter;
-    }
 
     public ArrayList<User> getUsers() {
         return this.users;
@@ -286,7 +277,6 @@ public class Group implements Serializable {
             jsonGroup.put("name", this.name);
             jsonGroup.put("localGroupKey", this.localGroupKey);
             jsonGroup.put("cloudLogKey", this.cloudLogKey);
-            jsonGroup.put("userIdCounter", this.userIdCounter);
             jsonGroup.put("groupLog", this.groupLog.toJSON());
 
 
@@ -328,7 +318,7 @@ public class Group implements Serializable {
     }
 
     public void addUser(Context context, User user) {
-        user.setId(String.valueOf(this.userIdCounter++));
+        user.setId(new BigInteger(130, new SecureRandom()).toString(32).substring(0,6));
         this.users.add(user);
         addUserToCloud(context, user);
     }

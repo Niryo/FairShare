@@ -2,6 +2,7 @@ package share.fair.fairshare;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -27,61 +28,17 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-        ParseObject testObject = new ParseObject("TestObject");
-
-//        testObject.put("foo","bar");
-//        try {
-//            testObject.save();
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        ParseObject testObject2 = new ParseObject("TestObject");
-//        testObject2.put("foo", "bar2");
-//        try {
-//            testObject2.save();
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-
-//        ParseQuery<ParseObject> testObject = ParseQuery.getQuery("TestObject");
-//
-//           testObject.findInBackground(new FindCallback<ParseObject>() {
-//                @Override
-//                public void done(List<ParseObject> list, ParseException e) {
-//                    Log.w("custom", "test");
-//                }
-//            });
-
-
-//        ParseObject banana = new ParseObject("banana");
-//        banana.put("banana", "nir10");
-
-//        testObject.getRelation("likes").add(new ParseObject("banana"));
-
-//        ParseObject testRelation = new ParseObject("TestObject");
-//       ParseObject wtf= testRelation.getParseObject("likes");
-//        String test= wtf.getString("banana");
-//
-//        testObject.saveInBackground(new SaveCallback() {
-//            @Override
-//            public void done(ParseException e) {
-//                if (e != null) {
-//                    e.printStackTrace();
-//                    Toast.makeText(getApplicationContext(), "can't save to parse", Toast.LENGTH_LONG).show();
-//                } else {
-//                    Toast.makeText(getApplicationContext(), "saved!", Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        });
+        SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
+        String name = settings.getString("name", "");
+        if(name.isEmpty()){
+              new SaveNameDialog().show(getSupportFragmentManager(), "save_name_dialog");;
+        }
 
         Button createNewGroupButton = (Button) findViewById(R.id.create_new_group_button);
         createNewGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GroupNameDialog dialog = new GroupNameDialog();
-                dialog.show(getSupportFragmentManager(), "add_new_group");
+                new GroupNameDialog().show(getSupportFragmentManager(), "add_new_group");
             }
         });
         groupNames = Group.getSavedGroupNames(getApplicationContext());

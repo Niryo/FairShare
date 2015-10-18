@@ -5,6 +5,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 
 /**
@@ -14,25 +16,25 @@ public class Action implements Serializable {
     ArrayList<Operation> operations = new ArrayList<Operation>();
     long timeStamp;
     private String description;
+    private String creatorName;
     private String creatorId;
+    private String actionId;
 
 
-    public Action() {
-        this.timeStamp = System.currentTimeMillis();
-        this.description = "...";
-
-    }
-
-    public Action(String description) {
+    public Action(String creatorName, String creatorId,String description) {
         this.timeStamp = System.currentTimeMillis();
         this.description = description;
-
+        this.actionId =new BigInteger(130, new SecureRandom()).toString(32).substring(0,10);
+        this.creatorName=creatorName;
+        this.creatorId=creatorId;
     }
-
     public Action(JSONObject jsonAction) {
         try {
             this.description = jsonAction.getString("description");
             this.timeStamp = jsonAction.getLong("timeStamp");
+            this.actionId = jsonAction.getString("actionId");
+            this.creatorName = jsonAction.getString("creatorName");
+            this.creatorId = jsonAction.getString("creatorId");
             JSONArray jsonOperations = jsonAction.getJSONArray("operations");
             for (int i = 0; i < jsonOperations.length(); i++) {
                 operations.add(new Operation(jsonOperations.getJSONObject(i)));
@@ -43,6 +45,13 @@ public class Action implements Serializable {
         }
     }
 
+    public String getCreatorId() {
+        return creatorId;
+    }
+
+    public String getActionId() {
+        return actionId;
+    }
 
     public String getDescription() {
         return description;
@@ -69,6 +78,9 @@ public class Action implements Serializable {
         try {
             jsonObject.put("description", this.description);
             jsonObject.put("timeStamp", this.timeStamp);
+            jsonObject.put("actionId",this.actionId);
+            jsonObject.put("creatorName", this.creatorName);
+            jsonObject.put("creatorId", this.creatorId);
             JSONArray jsonOperations = new JSONArray();
             for (Operation operation : operations) {
                 jsonOperations.put(operation.toJSON());

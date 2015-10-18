@@ -81,6 +81,7 @@ public class GroupLog implements Serializable {
                         if(jsonObject!=null){
                         Action newAction = new Action(jsonObject);
                         actions.add(newAction);
+                        lastActionTimestamp = parseObject.getCreatedAt();
                         parentGroup.consumeAction(newAction);
                         parentGroup.saveGroupToStorage(context);}
 
@@ -99,6 +100,8 @@ public class GroupLog implements Serializable {
     private void sendActionToCloud(Action action) {
         ParseObject parseGroupLog = new ParseObject(this.cloudLogKey);
         parseGroupLog.put("jsonAction", action.toJSON());
+        parseGroupLog.put("actionId",action.getActionId());
+        parseGroupLog.put("creatorId", action.getCreatorId());
         parseGroupLog.saveEventually();
     }
 
