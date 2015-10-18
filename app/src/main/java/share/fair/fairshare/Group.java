@@ -1,6 +1,8 @@
 package share.fair.fairshare;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
+
 /**
  * Created by Nir on 09/10/2015.
  */
@@ -42,7 +45,7 @@ public class Group implements Serializable {
     private String cloudLogKey = "";
     private int userIdCounter = 1;
     private GroupLog groupLog;
-
+    private transient Handler parentActivityMessageHandler;
 
     public Group(Context context, JSONObject jsonGroup) {
         try {
@@ -67,6 +70,7 @@ public class Group implements Serializable {
             e.printStackTrace();
         }
     }
+
 
     private Group(String name) {
         this.name = name;
@@ -170,6 +174,10 @@ public class Group implements Serializable {
         return group;
     }
 
+    public void setParentActivityMessageHandler(Handler parentActivityMessageHandler) {
+        this.parentActivityMessageHandler = parentActivityMessageHandler;
+    }
+
     public void addUserToCloud(final Context context, User user) {
         ParseObject parseGroup = new ParseObject(this.cloudGroupKey);
         parseGroup.put("userId", user.getId());
@@ -229,6 +237,9 @@ public class Group implements Serializable {
                     }
                     if (dirty) {
                         saveGroupToStorage(context);
+                        Message msg;
+                        msg = Message.obtain();
+                        parentActivityMessageHandler.sendMessage(msg);
                     }
                 }
 

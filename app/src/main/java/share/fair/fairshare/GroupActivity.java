@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -19,7 +21,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class GroupActivity extends FragmentActivity implements UserNameDialog.UserAddedListener {
+public class GroupActivity extends FragmentActivity {
 
     static final int GO_OUT_REQUEST = 1;  // The request code
     TextView groupNameTextView;
@@ -32,6 +34,7 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
     Button goOutCheckedButton;
     Button backToMain;
     Button toActionsButton;
+    private Handler notifyUserChangedHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +109,14 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
             }
         });
         Button syncButton= (Button) findViewById(R.id.sync_button);
+        notifyUserChangedHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                       notifyUserListChanged();
+                super.handleMessage(msg);
+            }
+        };
+        group.setParentActivityMessageHandler(notifyUserChangedHandler);
         syncButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,7 +161,7 @@ public class GroupActivity extends FragmentActivity implements UserNameDialog.Us
     }
 
 
-    @Override
+
     public void notifyUserAdded(String name, String emailAddress) {
         if (!emailAddress.isEmpty()) {
             inviteByMail(emailAddress);

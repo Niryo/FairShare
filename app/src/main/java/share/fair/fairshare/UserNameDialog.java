@@ -49,7 +49,7 @@ public class UserNameDialog extends DialogFragment {
             public void onClick(View v) {
                 String name = nameEditText.getText().toString();
                 String email = emailEditText.getText().toString();
-                ((UserAddedListener) getActivity()).notifyUserAdded(name, email);
+                ((GroupActivity) getActivity()).notifyUserAdded(name, email);
                 getDialog().dismiss();
             }
         });
@@ -83,9 +83,6 @@ public class UserNameDialog extends DialogFragment {
         return dialogLayout;
     }
 
-    public interface UserAddedListener {
-        public void notifyUserAdded(String name, String emailAddress);
-    }
 
 
 }
