@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -74,10 +75,11 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
     private void initLayoutPreferences(){
         double titleFactor;
         double buttonFactor;
+        int screenSize;
         int configuration= getResources().getConfiguration().orientation;
         if(configuration== Configuration.ORIENTATION_LANDSCAPE){
-            titleFactor=9.5;
-            buttonFactor=40;
+            titleFactor=13;
+            buttonFactor=50;
         }else{
             titleFactor=15;
             buttonFactor=82;
@@ -87,7 +89,8 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
         display.getSize(size);
         int height = size.y;
         TextView textView = (TextView) findViewById(R.id.main_activity_title);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (height/titleFactor));
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (height / titleFactor));
+        Toast.makeText(getApplicationContext(), "size: "+ (height/titleFactor), Toast.LENGTH_SHORT).show();
         Button newGroupButton = (Button) findViewById(R.id.create_new_group_button);
         newGroupButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (height/buttonFactor));
     }
