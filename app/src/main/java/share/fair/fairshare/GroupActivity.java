@@ -68,7 +68,7 @@ public class GroupActivity extends FragmentActivity {
                 Intent goOut = new Intent(getApplicationContext(), GoOutActivity.class);
                 goOut.putExtra("goOutList", users);
                 startActivityForResult(goOut, GO_OUT_REQUEST);
-                clearChecked();
+
             }
         });
         goOutCheckedButton = (Button) findViewById(R.id.bt_go_out_checked);
@@ -85,7 +85,7 @@ public class GroupActivity extends FragmentActivity {
                     goOut.putExtra("goOutList", checkedUsers);
                     startActivityForResult(goOut, GO_OUT_REQUEST);
                 }
-                clearChecked();
+
             }
         });
         backToMain = (Button) findViewById(R.id.bt_back_to_info);
@@ -176,6 +176,7 @@ public class GroupActivity extends FragmentActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        clearChecked();
         if (requestCode == GO_OUT_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Action action = (Action) data.getSerializableExtra("action");
@@ -206,38 +207,8 @@ public class GroupActivity extends FragmentActivity {
         this.userCheckBoxAdapter.clearChecked();
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        if (v.getId() == R.id.users_list_view) {
-            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-            menu.setHeaderTitle(users.get(info.position).getName());
-            ArrayList<String> menuItemsList = new ArrayList<>();
-            menuItemsList.add("Fast");
+    public void fastCheckoutCalculation(User user, double paid, double share){
 
-            if (users.get(info.position).getEmail().isEmpty()) {
-                menuItemsList.add("Invite by email");
-            } else {
-                menuItemsList.add("Edit email or send invitation again");
-            }
-            String[] menuItems = new String[menuItemsList.size()];
-            menuItems = menuItemsList.toArray(menuItems);
-            for (int i = 0; i < menuItems.length; i++) {
-                menu.add(Menu.NONE, i, i, menuItems[i]);
-            }
-        }
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        if (item.getTitle().equals("Edit email or send invitation again")) {
-            //inviteByMail( users.get(info.position).getEmail());
-            //toastGen(getApplicationContext(), "Invitation sent to: " + users.get(info.position).getEmail());
-        }
-
-
-        return true;
     }
 
 

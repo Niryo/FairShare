@@ -2,6 +2,7 @@ package share.fair.fairshare;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -26,10 +27,16 @@ public class ActionEditActivity extends AppCompatActivity {
     Button deleteAction;
     Group group;
     int actionIndex;
+    private String creatorName;
+    private String creatorId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
+        creatorName = settings.getString("name", "");
+        creatorId= settings.getString("id", "");
+
         setContentView(R.layout.activity_action_edit);
         actionIndex = (int) getIntent().getIntExtra("actionIndex", -1);
         toastGen(this, "Action index is: " + actionIndex); //debug
@@ -78,8 +85,8 @@ public class ActionEditActivity extends AppCompatActivity {
                     double oppositeShare = -1* oper.share;
                     oppositeOperationList.add(new Operation(oppositeId,oppositeUsername,oppsoitePaid,oppositeShare));
                 }
-                Action oppositeAction = new Action();
-                oppositeAction.setDescription(action.getDescription() + " (Cancellation(edit))");
+
+                Action oppositeAction = new Action(creatorName,creatorId ,action.getDescription() + " (Cancellation(edit))");
                 oppositeAction.operations = oppositeOperationList;
                 oppositeAction.timeStamp = action.timeStamp;
 
@@ -98,8 +105,9 @@ public class ActionEditActivity extends AppCompatActivity {
                     newOperations.add(new Operation(newId ,newUsername, newPaid ,newShare));
                     toastGen(getApplicationContext(),"id: "+newId+" user: "+newUsername );
                 }
-                Action newAction = new Action();
-                newAction.setDescription(action.getDescription() +"(Edited");
+
+
+                Action newAction= new Action(creatorName, creatorId, action.getDescription() +"(Edited");
                 newAction.setOperations(newOperations);
                 newAction.timeStamp = action.timeStamp;
                 group.consumeAction(newAction);
@@ -130,8 +138,7 @@ public class ActionEditActivity extends AppCompatActivity {
                     double oppositeShare = -1* oper.share;
                     oppositeOperationList.add(new Operation(oppositeId,oppositeUsername,oppositePaid,oppositeShare));
                 }
-                Action oppositeAction = new Action();
-                oppositeAction.setDescription(action.getDescription() + " (Cancellation)");
+                Action oppositeAction= new Action(creatorName, creatorId, action.getDescription() +"(Edited");
                 oppositeAction.operations = oppositeOperationList;
                 oppositeAction.timeStamp = action.timeStamp;
                 group.consumeAction(oppositeAction);
