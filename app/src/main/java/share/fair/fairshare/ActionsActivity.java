@@ -14,7 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ActionsActivity extends AppCompatActivity {
 
@@ -46,7 +49,7 @@ public class ActionsActivity extends AppCompatActivity {
 
         for (int i = 0; i < group.getGroupLog().actions.size(); i++) {
             View newView = vi.inflate(R.layout.action_row, null);
-            ((TextView) newView.findViewById(R.id.date)).setText("date1"); //todo: add date
+            ((TextView) newView.findViewById(R.id.date)).setText(getDate(group.getGroupLog().actions.get(i).getTimeStamp())); //todo: add date
             ((TextView) newView.findViewById(R.id.hour)).setText("hour1"); //todo: add hour
             ((TextView) newView.findViewById(R.id.description)).setText(group.getGroupLog().actions.get(i).getDescription()); //todo: add description
             newView.setTag(i);
@@ -93,6 +96,15 @@ public class ActionsActivity extends AppCompatActivity {
         Log.w("user", "in toastGen: " + msg);
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
+    private String getDate(long timeStamp){
 
-
+        try{
+            DateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss aa");
+            Date netDate = (new Date(timeStamp));
+            return sdf.format(netDate);
+        }
+        catch(Exception ex){
+            return "date failed";
+        }
+    }
 }
