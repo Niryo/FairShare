@@ -41,10 +41,11 @@ public class ActionEditActivity extends AppCompatActivity {
         group = (Group) getIntent().getSerializableExtra("group");
         //todo: put the contents of the operations in the boxes
 
-        final ArrayList<Operation> operationList = (ArrayList<Operation>) group.getGroupLog().actions.get(actionIndex).getOperations();
+        final Action action = group.getGroupLog().actions.get(actionIndex);
+        final ArrayList<Operation> operationList = (ArrayList<Operation>) action.getOperations();
         final ArrayList<View> viewsList = new ArrayList<>();
-        TextView actionDescription = (TextView) findViewById(R.id.description_action);
-        actionDescription.setText(group.getGroupLog().actions.get(actionIndex).getDescription());
+        final TextView actionDescription = (TextView) findViewById(R.id.description_action);
+        actionDescription.setText(action.getDescription());
         LinearLayout list = (LinearLayout) findViewById(R.id.list_of_action_users);
         LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         for (Operation oper : operationList) {
@@ -55,6 +56,7 @@ public class ActionEditActivity extends AppCompatActivity {
             ((EditText) newView.findViewById(R.id.et_paid_oper)).setText(textPaid);
             String textShare = Double.toString(oper.share);
             ((EditText) newView.findViewById(R.id.et_share_oper)).setText(textShare);
+            newView.setTag(oper.userId);
             list.addView(newView);
             viewsList.add(newView);
         }
@@ -65,25 +67,44 @@ public class ActionEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //todo: add an oppsite action, then create a new one
-                //do it by swapping share and paid, or by -paid and -share
+                //todo: check if change is needed
 
-                //todo: check if total paid = total share
-                //gain a map of username : newOperBalance
-                HashMap<String, Double> newOperationBalanceMap = new HashMap<String, Double>();
-                double newTotalPaid = 0;
-                double newTotalShare = 0;
+                //1. create opposite action:
+                ArrayList<Operation> oppositeOperationList = new ArrayList<Operation>();
+                for(Operation oper: operationList){
+                    String oppositeId = oper.userId;
+                    String oppositeUsername = oper.username;
+                    double oppsoitePaid = -1*oper.paid;
+                    double oppositeShare = -1* oper.share;
+                    oppositeOperationList.add(new Operation(oppositeId,oppositeUsername,oppsoitePaid,oppositeShare));
+                }
+                Action oppositeAction = new Action();
+                oppositeAction.setDescription(action.getDescription() + " (Cancellation(edit))");
+                oppositeAction.operations = oppositeOperationList;
+                oppositeAction.timeStamp = action.timeStamp;
+
+                group.consumeAction(oppositeAction);
+                group.getGroupLog().addAction(getApplicationContext(), oppositeAction);
+
+                //2. create the new action
+
+                ArrayList<Operation> newOperations = new ArrayList<Operation>();
                 for (int j = 0; j < viewsList.size(); j++) {
                     View row = viewsList.get(j);
-                    String username = ((TextView) row.findViewById(R.id.username_oper_row)).getText().toString();
+                    String newUsername = ((TextView) row.findViewById(R.id.username_oper_row)).getText().toString();
                     Double newPaid = Double.parseDouble(((EditText) row.findViewById(R.id.et_paid_oper)).getText().toString());
                     Double newShare = Double.parseDouble(((EditText) row.findViewById(R.id.et_share_oper)).getText().toString());
-                    newOperationBalanceMap.put(username, newPaid - newShare);
-
-
+                    String newId = (String)viewsList.get(j).getTag();
+                    newOperations.add(new Operation(newId ,newUsername, newPaid ,newShare));
+                    toastGen(getApplicationContext(),"id: "+newId+" user: "+newUsername );
                 }
-
-
+                Action newAction = new Action();
+                newAction.setDescription(action.getDescription() +"(Edited");
+                newAction.setOperations(newOperations);
+                newAction.timeStamp = action.timeStamp;
+                group.consumeAction(newAction);
+                group.getGroupLog().addAction(getApplicationContext(),newAction);
+                toastGen(getApplicationContext(),"the action: "+action.getDescription() +"was succesfully edited.");
             }
         });
 
@@ -100,10 +121,25 @@ public class ActionEditActivity extends AppCompatActivity {
         deleteAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //1. create opposite action:
+                ArrayList<Operation> oppositeOperationList = new ArrayList<Operation>();
+                for(Operation oper: operationList){
+                    String oppositeId = oper.userId;
+                    String oppositeUsername = oper.username;
+                    double oppositePaid = -1*oper.paid;
+                    double oppositeShare = -1* oper.share;
+                    oppositeOperationList.add(new Operation(oppositeId,oppositeUsername,oppositePaid,oppositeShare));
+                }
+                Action oppositeAction = new Action();
+                oppositeAction.setDescription(action.getDescription() + " (Cancellation)");
+                oppositeAction.operations = oppositeOperationList;
+                oppositeAction.timeStamp = action.timeStamp;
+                group.consumeAction(oppositeAction);
+                group.getGroupLog().addAction(getApplicationContext(),oppositeAction);
+                toastGen(getApplicationContext(),"the action: "+action.getDescription() +"was succesfully deleted.");
             }
-        });
 
+        });
     }
 
     @Override
