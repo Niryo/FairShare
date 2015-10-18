@@ -3,23 +3,18 @@ package share.fair.fairshare;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
-import android.renderscript.Sampler;
 import android.support.v4.app.FragmentActivity;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.parse.ParseObject;
 
 import java.util.ArrayList;
 
@@ -52,7 +47,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
         });
         groupNames = Group.getSavedGroupNames(getApplicationContext());
         groupList = (ListView) findViewById(R.id.groups_list);
-        groupAdapter = new GroupsAdapter(this, R.id.info, groupNames);
+        groupAdapter = new GroupsAdapter(this, R.id.group_row_container, groupNames);
         groupList.setAdapter(groupAdapter);
         groupList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -77,14 +72,24 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
         }
     }
     private void initLayoutPreferences(){
+        double titleFactor;
+        double buttonFactor;
+        int configuration= getResources().getConfiguration().orientation;
+        if(configuration== Configuration.ORIENTATION_LANDSCAPE){
+            titleFactor=9.5;
+            buttonFactor=40;
+        }else{
+            titleFactor=15;
+            buttonFactor=82;
+        }
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int height = size.y;
         TextView textView = (TextView) findViewById(R.id.main_activity_title);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (height/9.5));
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (height/titleFactor));
         Button newGroupButton = (Button) findViewById(R.id.create_new_group_button);
-        newGroupButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (height/40));
+        newGroupButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (height/buttonFactor));
     }
 
     @Override

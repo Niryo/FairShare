@@ -338,7 +338,10 @@ public class Group implements Serializable {
             usersTable.put(user.getId(), user);
         }
         for (Operation operation : action.getOperations()) {
-            usersTable.get(operation.userId).addToBalance(operation.getPaid() - operation.getShare());//todo: check!!
+           User user= usersTable.get(operation.userId);
+            if (user!=null){
+                user.addToBalance(operation.getPaid() - operation.getShare());//todo: check!!
+            }
         }
         //report user changed to notify the adapter:
         if(parentActivityMessageHandler!=null){ //todo: check if uerlist is being updated
