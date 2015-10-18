@@ -79,11 +79,12 @@ public class ActionEditActivity extends AppCompatActivity {
                     oppositeOperationList.add(new Operation(oppositeId,oppositeUsername,oppsoitePaid,oppositeShare));
                 }
                 Action oppositeAction = new Action();
-                oppositeAction.setDescription(actionDescription + " (Revoked)");
+                oppositeAction.setDescription(action.getDescription() + " (Cancellation(edit))");
                 oppositeAction.operations = oppositeOperationList;
                 oppositeAction.timeStamp = action.timeStamp;
 
                 group.consumeAction(oppositeAction);
+                group.getGroupLog().addAction(getApplicationContext(), oppositeAction);
 
                 //2. create the new action
 
@@ -98,12 +99,12 @@ public class ActionEditActivity extends AppCompatActivity {
                     toastGen(getApplicationContext(),"id: "+newId+" user: "+newUsername );
                 }
                 Action newAction = new Action();
-                newAction.setDescription(actionDescription +"(Edited");
+                newAction.setDescription(action.getDescription() +"(Edited");
                 newAction.setOperations(newOperations);
                 newAction.timeStamp = action.timeStamp;
                 group.consumeAction(newAction);
-                group.saveGroupToStorage(getApplicationContext());
-                toastGen(getApplicationContext(),"the action: "+actionDescription +"was succesfully edited.");
+                group.getGroupLog().addAction(getApplicationContext(),newAction);
+                toastGen(getApplicationContext(),"the action: "+action.getDescription() +"was succesfully edited.");
             }
         });
 
@@ -130,11 +131,12 @@ public class ActionEditActivity extends AppCompatActivity {
                     oppositeOperationList.add(new Operation(oppositeId,oppositeUsername,oppositePaid,oppositeShare));
                 }
                 Action oppositeAction = new Action();
-                oppositeAction.setDescription(actionDescription + " (Cancellation)");
+                oppositeAction.setDescription(action.getDescription() + " (Cancellation)");
                 oppositeAction.operations = oppositeOperationList;
                 oppositeAction.timeStamp = action.timeStamp;
                 group.consumeAction(oppositeAction);
-                toastGen(getApplicationContext(),"the action: "+actionDescription +"was succesfully deleted.");
+                group.getGroupLog().addAction(getApplicationContext(),oppositeAction);
+                toastGen(getApplicationContext(),"the action: "+action.getDescription() +"was succesfully deleted.");
             }
 
         });

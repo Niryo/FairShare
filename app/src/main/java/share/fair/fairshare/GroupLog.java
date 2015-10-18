@@ -30,6 +30,7 @@ public class GroupLog implements Serializable {
         this.cloudLogKey = cloudLogKey;
         this.lastActionTimestamp = new Date();
         this.lastActionTimestamp.setTime(0);
+        this.actions = new ArrayList<Action>(); // i added(Ori)
     }
 
     public GroupLog(Group parentGroup, JSONObject jsonLog) {

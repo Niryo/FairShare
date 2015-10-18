@@ -21,7 +21,7 @@ public class ActionsActivity extends AppCompatActivity {
     Button backToGroup;
     LinearLayout actionList;
     Group group;
-    GroupLog groupLog;
+//    GroupLog groupLog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +40,15 @@ public class ActionsActivity extends AppCompatActivity {
         LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final ArrayList<View> viewsList = new ArrayList<>();
         group = (Group) getIntent().getSerializableExtra("group");
-        groupLog = (GroupLog) getIntent().getSerializableExtra("groupLog");
+//        groupLog = (GroupLog) getIntent().getSerializableExtra("groupLog");
 
 //        for(Action act : groupLog.actions){
-        for (int i = 0; i < groupLog.actions.size(); i++) {
+
+        for (int i = 0; i < group.getGroupLog().actions.size(); i++) {
             View newView = vi.inflate(R.layout.action_row, null);
             ((TextView) newView.findViewById(R.id.date)).setText("date1"); //todo: add date
             ((TextView) newView.findViewById(R.id.hour)).setText("hour1"); //todo: add hour
-            ((TextView) newView.findViewById(R.id.description)).setText(groupLog.actions.get(i).getDescription()); //todo: add description
+            ((TextView) newView.findViewById(R.id.description)).setText(group.getGroupLog().actions.get(i).getDescription()); //todo: add description
             newView.setTag(i);
             actionList.addView(newView);
             viewsList.add(newView);

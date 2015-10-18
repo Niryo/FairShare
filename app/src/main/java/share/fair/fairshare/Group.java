@@ -339,7 +339,6 @@ public class Group implements Serializable {
         for (Operation operation : action.getOperations()) {
             usersTable.get(operation.userId).addToBalance(operation.getPaid() - operation.getShare());//todo: check!!
         }
-
     }
 
     public String getLocalGroupKey() {
