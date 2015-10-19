@@ -81,9 +81,9 @@ public class ActionEditActivity extends AppCompatActivity {
                 for(Operation oper: operationList){
                     String oppositeId = oper.userId;
                     String oppositeUsername = oper.username;
-                    double oppsoitePaid = -1*oper.paid;
+                    double oppositePaid = -1*oper.paid;
                     double oppositeShare = -1* oper.share;
-                    oppositeOperationList.add(new Operation(oppositeId,oppositeUsername,oppsoitePaid,oppositeShare));
+                    oppositeOperationList.add(new Operation(oppositeId,oppositeUsername,oppositePaid,oppositeShare));
                 }
 
                 Action oppositeAction = new Action(creatorName,creatorId ,action.getDescription() + " (Cancellation(edit))");
@@ -112,7 +112,7 @@ public class ActionEditActivity extends AppCompatActivity {
                 newAction.timeStamp = action.timeStamp;
                 group.consumeAction(newAction);
                 group.getGroupLog().addAction(getApplicationContext(),newAction);
-                toastGen(getApplicationContext(),"the action: "+action.getDescription() +"was succesfully edited.");
+                toastGen(getApplicationContext(), "the action: " + action.getDescription() + "was succesfully edited.");
             }
         });
 
@@ -141,9 +141,8 @@ public class ActionEditActivity extends AppCompatActivity {
                 oppositeAction.timeStamp = action.timeStamp;
                 group.consumeAction(oppositeAction);
                 group.getGroupLog().addAction(getApplicationContext(),oppositeAction);
-                toastGen(getApplicationContext(),"the action: "+action.getDescription() +"was succesfully deleted.");
+                toastGen(getApplicationContext(), "the action: " + action.getDescription() + "was successfully deleted.");
             }
-
         });
     }
 
@@ -174,3 +173,7 @@ public class ActionEditActivity extends AppCompatActivity {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 }
+
+
+
+
