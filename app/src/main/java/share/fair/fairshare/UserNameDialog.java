@@ -30,7 +30,6 @@ public class UserNameDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View dialogLayout = inflater.inflate(R.layout.new_user_dialog_layout, container);
-        setCancelable(false);
         getDialog().setContentView(R.layout.new_user_dialog_layout);
         getDialog().setTitle("Choose user name:");
 

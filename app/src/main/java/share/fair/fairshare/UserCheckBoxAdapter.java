@@ -32,8 +32,6 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
-        Log.d("user", "ConvertView " + String.valueOf(position));
-
         if (convertView == null) {
             LayoutInflater vi = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = vi.inflate(R.layout.user_check_row, null);

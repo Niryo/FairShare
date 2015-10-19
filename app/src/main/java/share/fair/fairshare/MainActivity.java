@@ -17,6 +17,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.orm.SugarRecord;
+import com.parse.Parse;
+
 import java.util.ArrayList;
 
 
@@ -26,6 +29,9 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
     ListView groupList;
     GroupsAdapter groupAdapter;
     ArrayList<NameAndKey> groupNames;
+
+
+
 
 
     @Override
@@ -90,7 +96,6 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
         int height = size.y;
         TextView textView = (TextView) findViewById(R.id.main_activity_title);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (height / titleFactor));
-        Toast.makeText(getApplicationContext(), "size: "+ (height/titleFactor), Toast.LENGTH_SHORT).show();
         Button newGroupButton = (Button) findViewById(R.id.create_new_group_button);
         newGroupButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (height/buttonFactor));
     }

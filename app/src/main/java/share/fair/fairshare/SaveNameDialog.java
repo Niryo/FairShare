@@ -26,7 +26,7 @@ public class SaveNameDialog extends DialogFragment {
         View dialogLayout = inflater.inflate(R.layout.save_name_dialog, container);
         getDialog().setContentView(R.layout.save_name_dialog);
         getDialog().setTitle("Enter your name:");
-
+        setCancelable(false);
         final EditText nameEditText = (EditText) dialogLayout.findViewById(R.id.name_edit_text);
         final Button saveButton = (Button) dialogLayout.findViewById(R.id.name_save_button);
         final Button cancelButton = (Button) dialogLayout.findViewById(R.id.name_cancel_button);

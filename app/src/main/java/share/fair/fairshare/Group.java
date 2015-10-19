@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -77,16 +78,25 @@ public class Group implements Serializable {
         String localGroupKey = Long.toString(System.currentTimeMillis());
         try {
             File groupNamesFile = new File(context.getFilesDir(), "groups_names");
-            if (!groupNamesFile.exists()) {
-                groupNamesFile.createNewFile();
+            File tempFile = new File(context.getFilesDir(), "temp");
+            JSONObject groupNames = loadGroupsNameFile(context);
+            groupNames.put(localGroupKey, name);
+            BufferedWriter groupsNamesWriter = new BufferedWriter(new FileWriter(tempFile, true));
+            groupsNamesWriter.write(groupNames.toString());
+            groupsNamesWriter.close();
+            if (groupNamesFile.exists()) {
+                groupNamesFile.delete();
+            }
+            boolean successful = tempFile.renameTo(groupNamesFile);
+            if (!successful) {
+                throw new Exception();
             }
 
-            BufferedWriter groupsNamesWriter = new BufferedWriter(new FileWriter(groupNamesFile, true));
-            groupsNamesWriter.write(name + "," + localGroupKey + System.getProperty("line.separator"));
-            groupsNamesWriter.close();
-
-
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return localGroupKey;
@@ -107,26 +117,44 @@ public class Group implements Serializable {
 
         return group;
     }
+    private static JSONObject loadGroupsNameFile(Context context){
+        try {
+            File file = new File(context.getFilesDir(), "groups_names");
+            if (!file.exists()) {
+                file.createNewFile();
+            }else {
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+                String line = bufferedReader.readLine();
+                if(line==null || line.isEmpty()){
+                    return new JSONObject();
+                }
+                JSONObject groupNames = new JSONObject(line);
+                return groupNames;
+
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static ArrayList<NameAndKey> getSavedGroupNames(Context context) {
         ArrayList<NameAndKey> groupNames = new ArrayList<>();
-        File file = new File(context.getFilesDir(), "groups_names");
-        Log.w("custom",file.getAbsolutePath().toString());
-        if (file.exists()) {
+       JSONObject jsonGroupNames = loadGroupsNameFile(context);
             try {
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    String[] nameAndKey = line.split(",");
-                    String name = nameAndKey[0]; //remove new line character
-                    String localGroupKey = nameAndKey[1].replace("(\\r|\\n)", "");
-                    groupNames.add(new NameAndKey(name, localGroupKey));
+                Iterator<?> keys = jsonGroupNames.keys();
+                while( keys.hasNext() ) {
+                    String localKey = (String)keys.next();
+                   String name = jsonGroupNames.getString(localKey);
+                    groupNames.add(new NameAndKey(name,localKey));
+
                 }
-                bufferedReader.close();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+
         return groupNames;
     }
 
