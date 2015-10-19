@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Ori on 5/20/2015.
@@ -20,10 +21,10 @@ import java.util.ArrayList;
 public class UserCheckBoxAdapter extends ArrayAdapter {
 
     ArrayList<User> checkedUsers;
-    private ArrayList<User> userList;
+    private List<User> userList;
 
     public UserCheckBoxAdapter(Context context, int textViewResourceId,
-                               ArrayList<User> userList) {
+                               List<User> userList) {
         super(context, textViewResourceId, userList);
         this.userList = userList;
         checkedUsers = new ArrayList<User>();

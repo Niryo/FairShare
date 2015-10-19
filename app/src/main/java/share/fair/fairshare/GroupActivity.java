@@ -8,9 +8,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -28,7 +25,7 @@ public class GroupActivity extends FragmentActivity {
     Button addUserButton;
     ArrayList<User> users;
     ListView userListView;
-    Group group;
+    FairShareGroup group;
     UserCheckBoxAdapter userCheckBoxAdapter;
     Button goOutAllButton;
     Button goOutCheckedButton;
@@ -40,10 +37,14 @@ public class GroupActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
-        this.group = Group.loadGroupFromStorage(getApplicationContext(), getIntent().getStringExtra("group_key"));
+        long groupId= getIntent().getLongExtra("groupId",-1);
+   if(groupId==-1){
+       //todo: handle problem;
+   }
+        this.group = FairShareGroup.loadGroupFromStorage(groupId);
         groupNameTextView = (TextView) findViewById(R.id.tv_grp_name);
         groupNameTextView.setText(group.getName());
-        this.users = group.getUsers();
+        this.users =new ArrayList<>( group.getUsers());
 
         userListView = (ListView) findViewById(R.id.users_list_view);
         userCheckBoxAdapter = new UserCheckBoxAdapter(this, R.layout.user_check_row, this.users);
@@ -170,7 +171,8 @@ public class GroupActivity extends FragmentActivity {
         User newUser = new User(name, 0);
         newUser.setEmail(emailAddress);
         this.group.addUser(getApplicationContext(), newUser);
-        users = group.getUsers();
+        users.clear();
+        users.addAll(group.getUsers());
         userCheckBoxAdapter.notifyDataSetChanged();
 
     }

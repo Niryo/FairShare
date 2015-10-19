@@ -1,5 +1,7 @@
 package share.fair.fairshare;
 
+import com.orm.SugarRecord;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,12 +13,15 @@ import java.util.Iterator;
  * Created by Nir on 09/10/2015.
  */
 
-public class User implements Serializable {
+public class User extends SugarRecord<User> implements Serializable {
 
     private String name;
     private double balance;
     private String email;
-    private String id;
+    private String userId;
+    private String belongingGroupId;
+
+    public User(){}
 
     public User(String name, double balance) {
         this.name = name;
@@ -31,17 +36,21 @@ public class User implements Serializable {
                 JSONObject user = jsonUsers.getJSONObject((String) userNames.next());
                 String name = user.getString("name");
                 int balance = user.getInt("balance");
-                String id = user.getString("id");
+                String id = user.getString("userId");
                 String email = user.has("email") ? user.getString("email") : "";
                 User newUser = new User(name, balance);
                 newUser.setEmail(email);
-                newUser.setId(id);
+                newUser.setUserId(id);
                 resultUsers.add(newUser);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return resultUsers;
+    }
+
+    public void setBelongingGroupId(String belongingGroupId) {
+        this.belongingGroupId = belongingGroupId;
     }
 
     public String getEmail() {
@@ -52,12 +61,12 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String getId() {
-        return id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public JSONObject toJSON() {
@@ -66,7 +75,7 @@ public class User implements Serializable {
             result.put("name", this.name);
             result.put("balance", this.balance);
             result.put("email", this.email);
-            result.put("id", this.id);
+            result.put("userId", this.userId);
 
         } catch (JSONException e) {
             e.printStackTrace();

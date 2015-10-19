@@ -37,9 +37,8 @@ public class GroupNameDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 String name = nameEditText.getText().toString();
-                Group newGroup = Group.groupBuilder(getContext(), name);
-                String localGroupKey = newGroup.getLocalGroupKey();
-                ((GroupCreatedListener) getActivity()).notifyGroupCreated(newGroup.getGroupNameRecord());
+                 FairShareGroup.groupBuilder(getContext(), name);
+                ((GroupCreatedListener) getActivity()).notifyGroupCreated();
                 getDialog().dismiss();
             }
         });
@@ -74,7 +73,7 @@ public class GroupNameDialog extends DialogFragment {
     }
 
     public interface GroupCreatedListener {
-        public void notifyGroupCreated(Group.GroupNameRecord groupNameRecord);
+        public void notifyGroupCreated();
     }
 }
 

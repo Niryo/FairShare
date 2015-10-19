@@ -1,7 +1,6 @@
 package share.fair.fairshare;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ActionEditActivity extends AppCompatActivity {
 
@@ -25,7 +23,7 @@ public class ActionEditActivity extends AppCompatActivity {
     Button editActionButton;
     Button backToActionsButton;
     Button deleteAction;
-    Group group;
+    FairShareGroup group;
     int actionIndex;
     private String creatorName;
     private String creatorId;
@@ -45,7 +43,7 @@ public class ActionEditActivity extends AppCompatActivity {
             return;
         }
 
-        group = (Group) getIntent().getSerializableExtra("group");
+        group = (FairShareGroup) getIntent().getSerializableExtra("group");
         //todo: put the contents of the operations in the boxes
 
         final Action action = group.getGroupLog().actions.get(actionIndex);
@@ -83,12 +81,12 @@ public class ActionEditActivity extends AppCompatActivity {
                     String oppositeUsername = oper.username;
                     double oppsoitePaid = -1*oper.paid;
                     double oppositeShare = -1* oper.share;
-                    oppositeOperationList.add(new Operation(oppositeId,oppositeUsername,oppsoitePaid,oppositeShare));
+                    oppositeOperationList.add(new Operation(oppositeId,oppositeUsername,oppsoitePaid,oppositeShare,action.getActionId()));
                 }
 
                 Action oppositeAction = new Action(creatorName,creatorId ,action.getDescription() + " (Cancellation(edit))");
                 oppositeAction.operations = oppositeOperationList;
-                oppositeAction.timeStamp = action.timeStamp;
+                oppositeAction.setTimeStamp(action.getTimeStamp());
 
                 group.consumeAction(oppositeAction);
                 group.getGroupLog().addAction(getApplicationContext(), oppositeAction);
@@ -102,14 +100,14 @@ public class ActionEditActivity extends AppCompatActivity {
                     Double newPaid = Double.parseDouble(((EditText) row.findViewById(R.id.et_paid_oper)).getText().toString());
                     Double newShare = Double.parseDouble(((EditText) row.findViewById(R.id.et_share_oper)).getText().toString());
                     String newId = (String)viewsList.get(j).getTag();
-                    newOperations.add(new Operation(newId ,newUsername, newPaid ,newShare));
+                    newOperations.add(new Operation(newId ,newUsername, newPaid ,newShare,action.getActionId()));
                     toastGen(getApplicationContext(),"id: "+newId+" user: "+newUsername );
                 }
 
 
                 Action newAction= new Action(creatorName, creatorId, action.getDescription() +"(Edited");
                 newAction.setOperations(newOperations);
-                newAction.timeStamp = action.timeStamp;
+                newAction.setTimeStamp(action.getTimeStamp());
                 group.consumeAction(newAction);
                 group.getGroupLog().addAction(getApplicationContext(),newAction);
                 toastGen(getApplicationContext(),"the action: "+action.getDescription() +"was succesfully edited.");
@@ -134,11 +132,11 @@ public class ActionEditActivity extends AppCompatActivity {
                     String oppositeUsername = oper.username;
                     double oppositePaid = -1*oper.paid;
                     double oppositeShare = -1* oper.share;
-                    oppositeOperationList.add(new Operation(oppositeId,oppositeUsername,oppositePaid,oppositeShare));
+                    oppositeOperationList.add(new Operation(oppositeId,oppositeUsername,oppositePaid,oppositeShare,action.getActionId()));
                 }
                 Action oppositeAction= new Action(creatorName, creatorId, action.getDescription() +"(Edited");
                 oppositeAction.operations = oppositeOperationList;
-                oppositeAction.timeStamp = action.timeStamp;
+                oppositeAction.setTimeStamp(action.getTimeStamp());
                 group.consumeAction(oppositeAction);
                 group.getGroupLog().addAction(getApplicationContext(),oppositeAction);
                 toastGen(getApplicationContext(),"the action: "+action.getDescription() +"was succesfully deleted.");

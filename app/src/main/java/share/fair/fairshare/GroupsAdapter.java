@@ -29,10 +29,10 @@ public class GroupsAdapter extends ArrayAdapter {
     public HashMap userBalMap;
     public ArrayList<String> goOutNameList;
     Context context;
-    private List<Group.GroupNameRecord> groupNameList;
+    private List<FairShareGroup.GroupNameRecord> groupNameList;
 
     public GroupsAdapter(Context context, int textViewResourceId,
-                         List<Group.GroupNameRecord> userList) {
+                         List<FairShareGroup.GroupNameRecord> userList) {
         super(context, textViewResourceId, userList);
         this.context = context;
         this.groupNameList = userList;

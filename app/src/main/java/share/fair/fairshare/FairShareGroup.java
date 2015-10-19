@@ -3,10 +3,12 @@ package share.fair.fairshare;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
+import com.orm.query.Condition;
+import com.orm.query.Select;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -16,13 +18,6 @@ import com.parse.SaveCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -38,88 +33,59 @@ import java.util.List;
  */
 
 
-public class Group implements Serializable {
+public class FairShareGroup extends SugarRecord<FairShareGroup> implements Serializable {
     private String name;
-    private ArrayList<User> users = new ArrayList<>();
-    private GroupNameRecord groupNameRecord;
-    private String localGroupKey = "";
-    private String cloudGroupKey = "";
+    private long groupLogId;
     private String cloudLogKey = "";
+    private String cloudGroupKey = "";
+    @Ignore
+    private List<User> users = new ArrayList<>();
+    @Ignore
     private GroupLog groupLog;
+    @Ignore
     private transient Handler parentActivityMessageHandler;
-    public Group(Context context, JSONObject jsonGroup) {
-        try {
-            String name = jsonGroup.getString("name");
-            String cloudGroupKey = jsonGroup.getString("cloudGroupKey");
-            String cloudLogKey = jsonGroup.getString("cloudLogKey");
-            String localGroupKey = jsonGroup.getString("localGroupKey");
-
-            ArrayList<User> users = User.parseUsers(jsonGroup.getJSONObject("users"));
-            GroupLog groupLog = new GroupLog(this,jsonGroup.getJSONObject("groupLog"));
 
 
-            this.name = name;
-            this.setCloudGroupKey(cloudGroupKey);
-            this.setUsers(users);
-            this.setLocalGroupKey(localGroupKey);
-            this.setGroupLog(groupLog);
-            this.setCloudLogKey(cloudLogKey);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public FairShareGroup(){
     }
-    private Group(String name) {
+    private FairShareGroup(String name) {
         this.name = name;
     }
 
-    private static GroupNameRecord createLocalKey(Context context, String name) {
-      GroupNameRecord groupNameRecord= new GroupNameRecord(name);
-        groupNameRecord.save();
-        return groupNameRecord;
-    }
 
-    public static Group groupBuilder(Context context, String name) {
-        Group group = new Group(name);
+
+    public static FairShareGroup groupBuilder(Context context, String name) {
+        FairShareGroup group = new FairShareGroup(name);
         Date zeroDate = new Date();
         zeroDate.setTime(0);
-        group.setGroupNameRecord(createLocalKey(context, name));
-        group.setLocalGroupKey("");
         String cloudGroupKey = "a" + new BigInteger(130, new SecureRandom()).toString(32);
         String cloudLogKey = "a"+ new BigInteger(130, new SecureRandom()).toString(32);
         group.setCloudGroupKey(cloudGroupKey);
         group.setCloudLogKey(cloudLogKey);
-        group.setGroupLog(new GroupLog(group,cloudLogKey));
-        initializeCloud(cloudGroupKey, cloudLogKey);
-        group.saveGroupToStorage(context);
+        GroupLog groupLog= new GroupLog(group, cloudLogKey);
+        groupLog.save();
+        group.setGroupLog(groupLog);
+        group.save();
+        GroupNameRecord groupNameRecord = new GroupNameRecord(name,group.getId());
+        groupNameRecord.save();
+
+       // initializeCloud(cloudGroupKey, cloudLogKey);
+       // group.saveGroupToStorage(context);
 
         return group;
     }
 
-    public static List<GroupNameRecord> getSavedGroupNames(Context context) {
+    public static List<GroupNameRecord> getSavedGroupNames() {
         return  GroupNameRecord.listAll(GroupNameRecord.class);
 
     }
 
-    public static Group loadGroupFromStorage(Context context, String localGroupKey) {
-        File file = new File(context.getFilesDir(), localGroupKey);
-        if (file.exists()) {
-            try {
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-                String rawLine = bufferedReader.readLine();
-                JSONObject jsonGroup = new JSONObject(rawLine);
-                Group loadedGroup = new Group(context, jsonGroup);
-                return loadedGroup;
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-        return null;
+    public static FairShareGroup loadGroupFromStorage(long groupId) {
+       FairShareGroup group= FairShareGroup.findById(FairShareGroup.class, groupId);
+       List<User> users = User.find(User.class, "belonging_group_id = ?", Long.toString(groupId));
+        group.setUsers(users);
+        group.setGroupLog(GroupLog.findById(GroupLog.class, group.groupLogId));
+        return group;
     }
 
     private static void initializeCloud(String cloudGroupKey, String cloudLogKey) {
@@ -131,24 +97,17 @@ public class Group implements Serializable {
         parseLog.saveEventually();
     }
 
-    public static Group joinGroupWithKey(Context context, String name, String cloudGroupKey, String cloudLogKey) {
-        Group group = new Group(name);
-        group.setGroupLog(new GroupLog(group, cloudLogKey));
-        group.setGroupNameRecord(createLocalKey(context, name));
-        group.setLocalGroupKey("");//todo: remove method
+    public static void joinGroupWithKey(Context context, String name, String cloudGroupKey, String cloudLogKey) {
+        FairShareGroup group = new FairShareGroup(name);
+        group.setGroupLog(new GroupLog(group,cloudLogKey));
+        GroupNameRecord groupNameRecord = new GroupNameRecord(name,group.getId());
+        groupNameRecord.save();
         group.setCloudGroupKey(cloudGroupKey);
         initializeCloud(cloudGroupKey, cloudLogKey);
         group.saveGroupToStorage(context);
-        return group;
     }
 
-    public GroupNameRecord getGroupNameRecord() {
-        return groupNameRecord;
-    }
 
-    public void setGroupNameRecord(GroupNameRecord groupNameRecord) {
-        this.groupNameRecord = groupNameRecord;
-    }
 
     public void setParentActivityMessageHandler(Handler parentActivityMessageHandler) {
         this.parentActivityMessageHandler = parentActivityMessageHandler;
@@ -156,7 +115,7 @@ public class Group implements Serializable {
 
     public void addUserToCloud(final Context context, User user) {
         ParseObject parseGroup = new ParseObject(this.cloudGroupKey);
-        parseGroup.put("userId", user.getId());
+        parseGroup.put("userId", user.getUserId());
         parseGroup.put("userName", user.getName());
         parseGroup.put("userEmail", user.getEmail());
         parseGroup.saveEventually(new SaveCallback() {
@@ -185,7 +144,7 @@ public class Group implements Serializable {
                     Hashtable<String, String> currentUserTable = new Hashtable<String, String>();
                     Hashtable<String, String> cloudUserTable = new Hashtable<String, String>();
                     for (User user : usersCopy) {
-                        currentUserTable.put(user.getId(), ""); //name is not relevant here
+                        currentUserTable.put(user.getUserId(), ""); //name is not relevant here
                     }
                     for (ParseObject parseObject : list) {
                         String userId = parseObject.getString("userId");
@@ -196,7 +155,7 @@ public class Group implements Serializable {
                     }
 
                     for (User user : usersCopy) {
-                        if (!cloudUserTable.containsKey(user.getId())) {
+                        if (!cloudUserTable.containsKey(user.getUserId())) {
                             users.remove(user);
                             dirty = true;
                         }
@@ -206,7 +165,7 @@ public class Group implements Serializable {
                         String id = keys.nextElement();
                         if (!currentUserTable.containsKey(id)) {
                             User newUser = new User(cloudUserTable.get(id), 0);
-                            newUser.setId(id);
+                            newUser.setUserId(id);
                             users.add(newUser);
                             dirty = true;
                         }
@@ -236,16 +195,15 @@ public class Group implements Serializable {
     }
 
     public void setGroupLog(GroupLog groupLog) {
+        this.groupLogId = groupLog.getId();
         this.groupLog = groupLog;
     }
 
-
-
-    public ArrayList<User> getUsers() {
+    public List<User> getUsers() {
         return this.users;
     }
 
-    public void setUsers(ArrayList<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 
@@ -254,7 +212,6 @@ public class Group implements Serializable {
         try {
             jsonGroup.put("cloudGroupKey", this.cloudGroupKey);
             jsonGroup.put("name", this.name);
-            jsonGroup.put("localGroupKey", this.localGroupKey);
             jsonGroup.put("cloudLogKey", this.cloudLogKey);
             jsonGroup.put("groupLog", this.groupLog.toJSON());
 
@@ -271,25 +228,7 @@ public class Group implements Serializable {
     }
 
     public void saveGroupToStorage(Context context) {
-        File oldFile = new File(context.getFilesDir(), this.localGroupKey);
-        File newFile = new File(context.getFilesDir(), "tempFile");
-        try {
-            newFile.createNewFile();
-            BufferedWriter writer = new BufferedWriter(new FileWriter(newFile));
-            writer.write(toJSONObject().toString());
-            writer.close();
-            if (oldFile.exists()) {
-                oldFile.delete();
-            }
-            boolean successful = newFile.renameTo(oldFile);
-            if (!successful) {
-                //todo: handle problem;
-                Log.w("custom", "can't rename file");
-                throw new Exception();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    save();
     }
 
     public String getName() {
@@ -297,7 +236,8 @@ public class Group implements Serializable {
     }
 
     public void addUser(Context context, User user) {
-        user.setId(new BigInteger(130, new SecureRandom()).toString(32).substring(0,6));
+        user.setUserId(new BigInteger(130, new SecureRandom()).toString(32).substring(0, 6));
+        user.setBelongingGroupId(Long.toString(getId()));
         this.users.add(user);
         addUserToCloud(context, user);
     }
@@ -314,7 +254,7 @@ public class Group implements Serializable {
     public void consumeAction(Action action) {
         Hashtable<String, User> usersTable = new Hashtable<String, User>();
         for (User user : users) {
-            usersTable.put(user.getId(), user);
+            usersTable.put(user.getUserId(), user);
         }
         for (Operation operation : action.getOperations()) {
            User user= usersTable.get(operation.userId);
@@ -330,21 +270,31 @@ public class Group implements Serializable {
 
     }
 
-    public String getLocalGroupKey() {
-        return this.localGroupKey;
+
+
+    @Override
+    public void save() {
+        super.save();
+
+        this.groupLog.save();
+        for(User user: users){
+            user.save();
+        }
     }
 
-    public void setLocalGroupKey(String localGroupKey) {
-        this.localGroupKey = localGroupKey;
-    }
-
-    public static class GroupNameRecord extends SugarRecord<GroupNameRecord>{
+    public  static class GroupNameRecord extends SugarRecord<GroupNameRecord> {
         private String groupName;
+        private Long groupId;
 
         public GroupNameRecord(){}
 
-        public GroupNameRecord(String name){
-            groupName=name;
+        public GroupNameRecord(String name, Long groupId){
+            this.groupName=name;
+            this.groupId= groupId;
+        }
+
+        public Long getGroupId() {
+            return groupId;
         }
 
         public String getGroupName() {
@@ -352,7 +302,6 @@ public class Group implements Serializable {
         }
 
     }
-
 }
 
 

@@ -1,5 +1,8 @@
 package share.fair.fairshare;
 
+import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,18 +11,25 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Nir on 13/10/2015.
  */
-public class Action implements Serializable {
-    ArrayList<Operation> operations = new ArrayList<Operation>();
-    long timeStamp;
+public class Action extends SugarRecord<Action> implements Serializable {
+    @Ignore
+   List<Operation> operations = new ArrayList<Operation>();
+    private String groupLogKey;
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    private long timeStamp;
     private String description;
     private String creatorName;
     private String creatorId;
     private String actionId;
-
 
     public Action(String creatorName, String creatorId,String description) {
         this.timeStamp = System.currentTimeMillis();
@@ -28,6 +38,15 @@ public class Action implements Serializable {
         this.creatorName=creatorName;
         this.creatorId=creatorId;
     }
+
+
+
+    public Action() {
+    //super();
+     //   operations = Operation.find(Operation.class, "actionId = ?", actionId);
+    }
+
+
     public Action(JSONObject jsonAction) {
         try {
             this.description = jsonAction.getString("description");
@@ -43,6 +62,10 @@ public class Action implements Serializable {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setGroupLogKey(String groupLogKey) {
+        this.groupLogKey = groupLogKey;
     }
 
     public String getCreatorId() {
@@ -61,7 +84,7 @@ public class Action implements Serializable {
         this.description = description;
     }
 
-    public ArrayList<Operation> getOperations() {
+    public List<Operation> getOperations() {
         return operations;
     }
 
@@ -70,7 +93,7 @@ public class Action implements Serializable {
     }
 
     public void addOperation(String id, String username, double paid, double share) {
-        this.operations.add(new Operation(id, username, paid, share));
+        this.operations.add(new Operation(id, username, paid, share,actionId));
     }
 
     public JSONObject toJSON() {
@@ -92,6 +115,14 @@ public class Action implements Serializable {
         return jsonObject;
     }
 
+    @Override
+    public void save() {
+        super.save();
+
+        for(Operation operation : operations){
+            operation.save();
+        }
+    }
 
     public long getTimeStamp() {
         return timeStamp;

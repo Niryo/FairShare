@@ -3,6 +3,8 @@ package share.fair.fairshare;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -21,39 +23,37 @@ import java.util.List;
 /**
  * Created by Nir on 13/10/2015.
  */
-public class GroupLog implements Serializable {
-    String cloudLogKey;
-    ArrayList<Action> actions = new ArrayList<>();
-    private Date lastActionTimestamp;
-    private Group parentGroup;
+public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
+   private String cloudLogKey;
+   private Long lastActionTimestampInMilisec;
 
-    public GroupLog(Group parentGroup, String cloudLogKey) {
-        this.parentGroup = parentGroup;
+    @Ignore
+    private FairShareGroup parentGroup;
+    @Ignore
+    List<Action> actions = new ArrayList<>();
+
+    public GroupLog(){}
+
+    public GroupLog(FairShareGroup parentGroup, String cloudLogKey) {
+        this.parentGroup=parentGroup;
         this.cloudLogKey = cloudLogKey;
-        this.lastActionTimestamp = new Date();
-        this.lastActionTimestamp.setTime(0);
-        this.actions = new ArrayList<Action>(); // i added(Ori)
+        this.lastActionTimestampInMilisec = Long.valueOf(0);
+        actions=new ArrayList<>();
     }
 
-    public GroupLog(Group parentGroup, JSONObject jsonLog) {
-        try {
-            this.parentGroup = parentGroup;
-            this.lastActionTimestamp = new Date(jsonLog.getLong("lastActionTimestamp"));
-            this.cloudLogKey = jsonLog.getString("cloudLogKey");
-            JSONArray actionArray = jsonLog.getJSONArray("actions");
-            for (int i = 0; i < actionArray.length(); i++) {
-                actions.add(new Action(actionArray.getJSONObject(i)));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public GroupLog(FairShareGroup parentGroup) {
+        this.parentGroup=parentGroup;
+        actions = Action.find(Action.class, "group_log_key = ?", cloudLogKey);
     }
+
+
+
 
     public JSONObject toJSON() {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("cloudLogKey", this.cloudLogKey);
-            jsonObject.put("lastActionTimestamp", this.lastActionTimestamp.getTime());
+            jsonObject.put("lastActionTimestamp", this.lastActionTimestampInMilisec);
             JSONArray actionsArray = new JSONArray();
             for (int i = 0; i < this.actions.size(); i++) {
                 actionsArray.put(actions.get(i).toJSON());
@@ -66,12 +66,7 @@ public class GroupLog implements Serializable {
         return jsonObject;
     }
 
-    //public ParseObject toParseObject(){
-//    ParseObject groupLogParse = new ParseObject("GroupLog");
-//    for(Action action : this.actions){
-//            action.toParseObject();
-//    }
-//}
+
     private Hashtable<String, Boolean> getActionsIdTable() {
         Hashtable<String, Boolean> table = new Hashtable<>();
         for (Action action : actions) {
@@ -85,7 +80,7 @@ public class GroupLog implements Serializable {
         SharedPreferences settings = context.getSharedPreferences("MAIN_PREFERENCES", 0);
         String creatorId = settings.getString("id", "");
         query.whereNotEqualTo("creatorId", creatorId); //we don't want to fetch our own updates
-        query.whereGreaterThan("createdAt", lastActionTimestamp);
+        query.whereGreaterThan("createdAt", new Date(lastActionTimestampInMilisec));
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, ParseException e) {
@@ -97,7 +92,7 @@ public class GroupLog implements Serializable {
                         if (jsonObject != null &&!actionsIdTable.containsKey(actionId) ) { //check if we don't already have this action
                                 Action newAction = new Action(jsonObject);
                                 actions.add(newAction);
-                                lastActionTimestamp = parseObject.getCreatedAt();
+                             lastActionTimestampInMilisec = parseObject.getCreatedAt().getTime();
                                 parentGroup.consumeAction(newAction);
                                 parentGroup.saveGroupToStorage(context);
                         }
@@ -108,6 +103,7 @@ public class GroupLog implements Serializable {
     }
 
     public void addAction(Context context, Action action) {
+        action.setGroupLogKey(cloudLogKey);
         this.actions.add(action);
         parentGroup.saveGroupToStorage(context);
         sendActionToCloud(action);
@@ -119,6 +115,15 @@ public class GroupLog implements Serializable {
         parseGroupLog.put("actionId", action.getActionId());
         parseGroupLog.put("creatorId", action.getCreatorId());
         parseGroupLog.saveEventually();
+    }
+
+    @Override
+    public void save() {
+        super.save();
+
+        for(Action action : actions){
+            action.save();
+        }
     }
 
 }

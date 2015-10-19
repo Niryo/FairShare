@@ -1,5 +1,7 @@
 package share.fair.fairshare;
 
+import com.orm.SugarRecord;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -8,11 +10,23 @@ import java.io.Serializable;
 /**
  * Created by Ori on 10/15/2015.
  */
-public class Operation implements Serializable {
+public class Operation extends SugarRecord<Operation> implements Serializable {
+    String belongingActionId;
     public String username;
     public String userId;
     public double paid;
     public double share;
+
+    public Operation(){}
+
+
+    public Operation(String userId, String username, double paid, double share,String actionId) {
+        this.userId = userId;
+        this.username = username;
+        this.paid = paid;
+        this.share = share;
+        this.belongingActionId =actionId;
+    }
 
     public Operation(JSONObject jsonOperation) {
         try {
@@ -20,16 +34,10 @@ public class Operation implements Serializable {
             this.userId = jsonOperation.getString("userId");
             this.paid = jsonOperation.getDouble("paid");
             this.share = jsonOperation.getDouble("share");
+            this.belongingActionId = jsonOperation.getString("belongingActionId");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    public Operation(String id, String username, double paid, double share) { //user id?
-        this.userId = id;
-        this.username = username;
-        this.paid = paid;
-        this.share = share;
     }
 
     public double getPaid() {
@@ -55,6 +63,7 @@ public class Operation implements Serializable {
             jsonObject.put("userId", this.userId);
             jsonObject.put("paid", this.paid);
             jsonObject.put("share", this.share);
+            jsonObject.put("belongingActionId", belongingActionId);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -24,7 +24,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
 
     ListView groupList;
     GroupsAdapter groupAdapter;
-    List<Group.GroupNameRecord> groupNames;
+    List<FairShareGroup.GroupNameRecord> groupNames;
 
 
 
@@ -48,7 +48,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
                 new GroupNameDialog().show(getSupportFragmentManager(), "add_new_group");
             }
         });
-        groupNames = Group.getSavedGroupNames(getApplicationContext());
+        groupNames = FairShareGroup.getSavedGroupNames();
         groupList = (ListView) findViewById(R.id.groups_list);
         groupAdapter = new GroupsAdapter(this, R.id.group_row_container, groupNames);
         groupList.setAdapter(groupAdapter);
@@ -57,7 +57,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent openGroup = new Intent(getApplicationContext(), GroupActivity.class);
-                openGroup.putExtra("group_key", groupNames.get(position).getId());
+                openGroup.putExtra("groupId", groupNames.get(position).getId());
                 startActivity(openGroup);
                 finish();
             }
@@ -69,8 +69,8 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
                 String groupName = uri.getQueryParameter("groupName");
                 String groupCloudKey = uri.getQueryParameter("groupCloudKey");
                 String cloudLogKey = uri.getQueryParameter("cloudLogKey");
-                Group newGroup = Group.joinGroupWithKey(getApplicationContext(), groupName, groupCloudKey, cloudLogKey);
-                notifyGroupCreated(newGroup.getGroupNameRecord());
+                FairShareGroup.joinGroupWithKey(getApplicationContext(), groupName, groupCloudKey, cloudLogKey);
+                notifyGroupCreated();
             }
         }
     }
@@ -97,8 +97,9 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
     }
 
     @Override
-    public void notifyGroupCreated(Group.GroupNameRecord groupNameRecord) {
-        groupNames.add(groupNameRecord);
+    public void notifyGroupCreated() {
+      groupNames.clear();
+        groupNames.addAll(FairShareGroup.getSavedGroupNames());
         groupAdapter.notifyDataSetChanged();
     }
 }

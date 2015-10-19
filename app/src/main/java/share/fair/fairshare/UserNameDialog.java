@@ -16,13 +16,13 @@ import android.widget.EditText;
 
 
 public class UserNameDialog extends DialogFragment {
-    private Group group;
+    private FairShareGroup group;
 
     public UserNameDialog() {
         // Empty constructor required for DialogFragment
     }
 
-    public void setGroup(Group group) {
+    public void setGroup(FairShareGroup group) {
         this.group = group;
     }
 

@@ -23,7 +23,7 @@ public class ActionsActivity extends AppCompatActivity {
 
     Button backToGroup;
     LinearLayout actionList;
-    Group group;
+    FairShareGroup group;
 //    GroupLog groupLog;
 
     @Override
@@ -42,7 +42,7 @@ public class ActionsActivity extends AppCompatActivity {
         actionList = (LinearLayout) findViewById(R.id.list_of_actions);
         LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final ArrayList<View> viewsList = new ArrayList<>();
-        group = (Group) getIntent().getSerializableExtra("group");
+        group = (FairShareGroup) getIntent().getSerializableExtra("group");
 
 //        groupLog = (GroupLog) getIntent().getSerializableExtra("groupLog");
 
