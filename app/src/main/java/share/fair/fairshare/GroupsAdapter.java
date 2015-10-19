@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,6 +18,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Ori on 7/30/2015.
@@ -29,13 +29,13 @@ public class GroupsAdapter extends ArrayAdapter {
     public HashMap userBalMap;
     public ArrayList<String> goOutNameList;
     Context context;
-    private ArrayList<NameAndKey> nameAndKeys;
+    private List<Group.GroupNameRecord> groupNameList;
 
     public GroupsAdapter(Context context, int textViewResourceId,
-                         ArrayList userList) {
+                         List<Group.GroupNameRecord> userList) {
         super(context, textViewResourceId, userList);
         this.context = context;
-        this.nameAndKeys = userList;
+        this.groupNameList = userList;
 
     }
 
@@ -54,7 +54,7 @@ public class GroupsAdapter extends ArrayAdapter {
         TextView tvGrpName = (TextView) convertView.findViewById(R.id.tv_row_grp_name);
 
 
-        tvGrpName.setText(nameAndKeys.get(position).getName());
+        tvGrpName.setText(groupNameList.get(position).getGroupName());
         return convertView;
     }
 

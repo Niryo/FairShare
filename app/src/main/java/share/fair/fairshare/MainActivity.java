@@ -15,12 +15,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.orm.SugarRecord;
-import com.parse.Parse;
-
-import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends FragmentActivity implements GroupNameDialog.GroupCreatedListener {
@@ -28,7 +24,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
 
     ListView groupList;
     GroupsAdapter groupAdapter;
-    ArrayList<NameAndKey> groupNames;
+    List<Group.GroupNameRecord> groupNames;
 
 
 
@@ -61,7 +57,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent openGroup = new Intent(getApplicationContext(), GroupActivity.class);
-                openGroup.putExtra("group_key", groupNames.get(position).getKey());
+                openGroup.putExtra("group_key", groupNames.get(position).getId());
                 startActivity(openGroup);
                 finish();
             }
@@ -74,7 +70,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
                 String groupCloudKey = uri.getQueryParameter("groupCloudKey");
                 String cloudLogKey = uri.getQueryParameter("cloudLogKey");
                 Group newGroup = Group.joinGroupWithKey(getApplicationContext(), groupName, groupCloudKey, cloudLogKey);
-                notifyGroupCreated(groupName, newGroup.getLocalGroupKey());
+                notifyGroupCreated(newGroup.getGroupNameRecord());
             }
         }
     }
@@ -101,8 +97,8 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
     }
 
     @Override
-    public void notifyGroupCreated(String name, String localGroupKey) {
-        groupNames.add(new NameAndKey(name, localGroupKey));
+    public void notifyGroupCreated(Group.GroupNameRecord groupNameRecord) {
+        groupNames.add(groupNameRecord);
         groupAdapter.notifyDataSetChanged();
     }
 }

@@ -6,6 +6,7 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.orm.SugarRecord;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -29,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -41,12 +41,12 @@ import java.util.List;
 public class Group implements Serializable {
     private String name;
     private ArrayList<User> users = new ArrayList<>();
+    private GroupNameRecord groupNameRecord;
     private String localGroupKey = "";
     private String cloudGroupKey = "";
     private String cloudLogKey = "";
     private GroupLog groupLog;
     private transient Handler parentActivityMessageHandler;
-
     public Group(Context context, JSONObject jsonGroup) {
         try {
             String name = jsonGroup.getString("name");
@@ -68,45 +68,22 @@ public class Group implements Serializable {
             e.printStackTrace();
         }
     }
-
-
     private Group(String name) {
         this.name = name;
     }
 
-    private static String createLocalKey(Context context, String name) {
-        String localGroupKey = Long.toString(System.currentTimeMillis());
-        try {
-            File groupNamesFile = new File(context.getFilesDir(), "groups_names");
-            File tempFile = new File(context.getFilesDir(), "temp");
-            JSONObject groupNames = loadGroupsNameFile(context);
-            groupNames.put(localGroupKey, name);
-            BufferedWriter groupsNamesWriter = new BufferedWriter(new FileWriter(tempFile, true));
-            groupsNamesWriter.write(groupNames.toString());
-            groupsNamesWriter.close();
-            if (groupNamesFile.exists()) {
-                groupNamesFile.delete();
-            }
-            boolean successful = tempFile.renameTo(groupNamesFile);
-            if (!successful) {
-                throw new Exception();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return localGroupKey;
+    private static GroupNameRecord createLocalKey(Context context, String name) {
+      GroupNameRecord groupNameRecord= new GroupNameRecord(name);
+        groupNameRecord.save();
+        return groupNameRecord;
     }
 
     public static Group groupBuilder(Context context, String name) {
         Group group = new Group(name);
         Date zeroDate = new Date();
         zeroDate.setTime(0);
-        group.setLocalGroupKey(createLocalKey(context, name));
+        group.setGroupNameRecord(createLocalKey(context, name));
+        group.setLocalGroupKey("");
         String cloudGroupKey = "a" + new BigInteger(130, new SecureRandom()).toString(32);
         String cloudLogKey = "a"+ new BigInteger(130, new SecureRandom()).toString(32);
         group.setCloudGroupKey(cloudGroupKey);
@@ -117,45 +94,10 @@ public class Group implements Serializable {
 
         return group;
     }
-    private static JSONObject loadGroupsNameFile(Context context){
-        try {
-            File file = new File(context.getFilesDir(), "groups_names");
-            if (!file.exists()) {
-                file.createNewFile();
-            }else {
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-                String line = bufferedReader.readLine();
-                if(line==null || line.isEmpty()){
-                    return new JSONObject();
-                }
-                JSONObject groupNames = new JSONObject(line);
-                return groupNames;
 
-            }
+    public static List<GroupNameRecord> getSavedGroupNames(Context context) {
+        return  GroupNameRecord.listAll(GroupNameRecord.class);
 
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static ArrayList<NameAndKey> getSavedGroupNames(Context context) {
-        ArrayList<NameAndKey> groupNames = new ArrayList<>();
-       JSONObject jsonGroupNames = loadGroupsNameFile(context);
-            try {
-                Iterator<?> keys = jsonGroupNames.keys();
-                while( keys.hasNext() ) {
-                    String localKey = (String)keys.next();
-                   String name = jsonGroupNames.getString(localKey);
-                    groupNames.add(new NameAndKey(name,localKey));
-
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        return groupNames;
     }
 
     public static Group loadGroupFromStorage(Context context, String localGroupKey) {
@@ -192,11 +134,20 @@ public class Group implements Serializable {
     public static Group joinGroupWithKey(Context context, String name, String cloudGroupKey, String cloudLogKey) {
         Group group = new Group(name);
         group.setGroupLog(new GroupLog(group, cloudLogKey));
-        group.setLocalGroupKey(createLocalKey(context, name));
+        group.setGroupNameRecord(createLocalKey(context, name));
+        group.setLocalGroupKey("");//todo: remove method
         group.setCloudGroupKey(cloudGroupKey);
         initializeCloud(cloudGroupKey, cloudLogKey);
         group.saveGroupToStorage(context);
         return group;
+    }
+
+    public GroupNameRecord getGroupNameRecord() {
+        return groupNameRecord;
+    }
+
+    public void setGroupNameRecord(GroupNameRecord groupNameRecord) {
+        this.groupNameRecord = groupNameRecord;
     }
 
     public void setParentActivityMessageHandler(Handler parentActivityMessageHandler) {
@@ -386,6 +337,22 @@ public class Group implements Serializable {
     public void setLocalGroupKey(String localGroupKey) {
         this.localGroupKey = localGroupKey;
     }
+
+    public static class GroupNameRecord extends SugarRecord<GroupNameRecord>{
+        private String groupName;
+
+        public GroupNameRecord(){}
+
+        public GroupNameRecord(String name){
+            groupName=name;
+        }
+
+        public String getGroupName() {
+            return groupName;
+        }
+
+    }
+
 }
 
 
