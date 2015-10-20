@@ -20,14 +20,13 @@ public class Operation extends SugarRecord<Operation> implements Serializable {
     public Operation() {
     }
 
-
-    public Operation(String userId, String username, double paid, double share, Long actionId) {
+    public Operation(String userId, String username, double paid, double share) {
         this.userId = userId;
         this.username = username;
         this.paid = paid;
         this.share = share;
-        this.belongingActionId = actionId;
     }
+
 
     public Operation(JSONObject jsonOperation) {
         try {
@@ -39,6 +38,10 @@ public class Operation extends SugarRecord<Operation> implements Serializable {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setBelongingActionId(Long belongingActionId) {
+        this.belongingActionId = belongingActionId;
     }
 
     public double getPaid() {

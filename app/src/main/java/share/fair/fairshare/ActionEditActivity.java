@@ -82,12 +82,11 @@ public class ActionEditActivity extends AppCompatActivity {
 
                     double oppositePaid = -1*oper.paid;
                     double oppositeShare = -1* oper.share;
-                    oppositeOperationList.add(new Operation(oppositeId,oppositeUsername,oppositePaid,oppositeShare,action.getId()));
+                    oppositeOperationList.add(new Operation(oppositeId,oppositeUsername,oppositePaid,oppositeShare));
                 }
 
                 Action oppositeAction = new Action(creatorName, creatorId, action.getDescription() + " (Cancellation(edit))");
                 oppositeAction.setGroupLogId(group.getGroupLog().getId());
-                oppositeAction.save();
                 oppositeAction.operations = oppositeOperationList;
                 oppositeAction.setTimeStamp(action.getTimeStamp());
 
@@ -103,13 +102,12 @@ public class ActionEditActivity extends AppCompatActivity {
                     Double newPaid = Double.parseDouble(((EditText) row.findViewById(R.id.et_paid_oper)).getText().toString());
                     Double newShare = Double.parseDouble(((EditText) row.findViewById(R.id.et_share_oper)).getText().toString());
                     String newId = (String) viewsList.get(j).getTag();
-                    newOperations.add(new Operation(newId, newUsername, newPaid, newShare, action.getId()));
+                    newOperations.add(new Operation(newId, newUsername, newPaid, newShare));
                     toastGen(getApplicationContext(), "id: " + newId + " user: " + newUsername);
                 }
 
                 Action newAction= new Action(creatorName, creatorId, action.getDescription() +"(Edited");
                 newAction.setGroupLogId(group.getGroupLog().getId());
-                oppositeAction.save();
 
                 newAction.setOperations(newOperations);
                 newAction.setTimeStamp(action.getTimeStamp());
@@ -139,11 +137,10 @@ public class ActionEditActivity extends AppCompatActivity {
                     String oppositeUsername = oper.username;
                     double oppositePaid = -1 * oper.paid;
                     double oppositeShare = -1 * oper.share;
-                    oppositeOperationList.add(new Operation(oppositeId, oppositeUsername, oppositePaid, oppositeShare, action.getId()));
+                    oppositeOperationList.add(new Operation(oppositeId, oppositeUsername, oppositePaid, oppositeShare));
                 }
                 Action oppositeAction = new Action(creatorName, creatorId, action.getDescription() + "(Edited");
                 oppositeAction.setGroupLogId(group.getGroupLog().getId());
-                oppositeAction.save();
                 oppositeAction.operations = oppositeOperationList;
                 oppositeAction.setTimeStamp(action.getTimeStamp());
                 group.consumeAction(oppositeAction);

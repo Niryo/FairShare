@@ -43,9 +43,12 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
 
 
     public void init(FairShareGroup parentGroup) {
-        save();
+        if(getId()==null){save();}
         this.parentGroup = parentGroup;
         actions = Action.find(Action.class, "group_log_id = ?", Long.toString(getId()));
+        for(Action action: actions){
+            action.init();
+        }
     }
 
 

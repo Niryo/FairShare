@@ -14,7 +14,6 @@ import java.util.Iterator;
  */
 
 public class User extends SugarRecord<User> implements Serializable {
-
     private String name;
     private double balance;
     private String email;

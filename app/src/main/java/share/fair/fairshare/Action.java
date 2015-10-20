@@ -34,8 +34,6 @@ public class Action extends SugarRecord<Action> implements Serializable {
         operations = new ArrayList<>();
     }
     public Action() {
-        //super();
-        //   operations = Operation.find(Operation.class, "actionId = ?", actionId);
     }
 
     public Action(JSONObject jsonAction) {
@@ -60,7 +58,7 @@ public class Action extends SugarRecord<Action> implements Serializable {
     }
 
     public void init() {
-        save();//to get the id;
+        if(getId()==null){save();};
         operations = Operation.find(Operation.class, "belonging_action_id = ?", Long.toString(getId()));
 
 
@@ -91,7 +89,7 @@ public class Action extends SugarRecord<Action> implements Serializable {
     }
 
     public void addOperation(String id, String username, double paid, double share) {
-        this.operations.add(new Operation(id, username, paid, share, getId()));
+        this.operations.add(new Operation(id, username, paid, share));
     }
 
     public JSONObject toJSON() {
@@ -118,6 +116,7 @@ public class Action extends SugarRecord<Action> implements Serializable {
         super.save();
 
         for (Operation operation : operations) {
+            operation.setBelongingActionId(getId());
             operation.save();
         }
     }
