@@ -60,7 +60,7 @@ public class GoOutActivity extends Activity {
                 String name = settings.getString("name", "");
                 String id = settings.getString("id", "");
                 String descriptionStr = description.getText().toString();
-                Action action = new Action(name,id,descriptionStr);
+                Action action = new Action(name, id, descriptionStr);
 
 
                 ArrayList<Integer> noShareUsersIndexes = new ArrayList<Integer>();

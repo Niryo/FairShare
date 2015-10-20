@@ -11,21 +11,22 @@ import java.io.Serializable;
  * Created by Ori on 10/15/2015.
  */
 public class Operation extends SugarRecord<Operation> implements Serializable {
-    String belongingActionId;
     public String username;
     public String userId;
     public double paid;
     public double share;
+    Long belongingActionId;
 
-    public Operation(){}
+    public Operation() {
+    }
 
 
-    public Operation(String userId, String username, double paid, double share,String actionId) {
+    public Operation(String userId, String username, double paid, double share, Long actionId) {
         this.userId = userId;
         this.username = username;
         this.paid = paid;
         this.share = share;
-        this.belongingActionId =actionId;
+        this.belongingActionId = actionId;
     }
 
     public Operation(JSONObject jsonOperation) {
@@ -34,7 +35,7 @@ public class Operation extends SugarRecord<Operation> implements Serializable {
             this.userId = jsonOperation.getString("userId");
             this.paid = jsonOperation.getDouble("paid");
             this.share = jsonOperation.getDouble("share");
-            this.belongingActionId = jsonOperation.getString("belongingActionId");
+            this.belongingActionId = jsonOperation.getLong("belongingActionId");
         } catch (JSONException e) {
             e.printStackTrace();
         }

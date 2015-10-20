@@ -83,7 +83,6 @@ public class UserNameDialog extends DialogFragment {
     }
 
 
-
 }
 
 

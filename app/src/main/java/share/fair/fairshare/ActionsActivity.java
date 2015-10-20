@@ -97,25 +97,25 @@ public class ActionsActivity extends AppCompatActivity {
         Log.w("user", "in toastGen: " + msg);
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
-    private String getDate(long timeStamp){
 
-        try{
-        DateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
-        Date netDate = (new Date(timeStamp));
-        return sdf.format(netDate);
-        }
-        catch(Exception ex){
-        return "date failed";
+    private String getDate(long timeStamp) {
+
+        try {
+            DateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
+            Date netDate = (new Date(timeStamp));
+            return sdf.format(netDate);
+        } catch (Exception ex) {
+            return "date failed";
         }
     }
-    private String getHour(long timeStamp){
 
-        try{
+    private String getHour(long timeStamp) {
+
+        try {
             DateFormat sdf = new SimpleDateFormat("hh:mm:ss aa");
             Date netHour = (new Date(timeStamp));
             return sdf.format(netHour);
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             return "hour failed";
         }
     }

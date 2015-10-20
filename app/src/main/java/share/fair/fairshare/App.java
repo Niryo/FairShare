@@ -1,7 +1,5 @@
 package share.fair.fairshare;
 
-import android.app.Application;
-
 import com.orm.SugarApp;
 import com.parse.Parse;
 
@@ -9,7 +7,7 @@ import com.parse.Parse;
 /**
  * Created by Nir on 09/10/2015.
  */
-public class App extends SugarApp{
+public class App extends SugarApp {
 
     @Override
     public void onCreate() {

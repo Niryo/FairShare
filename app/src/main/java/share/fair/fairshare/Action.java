@@ -18,34 +18,25 @@ import java.util.List;
  */
 public class Action extends SugarRecord<Action> implements Serializable {
     @Ignore
-   List<Operation> operations = new ArrayList<Operation>();
-    private String groupLogKey;
-
-    public void setTimeStamp(long timeStamp) {
-        this.timeStamp = timeStamp;
-    }
-
+    List<Operation> operations = new ArrayList<Operation>();
+    private Long groupLogId;
     private long timeStamp;
     private String description;
     private String creatorName;
     private String creatorId;
     private String actionId;
-
-    public Action(String creatorName, String creatorId,String description) {
+    public Action(String creatorName, String creatorId, String description) {
         this.timeStamp = System.currentTimeMillis();
         this.description = description;
-        this.actionId =new BigInteger(130, new SecureRandom()).toString(32).substring(0,10);
-        this.creatorName=creatorName;
-        this.creatorId=creatorId;
+        this.actionId = new BigInteger(130, new SecureRandom()).toString(32).substring(0, 10);
+        this.creatorName = creatorName;
+        this.creatorId = creatorId;
+        operations = new ArrayList<>();
     }
-
-
-
     public Action() {
-    //super();
-     //   operations = Operation.find(Operation.class, "actionId = ?", actionId);
+        //super();
+        //   operations = Operation.find(Operation.class, "actionId = ?", actionId);
     }
-
 
     public Action(JSONObject jsonAction) {
         try {
@@ -64,8 +55,15 @@ public class Action extends SugarRecord<Action> implements Serializable {
         }
     }
 
-    public void setGroupLogKey(String groupLogKey) {
-        this.groupLogKey = groupLogKey;
+    public void setGroupLogId(Long groupLogId) {
+        this.groupLogId = groupLogId;
+    }
+
+    public void init() {
+        save();//to get the id;
+        operations = Operation.find(Operation.class, "belonging_action_id = ?", Long.toString(getId()));
+
+
     }
 
     public String getCreatorId() {
@@ -93,7 +91,7 @@ public class Action extends SugarRecord<Action> implements Serializable {
     }
 
     public void addOperation(String id, String username, double paid, double share) {
-        this.operations.add(new Operation(id, username, paid, share,actionId));
+        this.operations.add(new Operation(id, username, paid, share, getId()));
     }
 
     public JSONObject toJSON() {
@@ -101,7 +99,7 @@ public class Action extends SugarRecord<Action> implements Serializable {
         try {
             jsonObject.put("description", this.description);
             jsonObject.put("timeStamp", this.timeStamp);
-            jsonObject.put("actionId",this.actionId);
+            jsonObject.put("actionId", this.actionId);
             jsonObject.put("creatorName", this.creatorName);
             jsonObject.put("creatorId", this.creatorId);
             JSONArray jsonOperations = new JSONArray();
@@ -119,13 +117,17 @@ public class Action extends SugarRecord<Action> implements Serializable {
     public void save() {
         super.save();
 
-        for(Operation operation : operations){
+        for (Operation operation : operations) {
             operation.save();
         }
     }
 
     public long getTimeStamp() {
         return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
     }
 }
 

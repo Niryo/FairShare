@@ -27,9 +27,6 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
     List<FairShareGroup.GroupNameRecord> groupNames;
 
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,8 +34,9 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
         initLayoutPreferences();
         SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
         String name = settings.getString("name", "");
-        if(name.isEmpty()){
-              new SaveNameDialog().show(getSupportFragmentManager(), "save_name_dialog");;
+        if (name.isEmpty()) {
+            new SaveNameDialog().show(getSupportFragmentManager(), "save_name_dialog");
+            ;
         }
 
         Button createNewGroupButton = (Button) findViewById(R.id.create_new_group_button);
@@ -74,17 +72,18 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
             }
         }
     }
-    private void initLayoutPreferences(){
+
+    private void initLayoutPreferences() {
         double titleFactor;
         double buttonFactor;
         int screenSize;
-        int configuration= getResources().getConfiguration().orientation;
-        if(configuration== Configuration.ORIENTATION_LANDSCAPE){
-            titleFactor=13;
-            buttonFactor=50;
-        }else{
-            titleFactor=15;
-            buttonFactor=82;
+        int configuration = getResources().getConfiguration().orientation;
+        if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
+            titleFactor = 13;
+            buttonFactor = 50;
+        } else {
+            titleFactor = 15;
+            buttonFactor = 82;
         }
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -93,12 +92,12 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
         TextView textView = (TextView) findViewById(R.id.main_activity_title);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (height / titleFactor));
         Button newGroupButton = (Button) findViewById(R.id.create_new_group_button);
-        newGroupButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (height/buttonFactor));
+        newGroupButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (height / buttonFactor));
     }
 
     @Override
     public void notifyGroupCreated() {
-      groupNames.clear();
+        groupNames.clear();
         groupNames.addAll(FairShareGroup.getSavedGroupNames());
         groupAdapter.notifyDataSetChanged();
     }

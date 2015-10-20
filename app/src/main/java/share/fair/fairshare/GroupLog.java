@@ -24,29 +24,29 @@ import java.util.List;
  * Created by Nir on 13/10/2015.
  */
 public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
-   private String cloudLogKey;
-   private Long lastActionTimestampInMilisec;
-
-    @Ignore
-    private FairShareGroup parentGroup;
     @Ignore
     List<Action> actions = new ArrayList<>();
+    private String cloudLogKey;
+    private Long lastActionTimestampInMilisec;
+    @Ignore
+    private FairShareGroup parentGroup;
 
-    public GroupLog(){}
+    public GroupLog() {
+    }
 
     public GroupLog(FairShareGroup parentGroup, String cloudLogKey) {
-        this.parentGroup=parentGroup;
+        this.parentGroup = parentGroup;
         this.cloudLogKey = cloudLogKey;
         this.lastActionTimestampInMilisec = Long.valueOf(0);
-        actions=new ArrayList<>();
-    }
-
-    public GroupLog(FairShareGroup parentGroup) {
-        this.parentGroup=parentGroup;
-        actions = Action.find(Action.class, "group_log_key = ?", cloudLogKey);
+        actions = new ArrayList<>();
     }
 
 
+    public void init(FairShareGroup parentGroup) {
+        save();
+        this.parentGroup = parentGroup;
+        actions = Action.find(Action.class, "group_log_id = ?", Long.toString(getId()));
+    }
 
 
     public JSONObject toJSON() {
@@ -89,12 +89,13 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
                     for (ParseObject parseObject : list) {
                         JSONObject jsonObject = parseObject.getJSONObject("jsonAction");
                         String actionId = parseObject.getString("actionId");
-                        if (jsonObject != null &&!actionsIdTable.containsKey(actionId) ) { //check if we don't already have this action
-                                Action newAction = new Action(jsonObject);
-                                actions.add(newAction);
-                             lastActionTimestampInMilisec = parseObject.getCreatedAt().getTime();
-                                parentGroup.consumeAction(newAction);
-                                parentGroup.saveGroupToStorage(context);
+                        if (jsonObject != null && !actionsIdTable.containsKey(actionId)) { //check if we don't already have this action
+                            Action newAction = new Action(jsonObject);
+                            newAction.setGroupLogId(parentGroup.getGroupLog().getId());
+                            newAction.save();
+                            actions.add(newAction);
+                            lastActionTimestampInMilisec = parseObject.getCreatedAt().getTime();
+                            parentGroup.consumeAction(newAction);
                         }
                     }
                 }
@@ -103,9 +104,9 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
     }
 
     public void addAction(Context context, Action action) {
-        action.setGroupLogKey(cloudLogKey);
+        action.setGroupLogId(parentGroup.getGroupLog().getId());
         this.actions.add(action);
-        parentGroup.saveGroupToStorage(context);
+        action.save();
         sendActionToCloud(action);
     }
 
@@ -121,7 +122,7 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
     public void save() {
         super.save();
 
-        for(Action action : actions){
+        for (Action action : actions) {
             action.save();
         }
     }

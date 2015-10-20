@@ -58,34 +58,34 @@ public class GroupsAdapter extends ArrayAdapter {
         return convertView;
     }
 
-    private void initLayoutPreferences(View convertView){
+    private void initLayoutPreferences(View convertView) {
         double groupNameFactor;
         int arrowFactor;
         double rowFactor;
-        int configuration= getContext().getResources().getConfiguration().orientation;
-        if(configuration== Configuration.ORIENTATION_LANDSCAPE){
-            groupNameFactor=30;
-            arrowFactor=14;
-            rowFactor=9;
-        }else{
-            groupNameFactor=45;
-            arrowFactor=17;
-            rowFactor=10;
+        int configuration = getContext().getResources().getConfiguration().orientation;
+        if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
+            groupNameFactor = 30;
+            arrowFactor = 14;
+            rowFactor = 9;
+        } else {
+            groupNameFactor = 45;
+            arrowFactor = 17;
+            rowFactor = 10;
         }
-        WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int height = size.y;
         TextView textView = (TextView) convertView.findViewById(R.id.tv_row_grp_name);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (height / groupNameFactor));
-        ImageView arrow= (ImageView) convertView.findViewById(R.id.group_row_arrow);
+        ImageView arrow = (ImageView) convertView.findViewById(R.id.group_row_arrow);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) arrow.getLayoutParams();
-        params.width=height/arrowFactor;
-        params.height=height/arrowFactor;
+        params.width = height / arrowFactor;
+        params.height = height / arrowFactor;
         arrow.setLayoutParams(params);
         RelativeLayout row = (RelativeLayout) convertView.findViewById(R.id.group_row_container);
-        row.setMinimumHeight((int) (height/rowFactor));
+        row.setMinimumHeight((int) (height / rowFactor));
 
 
     }

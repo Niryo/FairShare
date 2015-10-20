@@ -37,14 +37,14 @@ public class GroupActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
-        long groupId= getIntent().getLongExtra("groupId",-1);
-   if(groupId==-1){
-       //todo: handle problem;
-   }
+        long groupId = getIntent().getLongExtra("groupId", -1);
+        if (groupId == -1) {
+            //todo: handle problem;
+        }
         this.group = FairShareGroup.loadGroupFromStorage(groupId);
         groupNameTextView = (TextView) findViewById(R.id.tv_grp_name);
         groupNameTextView.setText(group.getName());
-        this.users =new ArrayList<>( group.getUsers());
+        this.users = new ArrayList<>(group.getUsers());
 
         userListView = (ListView) findViewById(R.id.users_list_view);
         userCheckBoxAdapter = new UserCheckBoxAdapter(this, R.layout.user_check_row, this.users);
@@ -109,11 +109,11 @@ public class GroupActivity extends FragmentActivity {
                 startActivity(actions);
             }
         });
-        Button syncButton= (Button) findViewById(R.id.sync_button);
+        Button syncButton = (Button) findViewById(R.id.sync_button);
         notifyUserChangedHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                       notifyUserListChanged();
+                notifyUserListChanged();
                 super.handleMessage(msg);
             }
         };
@@ -121,11 +121,11 @@ public class GroupActivity extends FragmentActivity {
         syncButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                group.syncUsers(getApplicationContext());
+                group.syncUsers();
                 group.getGroupLog().syncActions(getApplicationContext());
             }
         });
-        this.group.syncUsers(getApplicationContext());
+        this.group.syncUsers();
         group.getGroupLog().syncActions(getApplicationContext());
         notifyUserListChanged();
         this.userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -163,7 +163,6 @@ public class GroupActivity extends FragmentActivity {
     }
 
 
-
     public void notifyUserAdded(String name, String emailAddress) {
         if (!emailAddress.isEmpty()) {
             inviteByMail(emailAddress);
@@ -183,11 +182,10 @@ public class GroupActivity extends FragmentActivity {
         if (requestCode == GO_OUT_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Action action = (Action) data.getSerializableExtra("action");
-                this.group.getGroupLog().addAction(getApplicationContext(),action);//todo: find a way to remove the context
+                this.group.getGroupLog().addAction(getApplicationContext(), action);//todo: find a way to remove the context
                 this.group.consumeAction(action);
                 //users = resultList; //todo: problem if checked list was sent
                 userCheckBoxAdapter.notifyDataSetChanged();
-                this.group.saveGroupToStorage(getApplicationContext());
             }
         }
     }
@@ -210,7 +208,7 @@ public class GroupActivity extends FragmentActivity {
         this.userCheckBoxAdapter.clearChecked();
     }
 
-    public void fastCheckoutCalculation(User user, double paid, double share){
+    public void fastCheckoutCalculation(User user, double paid, double share) {
 
     }
 

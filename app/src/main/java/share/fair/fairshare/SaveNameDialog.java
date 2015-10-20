@@ -1,9 +1,8 @@
 package share.fair.fairshare;
 
-import android.support.v4.app.DialogFragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -19,7 +18,8 @@ import java.security.SecureRandom;
  * Created by Nir on 18/10/2015.
  */
 public class SaveNameDialog extends DialogFragment {
-    public SaveNameDialog(){}
+    public SaveNameDialog() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,9 +35,9 @@ public class SaveNameDialog extends DialogFragment {
             public void onClick(View v) {
                 SharedPreferences settings = getActivity().getSharedPreferences("MAIN_PREFERENCES", 0);
                 SharedPreferences.Editor editor = settings.edit();
-                String nameToSave= nameEditText.getText().toString();
+                String nameToSave = nameEditText.getText().toString();
                 editor.putString("name", nameToSave);
-                editor.putString("id",new BigInteger(130, new SecureRandom()).toString(32));
+                editor.putString("id", new BigInteger(130, new SecureRandom()).toString(32));
                 editor.commit();
                 getDialog().dismiss();
             }
@@ -69,7 +69,6 @@ public class SaveNameDialog extends DialogFragment {
             }
 
         });
-
 
 
         return dialogLayout;
