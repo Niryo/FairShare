@@ -105,14 +105,13 @@ public class ActionEditActivity extends AppCompatActivity {
                     newOperations.add(new Operation(newId ,newUsername, newPaid ,newShare));
                     toastGen(getApplicationContext(),"id: "+newId+" user: "+newUsername );
                 }
-
-
                 Action newAction= new Action(creatorName, creatorId, action.getDescription() +"(Edited");
                 newAction.setOperations(newOperations);
                 newAction.timeStamp = action.timeStamp;
                 group.consumeAction(newAction);
                 group.getGroupLog().addAction(getApplicationContext(),newAction);
                 toastGen(getApplicationContext(), "the action: " + action.getDescription() + "was succesfully edited.");
+                finish();
             }
         });
 
@@ -142,6 +141,7 @@ public class ActionEditActivity extends AppCompatActivity {
                 group.consumeAction(oppositeAction);
                 group.getGroupLog().addAction(getApplicationContext(),oppositeAction);
                 toastGen(getApplicationContext(), "the action: " + action.getDescription() + "was successfully deleted.");
+                finish();
             }
         });
     }

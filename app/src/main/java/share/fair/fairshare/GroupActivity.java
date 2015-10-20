@@ -211,6 +211,14 @@ public class GroupActivity extends FragmentActivity {
     public void fastCheckoutCalculation(User user, double paid, double share){
 
     }
+    protected void onResume()
+    {
+        super.onResume();
+        toastGen(this, "on resume called");
+        notifyUserListChanged();
+    }
+
+
 
 
 }
