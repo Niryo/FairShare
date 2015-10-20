@@ -94,7 +94,8 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
                         String actionId = parseObject.getString("actionId");
                         if (jsonObject != null && !actionsIdTable.containsKey(actionId)) { //check if we don't already have this action
                             Action newAction = new Action(jsonObject);
-                            newAction.setGroupLogId(parentGroup.getGroupLog().getId());
+                            if(getId()==null){save();}
+                            newAction.setGroupLogId(getId());
                             newAction.save();
                             actions.add(newAction);
                             lastActionTimestampInMilisec = parseObject.getCreatedAt().getTime();
@@ -107,9 +108,13 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
     }
 
     public void addAction(Context context, Action action) {
-        action.setGroupLogId(parentGroup.getGroupLog().getId());
+        if(getId()==null) {
+        save();
+        }
+            action.setGroupLogId(getId());
         this.actions.add(action);
         action.save();
+        save();
         sendActionToCloud(action);
     }
 

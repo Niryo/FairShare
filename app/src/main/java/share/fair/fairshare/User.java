@@ -93,7 +93,7 @@ public class User extends SugarRecord<User> implements Serializable {
 
     public void addToBalance(double val) {
         this.balance += val;
-
+        save();
     }
 
 }
