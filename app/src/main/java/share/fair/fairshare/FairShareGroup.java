@@ -228,7 +228,6 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> implements Seria
             User user = usersTable.get(operation.userId);
             if (user != null) {
                 user.addToBalance(operation.getPaid() - operation.getShare());//todo: check!!
-
             }
         }
         //report user changed to notify the adapter:

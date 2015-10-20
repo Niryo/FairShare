@@ -43,7 +43,11 @@ public class ActionEditActivity extends AppCompatActivity {
             return;
         }
 
-        group = (FairShareGroup) getIntent().getSerializableExtra("group");
+        Long groupId = getIntent().getLongExtra("groupId",-1);
+        if(groupId==-1){
+            //todo: problem
+        }
+        group= FairShareGroup.loadGroupFromStorage(groupId);
         //todo: put the contents of the operations in the boxes
 
         final Action action = group.getGroupLog().actions.get(actionIndex);

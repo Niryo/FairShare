@@ -104,8 +104,7 @@ public class GroupActivity extends FragmentActivity {
             public void onClick(View v) {
 
                 Intent actions = new Intent(getApplicationContext(), ActionsActivity.class);
-                actions.putExtra("group", group);
-                actions.putExtra("groupLog", group.getGroupLog());
+                actions.putExtra("groupId", group.getId());
                 startActivity(actions);
             }
         });

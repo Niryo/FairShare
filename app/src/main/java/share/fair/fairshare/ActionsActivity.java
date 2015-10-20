@@ -24,7 +24,7 @@ public class ActionsActivity extends AppCompatActivity {
     Button backToGroup;
     LinearLayout actionList;
     FairShareGroup group;
-//    GroupLog groupLog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +42,11 @@ public class ActionsActivity extends AppCompatActivity {
         actionList = (LinearLayout) findViewById(R.id.list_of_actions);
         LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final ArrayList<View> viewsList = new ArrayList<>();
-        group = (FairShareGroup) getIntent().getSerializableExtra("group");
-
+      Long groupId = getIntent().getLongExtra("groupId",-1);
+        if(groupId==-1){
+            //todo: problem
+        }
+        group= FairShareGroup.loadGroupFromStorage(groupId);
 //        groupLog = (GroupLog) getIntent().getSerializableExtra("groupLog");
 
 //        for(Action act : groupLog.actions){
@@ -64,7 +67,7 @@ public class ActionsActivity extends AppCompatActivity {
                     toastGen(getApplicationContext(), "clicked"); //debug
                     Intent editAction = new Intent(getApplicationContext(), ActionEditActivity.class);
                     editAction.putExtra("actionIndex", (int) v.getTag());
-                    editAction.putExtra("group", group);
+                    editAction.putExtra("groupId", group.getId());
                     startActivity(editAction);
                 }
             });
