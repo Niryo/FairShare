@@ -1,6 +1,8 @@
 package share.fair.fairshare;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +24,13 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
 
     ArrayList<User> checkedUsers;
     private List<User> userList;
+    private Handler parentActivityMessageHandler;
 
     public UserCheckBoxAdapter(Context context, int textViewResourceId,
-                               List<User> userList) {
+                               List<User> userList, Handler parentActivityMessageHandler) {
         super(context, textViewResourceId, userList);
         this.userList = userList;
+        this.parentActivityMessageHandler = parentActivityMessageHandler;
         checkedUsers = new ArrayList<User>();
     }
 
@@ -45,8 +49,18 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
                 Log.w("user", "Clicked on Checkbox: " + cb.getText() + " is " + cb.isChecked());
                 if (cb.isChecked()) {
                     checkedUsers.add(userList.get(position));
+                    if(checkedUsers.size()>0){
+                    Message msg = Message.obtain();
+                    msg.what=GroupActivity.CHECKED_AVAILABLE;
+                    parentActivityMessageHandler.sendMessage(msg);
+                    }
                 } else {
                     checkedUsers.remove(userList.get(position));
+                    if(checkedUsers.size()==0){
+                        Message msg = Message.obtain();
+                        msg.what=GroupActivity.CHECKED_UNAVAILABLE;
+                        parentActivityMessageHandler.sendMessage(msg);
+                    }
                 }
             }
         });

@@ -57,7 +57,6 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
                 Intent openGroup = new Intent(getApplicationContext(), GroupActivity.class);
                 openGroup.putExtra("groupId", groupNames.get(position).getId());
                 startActivity(openGroup);
-                finish();
             }
         });
         if (getIntent() != null) {
@@ -79,20 +78,20 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
         int screenSize;
         int configuration = getResources().getConfiguration().orientation;
         if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
-            titleFactor = 13;
-            buttonFactor = 50;
+            titleFactor = 10;
+            buttonFactor = 30;
         } else {
-            titleFactor = 15;
-            buttonFactor = 82;
+            titleFactor = 10;
+            buttonFactor = 40;
         }
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int height = size.y;
         TextView textView = (TextView) findViewById(R.id.main_activity_title);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (height / titleFactor));
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / titleFactor));
         Button newGroupButton = (Button) findViewById(R.id.create_new_group_button);
-        newGroupButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (height / buttonFactor));
+        newGroupButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / buttonFactor));
     }
 
     @Override

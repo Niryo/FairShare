@@ -29,7 +29,7 @@ public class SaveNameDialog extends DialogFragment {
         setCancelable(false);
         final EditText nameEditText = (EditText) dialogLayout.findViewById(R.id.name_edit_text);
         final Button saveButton = (Button) dialogLayout.findViewById(R.id.name_save_button);
-        final Button cancelButton = (Button) dialogLayout.findViewById(R.id.name_cancel_button);
+
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -40,13 +40,6 @@ public class SaveNameDialog extends DialogFragment {
                 editor.putString("id", new BigInteger(130, new SecureRandom()).toString(32));
                 editor.commit();
                 getDialog().dismiss();
-            }
-        });
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDialog().dismiss();
-
             }
         });
         saveButton.setEnabled(false);
