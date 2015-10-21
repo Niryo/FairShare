@@ -1,18 +1,27 @@
 package share.fair.fairshare;
 
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +29,9 @@ import java.util.ArrayList;
 
 public class GroupActivity extends FragmentActivity {
 
+    static final int NOTIFY_USER_CHANGE=1;
+    static final int CHECKED_AVAILABLE=2;
+    static final int CHECKED_UNAVAILABLE=3;
     static final int GO_OUT_REQUEST = 1;  // The request code
     TextView groupNameTextView;
     Button addUserButton;
@@ -30,8 +42,9 @@ public class GroupActivity extends FragmentActivity {
     Button goOutAllButton;
     Button goOutCheckedButton;
     Button backToMain;
-    Button toActionsButton;
-    private Handler notifyUserChangedHandler;
+    Button optionsButton;
+    ImageButton syncButton;
+    private Handler messageHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +58,24 @@ public class GroupActivity extends FragmentActivity {
         groupNameTextView = (TextView) findViewById(R.id.tv_grp_name);
         groupNameTextView.setText(group.getName());
         this.users = new ArrayList<>(group.getUsers());
-
+        messageHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if(msg.what==NOTIFY_USER_CHANGE){
+                notifyUserListChanged();}
+                if(msg.what==CHECKED_AVAILABLE){
+                    goOutCheckedButton.setVisibility(View.VISIBLE);
+                    goOutAllButton.setVisibility(View.GONE);
+                }
+                if(msg.what==CHECKED_UNAVAILABLE){
+                    goOutCheckedButton.setVisibility(View.GONE);
+                    goOutAllButton.setVisibility(View.VISIBLE);
+                }
+            }
+        };
         userListView = (ListView) findViewById(R.id.users_list_view);
-        userCheckBoxAdapter = new UserCheckBoxAdapter(this, R.layout.user_check_row, this.users);
+        userCheckBoxAdapter = new UserCheckBoxAdapter(this, R.layout.user_check_row, this.users, messageHandler);
         userListView.setAdapter(userCheckBoxAdapter);
         // registerForContextMenu(userListView);
 
@@ -58,6 +86,20 @@ public class GroupActivity extends FragmentActivity {
                 UserNameDialog dialog = new UserNameDialog();
                 dialog.setGroup(group);
                 dialog.show(getSupportFragmentManager(), "add_new_user");
+
+            }
+        });
+
+        optionsButton = (Button) findViewById(R.id.group_activity_options_button);
+        optionsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OptionsMenuDialog optionsMenuDialog =new OptionsMenuDialog();
+                int[] location= new int[2];
+                v.getLocationOnScreen(location);
+                optionsMenuDialog.setX(location[0]);
+                optionsMenuDialog.setY(location[1]);
+                optionsMenuDialog.show(getFragmentManager(), "optionsMenueDialog");
 
             }
         });
@@ -93,48 +135,35 @@ public class GroupActivity extends FragmentActivity {
         backToMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent main = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(main);
                 finish();
             }
         });
-        toActionsButton = (Button) findViewById(R.id.to_actions_button);
-        toActionsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                Intent actions = new Intent(getApplicationContext(), ActionsActivity.class);
-                actions.putExtra("groupId", group.getId());
-                startActivity(actions);
-            }
-        });
-        Button syncButton = (Button) findViewById(R.id.sync_button);
-        notifyUserChangedHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                notifyUserListChanged();
-                super.handleMessage(msg);
-            }
-        };
-        group.setParentActivityMessageHandler(notifyUserChangedHandler);
+
+        syncButton = (ImageButton) findViewById(R.id.sync_button);
+        group.setParentActivityMessageHandler(messageHandler);
         syncButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 group.syncUsers();
                 group.getGroupLog().syncActions(getApplicationContext());
+                syncButton.startAnimation(AnimationUtils.loadAnimation(GroupActivity.this, R.anim.rotate_360));
             }
         });
         this.group.syncUsers();
         group.getGroupLog().syncActions(getApplicationContext());
         notifyUserListChanged();
-        this.userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        this.userListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 UserContextMenuDialog dialog = new UserContextMenuDialog();
                 dialog.setUser(users.get(position));
                 dialog.show(getFragmentManager(), "UserContextMenuDialog");
+                return false;
             }
         });
+
+        initLayoutPreferences();
 
 
     }
@@ -161,7 +190,11 @@ public class GroupActivity extends FragmentActivity {
         }
     }
 
-
+public void goToActionActivity(){
+    Intent actions = new Intent(getApplicationContext(), ActionsActivity.class);
+    actions.putExtra("groupId", group.getId());
+    startActivity(actions);
+}
     public void notifyUserAdded(String name, String emailAddress) {
         if (!emailAddress.isEmpty()) {
             inviteByMail(emailAddress);
@@ -218,7 +251,60 @@ public class GroupActivity extends FragmentActivity {
     }
 
 
+    private void initLayoutPreferences() {
+        double syncButtonFactor;
+        double groupNameFactor;
+        double backButtonFactor;
+        double addPersonButtonFactor;
+        double goOutCheckedFactor;
+        double goOutAllFactor;
+        double optionManuFactor;
 
+
+        int screenSize;
+        int configuration = getResources().getConfiguration().orientation;
+        if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
+             syncButtonFactor=40;
+             groupNameFactor=0;
+             backButtonFactor=0;
+             addPersonButtonFactor=0;
+             goOutCheckedFactor=0;
+             goOutAllFactor=0;
+            optionManuFactor=0;
+        } else {
+             syncButtonFactor=18;
+             groupNameFactor=10;
+             backButtonFactor=25;
+             addPersonButtonFactor=0;
+             goOutCheckedFactor=0;
+             goOutAllFactor=0;
+            optionManuFactor=25;
+        }
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) syncButton.getLayoutParams();
+        params.width = (int)(height / syncButtonFactor);
+        params.height = (int) (height / syncButtonFactor);
+        syncButton.setLayoutParams(params);
+
+
+        TextView groupName = (TextView) findViewById(R.id.tv_grp_name);
+        groupName.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/groupNameFactor));
+
+        RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) optionsButton.getLayoutParams();
+        params2.width = (int)(height / optionManuFactor);
+        params2.height = (int) (height / optionManuFactor);
+        optionsButton.setLayoutParams(params2);
+
+
+        RelativeLayout.LayoutParams params3 = (RelativeLayout.LayoutParams) backToMain.getLayoutParams();
+        params3.width = (int)(height / backButtonFactor);
+        params3.height = (int) (height / backButtonFactor);
+        backToMain.setLayoutParams(params3);
+    }
 
 }
 

@@ -4,87 +4,108 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="#45da8f"
+        android:gravity="center_vertical">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bt_back_to_info"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/back"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="15dp" />
+
+        <Button
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/group_activity_options_button"
+            android:background="@drawable/options_icon"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/bt_back_to_info"
+            android:layout_toEndOf="@+id/bt_back_to_info"
+            android:layout_marginRight="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/tv_grp_name"
+            android:text="Group Name"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/group_activity_options_button"
+            android:layout_toEndOf="@+id/group_activity_options_button" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="#45da8f">
 
-        <LinearLayout
-            android:orientation="horizontal"
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center">
+            android:text="+Add Person"
+            android:id="@+id/add_user_button"
+            android:background="@drawable/round_button"
+            android:padding="2dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/bt_back_to_info"
-                android:text="Back"
-
-                />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/to_actions_button"
-                android:text="To Action"
-                />
-
-            <Button
-
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:id="@+id/group_activity_options_button"
-                android:background="@drawable/options_icon" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/tv_grp_name"
-                android:text="Group Name"
-                android:gravity="center"
-                android:textColor="#ffffff" />
-
-            <Button
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:id="@+id/sync_button"
-                android:background="@drawable/cloud_sync_icon" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            android:gravity="left|top">
+            android:text="New Bill"
+            android:id="@+id/bt_go_out_checked"
+            android:visibility="gone"
+            android:background="@drawable/round_button"
+            android:textStyle="bold"
+            android:padding="2dp"
+            android:layout_toRightOf="@+id/add_user_button"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/add_user_button"
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add a user"
-                android:id="@+id/add_user_button"
-     />
+            />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Go out checked!"
-                android:id="@+id/bt_go_out_checked"
-                />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Bill"
+            android:id="@+id/bt_go_out_all"
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Go out all!"
-                android:id="@+id/bt_go_out_all"
+            android:background="@drawable/round_button"
+            android:padding="2dp"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/add_user_button"
+            android:layout_toEndOf="@+id/add_user_button"
+            />
 
-                />
-        </LinearLayout>
-    </LinearLayout>
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/sync_button"
+            android:background="@android:drawable/stat_notify_sync"
+
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp" />
+    </RelativeLayout>
 
     <ListView
         android:layout_width="match_parent"

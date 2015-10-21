@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="Payment history"
+        android:id="@+id/options_menu_payment_history"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:gravity="center|left" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="Settle up"
+        android:id="@+id/options_menu_settle_up"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:gravity="center|left" />
+</LinearLayout>

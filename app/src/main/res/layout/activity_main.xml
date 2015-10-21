@@ -2,24 +2,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:weightSum="20">
+    android:orientation="vertical">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#45da8f"
+        android:background="@drawable/picture_frame"
         android:orientation="vertical"
         android:id="@+id/main_activity_header_container"
-        >
+        android:gravity="center_horizontal|top"
+        android:layout_marginLeft="-10dp"
+        android:layout_marginTop="-10dp"
+        android:layout_marginRight="-10dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
             android:text="FairShare"
-            android:layout_gravity="center_horizontal|top"
             android:id="@+id/main_activity_title"
             android:textColor="#ffffffff" />
 
@@ -27,11 +27,8 @@
             android:id="@+id/create_new_group_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
             android:gravity="center"
-            android:text="+Create New Group"
-            android:layout_gravity="center_horizontal|bottom"
-            android:textSize="15sp" />
+            android:text="+Create New Group" />
 
     </LinearLayout>
 
@@ -39,7 +36,6 @@
         android:id="@+id/groups_list"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_weight="16"
         android:background="#ffffffff" />
 
 </LinearLayout>

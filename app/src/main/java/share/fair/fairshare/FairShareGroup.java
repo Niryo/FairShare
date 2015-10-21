@@ -31,7 +31,7 @@ import java.util.List;
  */
 
 
-public class FairShareGroup extends SugarRecord<FairShareGroup> implements Serializable {
+public class FairShareGroup extends SugarRecord<FairShareGroup>  {
     private String name;
     private long groupLogId;
     private String cloudLogKey = "";
@@ -73,6 +73,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> implements Seria
     }
 
     public static List<GroupNameRecord> getSavedGroupNames() {
+
         return GroupNameRecord.listAll(GroupNameRecord.class);
 
     }
@@ -108,6 +109,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> implements Seria
         parseGroup.put("userId", user.getUserId());
         parseGroup.put("userName", user.getName());
         parseGroup.put("userEmail", user.getEmail());
+        parseGroup.put("userBalance",user.getBalance());
         parseGroup.saveEventually(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -162,8 +164,8 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> implements Seria
                         }
                     }
                     if (dirty) {
-                        Message msg;
-                        msg = Message.obtain();
+                        Message msg = Message.obtain();
+                        msg.what=GroupActivity.NOTIFY_USER_CHANGE;
                         parentActivityMessageHandler.sendMessage(msg);
                     }
                 }

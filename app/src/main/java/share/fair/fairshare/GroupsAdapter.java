@@ -64,11 +64,11 @@ public class GroupsAdapter extends ArrayAdapter {
         double rowFactor;
         int configuration = getContext().getResources().getConfiguration().orientation;
         if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
-            groupNameFactor = 30;
+            groupNameFactor = 27;
             arrowFactor = 14;
             rowFactor = 9;
         } else {
-            groupNameFactor = 45;
+            groupNameFactor = 23;
             arrowFactor = 17;
             rowFactor = 10;
         }
@@ -78,7 +78,7 @@ public class GroupsAdapter extends ArrayAdapter {
         display.getSize(size);
         int height = size.y;
         TextView textView = (TextView) convertView.findViewById(R.id.tv_row_grp_name);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (height / groupNameFactor));
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / groupNameFactor));
         ImageView arrow = (ImageView) convertView.findViewById(R.id.group_row_arrow);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) arrow.getLayoutParams();
         params.width = height / arrowFactor;

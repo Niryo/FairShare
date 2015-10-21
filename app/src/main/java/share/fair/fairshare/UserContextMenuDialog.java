@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -32,7 +33,8 @@ public class UserContextMenuDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View dialogLayout = inflater.inflate(R.layout.user_context_menu_dialog_layout, container);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        getDialog().setTitle(user.getName());
+       getDialog().setTitle(user.getName());
+
         //==================================== First Item ==========================================
         final EditText inputEditText = (EditText) dialogLayout.findViewById(R.id.edit_text_user_context_menu);
         inputEditText.setHint("Enter amount paid");
