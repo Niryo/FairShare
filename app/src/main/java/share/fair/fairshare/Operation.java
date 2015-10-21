@@ -15,16 +15,20 @@ public class Operation extends SugarRecord<Operation> implements Serializable {
     public String userId;
     public double paid;
     public double share;
+    boolean hasUserAddedShare;
     Long belongingActionId;
+
+
 
     public Operation() {
     }
 
-    public Operation(String userId, String username, double paid, double share) {
+    public Operation(String userId, String username, double paid, double share, boolean hasUserAddedShare) {
         this.userId = userId;
         this.username = username;
         this.paid = paid;
         this.share = share;
+        this.hasUserAddedShare =hasUserAddedShare;
     }
 
 
@@ -58,6 +62,13 @@ public class Operation extends SugarRecord<Operation> implements Serializable {
 
     public void setShare(double share) {
         this.share = share;
+    }
+
+    public boolean getHasShare(){
+        return this.hasUserAddedShare;
+    }
+    public void setHasShare(boolean hasUserAddedShare){
+        this.hasUserAddedShare = hasUserAddedShare;
     }
 
     public JSONObject toJSON() {

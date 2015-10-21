@@ -18,9 +18,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:imeOptions="actionDone"
-        android:textColorHint="#d0151515"
+        android:textColorHint="#590f0f15"
         android:singleLine="false"
-        android:textColor="#b33b3b3b"
+        android:textColor="#010101"
         android:digits="0123456789."
         android:textSize="14sp"
         android:layout_gravity="center_horizontal"
@@ -34,8 +34,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:imeOptions="actionDone"
-        android:textColorHint="#d0151515"
-        android:textColor="#b33b3b3b"
+        android:textColorHint="#590f0f15"
+        android:textColor="#010101"
         android:digits="0123456789."
         android:textSize="14sp" />
 
