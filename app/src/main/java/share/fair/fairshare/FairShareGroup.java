@@ -1,6 +1,7 @@
 package share.fair.fairshare;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
@@ -222,6 +223,11 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
     }
 
     public void consumeAction(Action action) {
+        List<Alert.NotifiedId> notifiedIds = (List<Alert.NotifiedId>) Alert.NotifiedId.listAll(Alert.NotifiedId.class);
+        Hashtable<String, Boolean> notifiedTable = new Hashtable<>();
+        for(Alert.NotifiedId notifiedId: notifiedIds){
+            notifiedTable.put(notifiedId.userId,true);
+        }
         Hashtable<String, User> usersTable = new Hashtable<String, User>();
         for (User user : users) {
             usersTable.put(user.getUserId(), user);
@@ -230,6 +236,15 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
             User user = usersTable.get(operation.userId);
             if (user != null) {
                 user.addToBalance(operation.getPaid() - operation.getShare());//todo: check!!
+                if(notifiedTable.containsKey(user.getUserId())){
+                    Alert.AlertObject newAlert = new Alert.AlertObject(action.getDescription(),operation.getPaid()-operation.getShare(),user.getName());
+                    Message msg;
+                    msg = Message.obtain();
+                    msg.obj=newAlert;
+                    msg.what = GroupActivity.BALANCE_CHANGED;
+                    parentActivityMessageHandler.sendMessage(msg);
+                }
+
             }
         }
         //report user changed to notify the adapter:

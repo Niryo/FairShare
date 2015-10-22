@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 /**
  * Created by Nir on 16/10/2015.
@@ -37,7 +38,7 @@ public class UserContextMenuDialog extends DialogFragment {
 
         //==================================== First Item ==========================================
         final EditText inputEditText = (EditText) dialogLayout.findViewById(R.id.edit_text_user_context_menu);
-        inputEditText.setHint("Enter amount paid");
+        inputEditText.setHint("Amount paid");
         final Button doneButton = (Button) dialogLayout.findViewById(R.id.done_button_user_context_menu);
         final Button nextButton = (Button) dialogLayout.findViewById(R.id.next_button_user_context_menu);
         nextButton.setEnabled(false);
@@ -67,7 +68,7 @@ public class UserContextMenuDialog extends DialogFragment {
                 doneButton.setVisibility(View.VISIBLE);
                 paid = inputEditText.getText().toString().isEmpty() ? 0.0 : Double.parseDouble(inputEditText.getText().toString());
                 inputEditText.setText("");
-                inputEditText.setHint("Enter user's share");
+                inputEditText.setHint("User's share");
             }
         });
         doneButton.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +83,15 @@ public class UserContextMenuDialog extends DialogFragment {
         });
         //==================================== Second Item ==========================================
 
+        TextView notifyMe = (TextView) dialogLayout.findViewById(R.id.user_context_menu_notify_me);
+        notifyMe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Alert.NotifiedId notifiedId= new Alert.NotifiedId(user.getUserId());
+                notifiedId.save();
+                getDialog().dismiss();
+            }
+        });
         return dialogLayout;
     }
 }

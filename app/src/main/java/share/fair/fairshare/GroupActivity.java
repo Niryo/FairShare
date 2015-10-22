@@ -32,6 +32,7 @@ public class GroupActivity extends FragmentActivity {
     static final int NOTIFY_USER_CHANGE=1;
     static final int CHECKED_AVAILABLE=2;
     static final int CHECKED_UNAVAILABLE=3;
+    static final int BALANCE_CHANGED=4;
     static final int GO_OUT_REQUEST = 1;  // The request code
     TextView groupNameTextView;
     Button addUserButton;
@@ -46,6 +47,7 @@ public class GroupActivity extends FragmentActivity {
     ImageButton syncButton;
     Button alertButton;
     private Handler messageHandler;
+    private ArrayList<Alert.AlertObject> alertObjects=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,13 @@ public class GroupActivity extends FragmentActivity {
                 if(msg.what==CHECKED_UNAVAILABLE){
                     goOutCheckedButton.setVisibility(View.GONE);
                     goOutAllButton.setVisibility(View.VISIBLE);
+                }
+                if(msg.what==BALANCE_CHANGED){
+                    Alert.AlertObject alert =(Alert.AlertObject) msg.obj;
+                    alertObjects.add(alert);
+                    alertButton.setBackgroundResource(R.drawable.popup_reminder_active);
+                    alertButton.setText(Integer.toString(alertObjects.size()));
+
                 }
             }
         };
@@ -179,6 +188,9 @@ public class GroupActivity extends FragmentActivity {
 
     }
 
+    private void setAlertButton(){
+
+    }
     private void inviteByMail(String emailAddress) {
         Uri.Builder uriBuilder = new Uri.Builder();
         uriBuilder.scheme("http");
@@ -271,6 +283,7 @@ public void goToActionActivity(){
         double goOutAllFactor;
         double optionManuFactor;
         double alertButtonFactor;
+        double alertButtonTextSizeFactor;
 
 
         int screenSize;
@@ -282,6 +295,7 @@ public void goToActionActivity(){
             regularButtonSizeFactor=40;
             optionManuFactor=25;
             alertButtonFactor=25;
+            alertButtonTextSizeFactor=50;
         } else {
              syncButtonFactor=18;
              groupNameFactor=10;
@@ -289,6 +303,7 @@ public void goToActionActivity(){
              regularButtonSizeFactor=40;
             optionManuFactor=25;
             alertButtonFactor=25;
+            alertButtonTextSizeFactor=50;
         }
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -323,6 +338,7 @@ public void goToActionActivity(){
         params4.width = (int)(height / alertButtonFactor);
         params4.height = (int) (height / alertButtonFactor);
         alertButton.setLayoutParams(params4);
+        alertButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / alertButtonTextSizeFactor));
     }
 
 }

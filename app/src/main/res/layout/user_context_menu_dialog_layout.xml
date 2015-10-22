@@ -63,8 +63,8 @@ android:maxLength="15"
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
-            android:id="@+id/textView2"
+            android:text="Notify me (be alerted when user&apos;s balance changed)"
+            android:id="@+id/user_context_menu_notify_me"
             android:layout_gravity="center" />
     </LinearLayout>
 </LinearLayout>
