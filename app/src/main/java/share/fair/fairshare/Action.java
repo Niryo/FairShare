@@ -88,8 +88,8 @@ public class Action extends SugarRecord<Action> implements Serializable {
         this.operations = operations;
     }
 
-    public void addOperation(String id, String username, double paid, double share) {
-        this.operations.add(new Operation(id, username, paid, share));
+    public void addOperation(String id, String username, double paid, double share , boolean hasUserAddedShare) {
+        this.operations.add(new Operation(id, username, paid, share, hasUserAddedShare));
     }
 
     public JSONObject toJSON() {

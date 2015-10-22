@@ -80,7 +80,7 @@ public class GoOutActivity extends Activity {
                         shareInput = Double.parseDouble(shareInputStr);
                         totalShare += shareInput;
                         //if user have share, we can calculate it's balance right now;
-                        action.addOperation(nameList.get(i).getUserId(), nameList.get(i).getName(), paidInput, shareInput);
+                        action.addOperation(nameList.get(i).getUserId(), nameList.get(i).getName(), paidInput, shareInput , true);
                     }
                 }
                 double totalPaidWithoutShares = totalPaid - totalShare;
@@ -100,7 +100,7 @@ public class GoOutActivity extends Activity {
                     if (!paidInputStr.isEmpty()) {
                         paidInput = Double.parseDouble(paidInputStr);
                     }
-                    action.addOperation(nameList.get(index).getUserId(), nameList.get(index).getName(), paidInput, splitEvenShare);
+                    action.addOperation(nameList.get(index).getUserId(), nameList.get(index).getName(), paidInput, splitEvenShare,false);
                 }
                 for (User user : nameList) {
                     toastGen(getApplicationContext(), "usernameGo: " + user.getName() + " balGo: " + user.getBalance());

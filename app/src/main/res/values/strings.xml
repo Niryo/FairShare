@@ -6,4 +6,6 @@
     <string name="title_activity_go_out">GoOutActivity</string>
     <string name="title_activity_actions">ActionsActivity</string>
     <string name="title_activity_action_edit">ActionEditActivity</string>
+    <string name="for_tag_id">tagId</string>
+
 </resources>

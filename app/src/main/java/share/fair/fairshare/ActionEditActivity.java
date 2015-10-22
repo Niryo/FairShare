@@ -64,8 +64,13 @@ public class ActionEditActivity extends AppCompatActivity {
             String textPaid = Double.toString(oper.getPaid());
             ((EditText) newView.findViewById(R.id.et_paid_oper)).setText(textPaid);
             String textShare = Double.toString(oper.share);
-            ((EditText) newView.findViewById(R.id.et_share_oper)).setText(textShare);
+            if(oper.getHasShare()) {
+                ((EditText) newView.findViewById(R.id.et_share_oper)).setText(textShare);
+            } else{
+                ((EditText) newView.findViewById(R.id.et_share_oper)).setHint(textShare);
+            }
             newView.setTag(oper.userId);
+            newView.setTag(R.string.for_tag_id,oper.getHasShare());
             list.addView(newView);
             viewsList.add(newView);
         }
@@ -86,7 +91,7 @@ public class ActionEditActivity extends AppCompatActivity {
 
                     double oppositePaid = -1*oper.paid;
                     double oppositeShare = -1* oper.share;
-                    oppositeOperationList.add(new Operation(oppositeId,oppositeUsername,oppositePaid,oppositeShare));
+                    oppositeOperationList.add(new Operation(oppositeId,oppositeUsername,oppositePaid,oppositeShare,oper.getHasShare()));
                 }
 
                 Action oppositeAction = new Action(creatorName, creatorId, action.getDescription() + " (Cancellation(edit))");
@@ -106,7 +111,7 @@ public class ActionEditActivity extends AppCompatActivity {
                     Double newPaid = Double.parseDouble(((EditText) row.findViewById(R.id.et_paid_oper)).getText().toString());
                     Double newShare = Double.parseDouble(((EditText) row.findViewById(R.id.et_share_oper)).getText().toString());
                     String newId = (String) viewsList.get(j).getTag();
-                    newOperations.add(new Operation(newId, newUsername, newPaid, newShare));
+                    newOperations.add(new Operation(newId, newUsername, newPaid, newShare, (boolean)row.getTag(R.string.for_tag_id)));
                     toastGen(getApplicationContext(), "id: " + newId + " user: " + newUsername);
                 }
 
@@ -141,14 +146,13 @@ public class ActionEditActivity extends AppCompatActivity {
                     String oppositeUsername = oper.username;
                     double oppositePaid = -1 * oper.paid;
                     double oppositeShare = -1 * oper.share;
-                    oppositeOperationList.add(new Operation(oppositeId, oppositeUsername, oppositePaid, oppositeShare));
+                    oppositeOperationList.add(new Operation(oppositeId, oppositeUsername, oppositePaid, oppositeShare, oper.getHasShare()));
                 }
                 Action oppositeAction = new Action(creatorName, creatorId, action.getDescription() + "(Edited");
                 oppositeAction.setGroupLogId(group.getGroupLog().getId());
                 oppositeAction.operations = oppositeOperationList;
                 oppositeAction.setTimeStamp(action.getTimeStamp());
                 group.consumeAction(oppositeAction);
-
                 group.getGroupLog().addAction(getApplicationContext(),oppositeAction);
                 toastGen(getApplicationContext(), "the action: " + action.getDescription() + "was successfully deleted.");
                 finish();
@@ -183,7 +187,4 @@ public class ActionEditActivity extends AppCompatActivity {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 }
-
-
-
 
