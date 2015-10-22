@@ -38,6 +38,16 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
     private String cloudLogKey = "";
     private String cloudGroupKey = "";
 
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    private String ownerId="";
+
     @Ignore
     private List<User> users = new ArrayList<>();
     @Ignore
@@ -54,7 +64,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
     }
 
 
-    public static FairShareGroup groupBuilder(String name) {
+    public static FairShareGroup groupBuilder(Context context, String name) {
         FairShareGroup group = new FairShareGroup(name);
         Date zeroDate = new Date();
         zeroDate.setTime(0);
@@ -65,11 +75,12 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         GroupLog groupLog = new GroupLog(group, cloudLogKey);
         groupLog.save();
         group.setGroupLog(groupLog);
+        SharedPreferences settings = context.getSharedPreferences("MAIN_PREFERENCES", 0);
+        String ownerId = settings.getString("id", "");
+        group.setOwnerId(ownerId);
         group.save();
         GroupNameRecord groupNameRecord = new GroupNameRecord(name, group.getId());
         groupNameRecord.save();
-
-
         return group;
     }
 
@@ -97,6 +108,9 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         GroupNameRecord groupNameRecord = new GroupNameRecord(name, group.getId());
         groupNameRecord.save();
         group.setCloudGroupKey(cloudGroupKey);
+        SharedPreferences settings = context.getSharedPreferences("MAIN_PREFERENCES", 0);
+        String ownerId = settings.getString("id", "");
+        group.setOwnerId(ownerId);
         group.save();
     }
 
@@ -236,7 +250,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
             User user = usersTable.get(operation.userId);
             if (user != null) {
                 user.addToBalance(operation.getPaid() - operation.getShare());//todo: check!!
-                if(notifiedTable.containsKey(user.getUserId())){
+                if(!action.getCreatorId().equals(this.ownerId) && notifiedTable.containsKey(user.getUserId())){
                     Alert.AlertObject newAlert = new Alert.AlertObject(action.getDescription(),operation.getPaid()-operation.getShare(),user.getName());
                     Message msg;
                     msg = Message.obtain();

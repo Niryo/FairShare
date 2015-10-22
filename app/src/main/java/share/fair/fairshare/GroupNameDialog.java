@@ -38,7 +38,7 @@ public class GroupNameDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 String name = nameEditText.getText().toString();
-                FairShareGroup.groupBuilder(name);
+                FairShareGroup.groupBuilder(getContext(),name);
                 ((GroupCreatedListener) getActivity()).notifyGroupCreated();
                 getDialog().dismiss();
             }

@@ -57,6 +57,7 @@ public class GroupActivity extends FragmentActivity {
         if (groupId == -1) {
             //todo: handle problem;
         }
+
         this.group = FairShareGroup.loadGroupFromStorage(groupId);
         groupNameTextView = (TextView) findViewById(R.id.tv_grp_name);
         groupNameTextView.setText(group.getName());
@@ -104,8 +105,19 @@ public class GroupActivity extends FragmentActivity {
         alertButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.setBackgroundResource(R.drawable.popup_reminder_active);
+                if(alertObjects.size()>0) {
+                    v.setBackgroundResource(R.drawable.popup_reminder);
+                    ((Button)v).setText("");
+                    AlertsDialog alertsDialog = new AlertsDialog();
+                    int[] location= new int[2];
+                    v.getLocationOnScreen(location);
+                    alertsDialog.setX(location[0]);
+                    alertsDialog.setY(location[1]);
+                    alertsDialog.setAlerts(new ArrayList<Alert.AlertObject>(alertObjects));
+                    alertsDialog.show(getSupportFragmentManager(), "add_new_user");
+                    alertObjects.clear();
 
+                }
             }
         });
 
