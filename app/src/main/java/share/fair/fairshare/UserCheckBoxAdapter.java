@@ -1,15 +1,21 @@
 package share.fair.fairshare;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.graphics.Point;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +47,7 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
             LayoutInflater vi = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = vi.inflate(R.layout.user_check_row, null);
         }
+        initLayoutPreferences(convertView);
         TextView userBalance = (TextView) convertView.findViewById(R.id.tv_user_balance);
         CheckBox cbUserRow = (CheckBox) convertView.findViewById(R.id.cb_user_row);
         cbUserRow.setOnClickListener(new OnClickListener() {
@@ -85,6 +92,33 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
 
     public void clearChecked() {
         this.checkedUsers.clear();
+    }
+
+
+    private void initLayoutPreferences(View convertView) {
+
+
+        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        int screenSize;
+        int configuration = getContext().getResources().getConfiguration().orientation;
+        double fontSizeFactor;
+        if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
+            fontSizeFactor=30;
+        } else {
+            fontSizeFactor=30;
+        }
+        Display display =  wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+
+        TextView userBalance = (TextView) convertView.findViewById(R.id.tv_user_balance);
+        userBalance.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/fontSizeFactor));
+
+        CheckBox cbUserRow = (CheckBox) convertView.findViewById(R.id.cb_user_row);
+        cbUserRow.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/fontSizeFactor));
+
+
     }
 }
 

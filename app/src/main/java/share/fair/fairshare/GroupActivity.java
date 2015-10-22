@@ -44,6 +44,7 @@ public class GroupActivity extends FragmentActivity {
     Button backToMain;
     Button optionsButton;
     ImageButton syncButton;
+    Button alertButton;
     private Handler messageHandler;
 
     @Override
@@ -90,6 +91,16 @@ public class GroupActivity extends FragmentActivity {
             }
         });
 
+        alertButton = (Button) findViewById(R.id.group_activity_alert_button);
+        alertButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setBackgroundResource(R.drawable.popup_reminder_active);
+
+            }
+        });
+
+
         optionsButton = (Button) findViewById(R.id.group_activity_options_button);
         optionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +109,7 @@ public class GroupActivity extends FragmentActivity {
                 int[] location= new int[2];
                 v.getLocationOnScreen(location);
                 optionsMenuDialog.setX(location[0]);
-                optionsMenuDialog.setY(location[1]);
+                optionsMenuDialog.setY(location[1]-v.getHeight());
                 optionsMenuDialog.show(getFragmentManager(), "optionsMenueDialog");
 
             }
@@ -202,9 +213,7 @@ public void goToActionActivity(){
         User newUser = new User(name, 0);
         newUser.setEmail(emailAddress);
         this.group.addUser(getApplicationContext(), newUser);
-        users.clear();
-        users.addAll(group.getUsers());
-        userCheckBoxAdapter.notifyDataSetChanged();
+        notifyUserListChanged();
 
     }
 
@@ -229,6 +238,8 @@ public void goToActionActivity(){
 
 
     public void notifyUserListChanged() {
+        users.clear();
+        users.addAll(group.getUsers());
         userCheckBoxAdapter.notifyDataSetChanged();
     }
 
@@ -255,30 +266,29 @@ public void goToActionActivity(){
         double syncButtonFactor;
         double groupNameFactor;
         double backButtonFactor;
-        double addPersonButtonFactor;
+        double regularButtonSizeFactor;
         double goOutCheckedFactor;
         double goOutAllFactor;
         double optionManuFactor;
+        double alertButtonFactor;
 
 
         int screenSize;
         int configuration = getResources().getConfiguration().orientation;
         if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
-             syncButtonFactor=40;
-             groupNameFactor=0;
-             backButtonFactor=0;
-             addPersonButtonFactor=0;
-             goOutCheckedFactor=0;
-             goOutAllFactor=0;
-            optionManuFactor=0;
+            syncButtonFactor=18;
+            groupNameFactor=10;
+            backButtonFactor=15;
+            regularButtonSizeFactor=40;
+            optionManuFactor=25;
+            alertButtonFactor=25;
         } else {
              syncButtonFactor=18;
              groupNameFactor=10;
-             backButtonFactor=25;
-             addPersonButtonFactor=0;
-             goOutCheckedFactor=0;
-             goOutAllFactor=0;
+             backButtonFactor=15;
+             regularButtonSizeFactor=40;
             optionManuFactor=25;
+            alertButtonFactor=25;
         }
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -304,6 +314,15 @@ public void goToActionActivity(){
         params3.width = (int)(height / backButtonFactor);
         params3.height = (int) (height / backButtonFactor);
         backToMain.setLayoutParams(params3);
+
+        addUserButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularButtonSizeFactor));
+        goOutAllButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/regularButtonSizeFactor));
+        goOutCheckedButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularButtonSizeFactor));
+
+        RelativeLayout.LayoutParams params4 = (RelativeLayout.LayoutParams) alertButton.getLayoutParams();
+        params4.width = (int)(height / alertButtonFactor);
+        params4.height = (int) (height / alertButtonFactor);
+        alertButton.setLayoutParams(params4);
     }
 
 }
