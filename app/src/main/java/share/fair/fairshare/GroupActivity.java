@@ -25,6 +25,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.ParseException;
+import com.parse.ParsePush;
+import com.parse.SendCallback;
+
 import java.util.ArrayList;
 
 public class GroupActivity extends FragmentActivity {
@@ -59,6 +63,7 @@ public class GroupActivity extends FragmentActivity {
         }
 
         this.group = FairShareGroup.loadGroupFromStorage(groupId);
+
         groupNameTextView = (TextView) findViewById(R.id.tv_grp_name);
         groupNameTextView.setText(group.getName());
         this.users = new ArrayList<>(group.getUsers());
@@ -81,6 +86,7 @@ public class GroupActivity extends FragmentActivity {
                     alertObjects.add(alert);
                     alertButton.setBackgroundResource(R.drawable.popup_reminder_active);
                     alertButton.setText(Integer.toString(alertObjects.size()));
+                    notifyUserListChanged();
 
                 }
             }
@@ -130,7 +136,7 @@ public class GroupActivity extends FragmentActivity {
                 int[] location= new int[2];
                 v.getLocationOnScreen(location);
                 optionsMenuDialog.setX(location[0]);
-                optionsMenuDialog.setY(location[1]-v.getHeight());
+                optionsMenuDialog.setY(location[1] - v.getHeight());
                 optionsMenuDialog.show(getFragmentManager(), "optionsMenueDialog");
 
             }
@@ -184,6 +190,7 @@ public class GroupActivity extends FragmentActivity {
         });
         this.group.syncUsers();
         group.getGroupLog().syncActions(getApplicationContext());
+
         notifyUserListChanged();
         this.userListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -273,6 +280,8 @@ public void goToActionActivity(){
             checkBox.setChecked(false);
         }
         this.userCheckBoxAdapter.clearChecked();
+        goOutCheckedButton.setVisibility(View.GONE);
+        goOutAllButton.setVisibility(View.VISIBLE);
     }
 
     public void fastCheckoutCalculation(User user, double paid, double share) {

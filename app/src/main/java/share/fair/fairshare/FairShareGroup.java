@@ -11,6 +11,7 @@ import com.orm.dsl.Ignore;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
@@ -71,6 +72,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         String cloudGroupKey = "a" + new BigInteger(130, new SecureRandom()).toString(32);
         String cloudLogKey = "a" + new BigInteger(130, new SecureRandom()).toString(32);
         group.setCloudGroupKey(cloudGroupKey);
+        ParsePush.subscribeInBackground(cloudGroupKey);//subscribe to the group chanel
         group.setCloudLogKey(cloudLogKey);
         GroupLog groupLog = new GroupLog(group, cloudLogKey);
         groupLog.save();
@@ -104,10 +106,13 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
 
     public static void joinGroupWithKey(Context context, String name, String cloudGroupKey, String cloudLogKey) {
         FairShareGroup group = new FairShareGroup(name);
-        group.setGroupLog(new GroupLog(group, cloudLogKey));
+        GroupLog groupLog = new GroupLog(group, cloudLogKey);
+        groupLog.save();
+        group.setGroupLog(groupLog);
         GroupNameRecord groupNameRecord = new GroupNameRecord(name, group.getId());
         groupNameRecord.save();
         group.setCloudGroupKey(cloudGroupKey);
+        ParsePush.subscribeInBackground(cloudGroupKey);//subscribe to the group chanel
         SharedPreferences settings = context.getSharedPreferences("MAIN_PREFERENCES", 0);
         String ownerId = settings.getString("id", "");
         group.setOwnerId(ownerId);
@@ -263,7 +268,8 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         }
         //report user changed to notify the adapter:
         if (parentActivityMessageHandler != null) { //todo: check if uerlist is being updated
-            Message msg;
+            Message msg=new Message();
+            msg.what=GroupActivity.BALANCE_CHANGED;
             msg = Message.obtain();
             parentActivityMessageHandler.sendMessage(msg);
         }

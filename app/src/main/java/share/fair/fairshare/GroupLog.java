@@ -8,6 +8,7 @@ import com.orm.dsl.Ignore;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 
 import org.json.JSONArray;
@@ -94,20 +95,22 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
                         String actionId = parseObject.getString("actionId");
                         if (jsonObject != null && !actionsIdTable.containsKey(actionId)) { //check if we don't already have this action
                             Action newAction = new Action(jsonObject);
-                            actionsIdTable.put(actionId,true);
-                            if(getId()==null){save();}
+                            actionsIdTable.put(actionId, true);
+                            if (getId() == null) {
+                                save();
+                            }
                             newAction.setGroupLogId(getId());
                             newAction.save();
                             actions.add(newAction);
-                            lastActionTimestampInMilisec = parseObject.getCreatedAt().getTime();
+                            lastActionTimestampInMilisec = Math.max(parseObject.getCreatedAt().getTime(), lastActionTimestampInMilisec);
                             parentGroup.consumeAction(newAction);
                         }
                     }
+                    save();
                 }
             }
         });
     }
-
     public void addAction(Context context, Action action) {
         if(getId()==null) {
         save();
@@ -117,8 +120,30 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
         action.save();
         save();
         sendActionToCloud(action);
+        reportActionViaPush(action);
     }
 
+    private void reportActionViaPush(Action action){
+        ParsePush push = new ParsePush();
+        push.setChannel(parentGroup.getCloudGroupKey());
+            JSONObject jsonToPush=new JSONObject();
+        try {
+            jsonToPush.put("creatorId", parentGroup.getOwnerId());
+            jsonToPush.put("groupName", parentGroup.getName());
+            jsonToPush.put("groupId", parentGroup.getId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        for(Operation operation: action.getOperations()){
+            try {
+                jsonToPush.put(operation.getUserId(), true);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        push.setMessage(jsonToPush.toString());
+        push.sendInBackground();
+    }
     private void sendActionToCloud(Action action) {
         ParseObject parseGroupLog = new ParseObject(this.cloudLogKey);
         parseGroupLog.put("jsonAction", action.toJSON());

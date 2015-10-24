@@ -56,27 +56,29 @@ public class AlertsDialog extends DialogFragment {
         Point size = new Point();
         display.getSize(size);
         int height = size.y;
-        double textSizeFactor=45;
+        double textSizeFactor = 45;
 
         View dialogLayout = inflater.inflate(R.layout.alert_dialog_layout, container);
         LinearLayout alertsContainer = (LinearLayout) dialogLayout.findViewById(R.id.alert_dialog_container);
-        for(Alert.AlertObject alert : alerts){
+        if(alerts!=null){
+        for (Alert.AlertObject alert : alerts) {
             View alertRow = inflater.inflate(R.layout.alert_row, null);
-           TextView  description = (TextView) alertRow.findViewById(R.id.alert_row_description);
+            TextView description = (TextView) alertRow.findViewById(R.id.alert_row_description);
             description.setText(alert.description);
-           description.setTextSize((float) (height / textSizeFactor));
+            description.setTextSize((float) (height / textSizeFactor));
 
-            TextView    userName = (TextView) alertRow.findViewById(R.id.alert_row_username);
+            TextView userName = (TextView) alertRow.findViewById(R.id.alert_row_username);
             userName.setText(alert.useNrame);
-           userName.setTextSize((float) (height / textSizeFactor));
+            userName.setTextSize((float) (height / textSizeFactor));
 
-            TextView     paid = (TextView) alertRow.findViewById(R.id.alert_row_paid);
+            TextView paid = (TextView) alertRow.findViewById(R.id.alert_row_paid);
             paid.setText(Double.toString(alert.paid));
-           paid.setTextSize((float) (height / textSizeFactor));
+            paid.setTextSize((float) (height / textSizeFactor));
             alertsContainer.addView(alertRow);
 
         }
         getDialog().setContentView(R.layout.alert_dialog_layout);
+    }
 
 
 
