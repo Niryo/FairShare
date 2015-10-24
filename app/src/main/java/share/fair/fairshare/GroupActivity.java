@@ -53,12 +53,15 @@ public class GroupActivity extends FragmentActivity {
     private Handler messageHandler;
     private ArrayList<Alert.AlertObject> alertObjects=new ArrayList<>();
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+       // ((App)getApplication()).registerGroupAcrivity(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
-        long groupId = getIntent().getLongExtra("groupId", -1);
-        if (groupId == -1) {
+        String groupId = getIntent().getStringExtra("groupId");
+        if (groupId.isEmpty()) {
             //todo: handle problem;
         }
 
@@ -234,7 +237,7 @@ public class GroupActivity extends FragmentActivity {
 
 public void goToActionActivity(){
     Intent actions = new Intent(getApplicationContext(), ActionsActivity.class);
-    actions.putExtra("groupId", group.getId());
+    actions.putExtra("groupId", group.getCloudGroupKey());
     startActivity(actions);
 }
     public void notifyUserAdded(String name, String emailAddress) {

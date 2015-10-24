@@ -1,5 +1,6 @@
 package share.fair.fairshare;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -33,6 +34,12 @@ public class FairShareReceiver extends ParsePushBroadcastReceiver {
         SharedPreferences settings = context.getSharedPreferences("MAIN_PREFERENCES", 0);
         String ownerId = settings.getString("id", "");
 
+//        Activity activity= ((App)context.getApplicationContext()).activity;
+//        if(activity==null){
+//            Toast.makeText(context, "App is null", Toast.LENGTH_SHORT).show();
+//        }else{
+//            Toast.makeText(context, "App is active!", Toast.LENGTH_SHORT).show();
+//        }
 
         ParseAnalytics.trackAppOpenedInBackground(intent);
         String rawData= intent.getExtras().getString("com.parse.Data");
@@ -75,7 +82,9 @@ public class FairShareReceiver extends ParsePushBroadcastReceiver {
         .setSound(defaultNotificationSound);
 // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context,GroupActivity.class);
-        recivedIntent.putExtra("groupId",Long.parseLong(groupId));
+        resultIntent.putExtra("groupId", groupId);
+
+
 
 // The stack builder object will contain an artificial back stack for the
 // started Activity.
@@ -89,8 +98,9 @@ public class FairShareReceiver extends ParsePushBroadcastReceiver {
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(
                         0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                        PendingIntent.FLAG_ONE_SHOT
                 );
+
         mBuilder.setContentIntent(resultPendingIntent);
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

@@ -81,7 +81,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         String ownerId = settings.getString("id", "");
         group.setOwnerId(ownerId);
         group.save();
-        GroupNameRecord groupNameRecord = new GroupNameRecord(name, group.getId());
+        GroupNameRecord groupNameRecord = new GroupNameRecord(name, group.getCloudGroupKey());
         groupNameRecord.save();
         return group;
     }
@@ -92,9 +92,11 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
 
     }
 
-    public static FairShareGroup loadGroupFromStorage(long groupId) {
-        FairShareGroup group = FairShareGroup.findById(FairShareGroup.class, groupId);
-        List<User> users = User.find(User.class, "belonging_group_id = ?", Long.toString(group.getId()));
+    public static FairShareGroup loadGroupFromStorage(String groupId) {
+
+        List<FairShareGroup> groups = FairShareGroup.find(FairShareGroup.class, "cloud_group_key = ?", groupId);
+        FairShareGroup group = groups.get(0);
+        List<User> users = User.find(User.class, "belonging_group_id = ?", group.getCloudGroupKey());
         group.setUsers(users);
         GroupLog groupLog = GroupLog.findById(GroupLog.class, group.groupLogId);
         groupLog.init(group);
@@ -109,9 +111,9 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         GroupLog groupLog = new GroupLog(group, cloudLogKey);
         groupLog.save();
         group.setGroupLog(groupLog);
-        GroupNameRecord groupNameRecord = new GroupNameRecord(name, group.getId());
-        groupNameRecord.save();
         group.setCloudGroupKey(cloudGroupKey);
+        GroupNameRecord groupNameRecord = new GroupNameRecord(name, cloudGroupKey);
+        groupNameRecord.save();
         ParsePush.subscribeInBackground(cloudGroupKey);//subscribe to the group chanel
         SharedPreferences settings = context.getSharedPreferences("MAIN_PREFERENCES", 0);
         String ownerId = settings.getString("id", "");
@@ -177,7 +179,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
                         if (!currentUserTable.containsKey(id)) {
                             User newUser = new User(cloudUserTable.get(id), 0);
                             newUser.setUserId(id);
-                            newUser.setBelongingGroupId(getId());
+                            newUser.setBelongingGroupId(getCloudGroupKey());
                             newUser.save();
                             users.add(newUser);
                             dirty = true;
@@ -226,7 +228,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
 
     public void addUser(Context context, User user) {
         user.setUserId(new BigInteger(130, new SecureRandom()).toString(32).substring(0, 6));
-        user.setBelongingGroupId(getId());
+        user.setBelongingGroupId(getCloudGroupKey());
         user.save();
         this.users.add(user);
         addUserToCloud(context, user);
@@ -289,11 +291,16 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
 
     public static class GroupNameRecord extends SugarRecord<GroupNameRecord> {
         private String groupName;
-        private Long groupId;
+
+        public String getGroupId() {
+            return groupId;
+        }
+
+        private String groupId;
 
         public  GroupNameRecord(){}
 
-        public GroupNameRecord(String name, Long groupId) {
+        public GroupNameRecord(String name, String groupId) {
             this.groupName = name;
             this.groupId = groupId;
         }

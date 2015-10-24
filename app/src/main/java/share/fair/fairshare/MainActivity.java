@@ -61,7 +61,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent openGroup = new Intent(getApplicationContext(), GroupActivity.class);
-                openGroup.putExtra("groupId", groupNames.get(position).getId());
+                openGroup.putExtra("groupId", groupNames.get(position).getGroupId());
                 startActivity(openGroup);
             }
         });

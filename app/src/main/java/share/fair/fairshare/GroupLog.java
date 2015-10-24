@@ -130,7 +130,7 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
         try {
             jsonToPush.put("creatorId", parentGroup.getOwnerId());
             jsonToPush.put("groupName", parentGroup.getName());
-            jsonToPush.put("groupId", parentGroup.getId());
+            jsonToPush.put("groupId", parentGroup.getCloudGroupKey());
         } catch (JSONException e) {
             e.printStackTrace();
         }

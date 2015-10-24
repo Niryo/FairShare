@@ -12,12 +12,14 @@ import com.parse.SaveCallback;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.acl.Group;
 
 
 /**
  * Created by Nir on 09/10/2015.
  */
 public class App extends SugarApp {
+   // public GroupActivity activity=null;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -34,22 +36,13 @@ public class App extends SugarApp {
                 }
             }
         });
-        //        Method method = null;
-//        try {
-//            method = PushService.class.getDeclaredMethod("startServiceIfRequired");
-//        } catch (NoSuchMethodException e) {
-//            e.printStackTrace();
-//        }
-//        method.setAccessible(true);
-//        try {
-//            Object object=method.invoke(null, getApplicationContext());
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        } catch (InvocationTargetException e) {
-//            e.printStackTrace();
-//        }
+
 
 
 
     }
+
+//    public void registerGroupAcrivity(GroupActivity activity){
+//        this.activity=activity;
+//    }
 }

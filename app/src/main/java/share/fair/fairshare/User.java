@@ -18,7 +18,7 @@ public class User extends SugarRecord<User> implements Serializable {
     private double balance;
     private String email;
     private String userId;
-    private Long belongingGroupId;
+    private String belongingGroupId;
 
     public User() {
     }
@@ -49,7 +49,7 @@ public class User extends SugarRecord<User> implements Serializable {
         return resultUsers;
     }
 
-    public void setBelongingGroupId(Long belongingGroupId) {
+    public void setBelongingGroupId(String belongingGroupId) {
         this.belongingGroupId = belongingGroupId;
     }
 
