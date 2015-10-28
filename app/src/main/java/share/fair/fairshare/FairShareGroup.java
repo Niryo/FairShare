@@ -145,7 +145,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         });
     }
 
-    public void syncUsers() {
+    public void syncUsers(final FairShareCallback callback) {
         final ArrayList<User> usersCopy = new ArrayList<>(users); //a copy so we wan't run on mutable list;
         ParseQuery<ParseObject> query = ParseQuery.getQuery(this.cloudGroupKey);
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -189,6 +189,11 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
                         Message msg = Message.obtain();
                         msg.what=GroupActivity.NOTIFY_USER_CHANGE;
                         parentActivityMessageHandler.sendMessage(msg);
+
+                    }
+                    //return to callback:
+                    if(callback!=null){
+                        callback.doAction();
                     }
                 }
 
@@ -253,6 +258,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         for (User user : users) {
             usersTable.put(user.getUserId(), user);
         }
+
         for (Operation operation : action.getOperations()) {
             User user = usersTable.get(operation.userId);
             if (user != null) {
@@ -267,6 +273,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
                 }
 
             }
+
         }
         //report user changed to notify the adapter:
         if (parentActivityMessageHandler != null) { //todo: check if uerlist is being updated

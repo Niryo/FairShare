@@ -80,36 +80,43 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
     }
 
     public void syncActions(final Context context) {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(this.cloudLogKey);
-        SharedPreferences settings = context.getSharedPreferences("MAIN_PREFERENCES", 0);
-        String creatorId = settings.getString("id", "");
-        query.whereNotEqualTo("creatorId", creatorId); //we don't want to fetch our own updates
-        query.whereGreaterThan("createdAt", new Date(lastActionTimestampInMilisec));
-        query.findInBackground(new FindCallback<ParseObject>() {
+        parentGroup.syncUsers(new FairShareCallback() { //we sync the users
             @Override
-            public void done(List<ParseObject> list, ParseException e) {
-                if (e == null && list != null) {
-                    Hashtable<String, Boolean> actionsIdTable = getActionsIdTable();
-                    for (ParseObject parseObject : list) {
-                        JSONObject jsonObject = parseObject.getJSONObject("jsonAction");
-                        String actionId = parseObject.getString("actionId");
-                        if (jsonObject != null && !actionsIdTable.containsKey(actionId)) { //check if we don't already have this action
-                            Action newAction = new Action(jsonObject);
-                            actionsIdTable.put(actionId, true);
-                            if (getId() == null) {
-                                save();
+            public void doAction() {
+                ParseQuery<ParseObject> query = ParseQuery.getQuery(cloudLogKey);
+                SharedPreferences settings = context.getSharedPreferences("MAIN_PREFERENCES", 0);
+                String creatorId = settings.getString("id", "");
+                query.whereNotEqualTo("creatorId", creatorId); //we don't want to fetch our own updates
+                query.whereGreaterThan("createdAt", new Date(lastActionTimestampInMilisec));
+                query.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> list, ParseException e) {
+                        if (e == null && list != null) {
+                            Hashtable<String, Boolean> actionsIdTable = getActionsIdTable();
+                            for (ParseObject parseObject : list) {
+                                JSONObject jsonObject = parseObject.getJSONObject("jsonAction");
+                                String actionId = parseObject.getString("actionId");
+                                if (jsonObject != null && !actionsIdTable.containsKey(actionId)) { //check if we don't already have this action
+                                    Action newAction = new Action(jsonObject);
+                                    actionsIdTable.put(actionId, true);
+                                    if (getId() == null) {
+                                        save();
+                                    }
+                                    newAction.setGroupLogId(getId());
+                                    newAction.save();
+                                    actions.add(newAction);
+                                    lastActionTimestampInMilisec = Math.max(parseObject.getCreatedAt().getTime(), lastActionTimestampInMilisec);
+                                    parentGroup.consumeAction(newAction);
+                                }
                             }
-                            newAction.setGroupLogId(getId());
-                            newAction.save();
-                            actions.add(newAction);
-                            lastActionTimestampInMilisec = Math.max(parseObject.getCreatedAt().getTime(), lastActionTimestampInMilisec);
-                            parentGroup.consumeAction(newAction);
+                            save();
                         }
                     }
-                    save();
-                }
+                });
             }
         });
+
+
     }
     public void addAction(Context context, Action action) {
         if(getId()==null) {

@@ -81,7 +81,7 @@
                 android:text="New Bill"
                 android:id="@+id/bt_go_out_checked"
                 android:visibility="gone"
-                android:background="@drawable/round_button"
+                android:background="@drawable/round_button_unpressed"
                 android:textStyle="bold"
                 android:padding="2dp"
                 android:layout_centerVertical="true"

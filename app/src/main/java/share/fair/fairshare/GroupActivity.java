@@ -186,12 +186,12 @@ public class GroupActivity extends FragmentActivity {
         syncButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                group.syncUsers();
+                group.syncUsers(null);
                 group.getGroupLog().syncActions(getApplicationContext());
                 syncButton.startAnimation(AnimationUtils.loadAnimation(GroupActivity.this, R.anim.rotate_360));
             }
         });
-        this.group.syncUsers();
+        this.group.syncUsers(null);
         group.getGroupLog().syncActions(getApplicationContext());
 
         notifyUserListChanged();

@@ -27,7 +27,7 @@ import java.util.List;
  * Created by Nir on 24/10/2015.
  */
 public class FairShareReceiver extends ParsePushBroadcastReceiver {
-
+public static int NOTIFICATION_ID = 0;
 
     @Override
     protected void onPushReceive(Context context, Intent intent) {
@@ -105,7 +105,7 @@ public class FairShareReceiver extends ParsePushBroadcastReceiver {
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 // mId allows you to update the notification later on.
-        mNotificationManager.notify(0, mBuilder.build());
+        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
 }
