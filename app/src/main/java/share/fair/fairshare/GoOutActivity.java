@@ -126,10 +126,11 @@ public class GoOutActivity extends Activity {
 
     private View getNewGoOutRow(User user){
         int regularTextSizeFactor;
+
         int configuration = getResources().getConfiguration().orientation;
         if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
-            regularTextSizeFactor=30;
 
+            regularTextSizeFactor=30;
         } else {
 
             regularTextSizeFactor=30;
@@ -154,9 +155,11 @@ public class GoOutActivity extends Activity {
 
         EditText userPaidEditText = (EditText) newView.findViewById(R.id.et_paid);
         userPaidEditText.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularTextSizeFactor));
+        userPaidEditText.setWidth(userPaidPlaceHolder.getWidth());
 
         EditText userShareEditText = (EditText) newView.findViewById(R.id.et_special_share);
         userShareEditText.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularTextSizeFactor));
+        userShareEditText.setWidth(userSharePlaceHolder.getWidth());
 
 
         return newView;

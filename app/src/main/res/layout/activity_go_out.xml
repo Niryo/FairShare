@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/description"
             android:textSize="40dp"
-            android:hint="Bill description"
+            android:hint="Enter bill title.."
             android:gravity="center_horizontal"
             android:singleLine= "true"
            android:imeOptions="actionDone"
@@ -70,7 +70,7 @@
             android:layout_alignParentLeft="true"
 
 
-            />
+            android:textColor="#3399FF" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -80,7 +80,8 @@
             android:layout_toLeftOf="@+id/user_share_title"
 
 
-            android:layout_marginRight="20dp" />
+            android:layout_marginRight="20dp"
+            android:textColor="#3399FF" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -90,7 +91,7 @@
             android:layout_alignParentRight="true"
 
 
-            />
+            android:textColor="#3399FF" />
     </RelativeLayout>
 
     <View

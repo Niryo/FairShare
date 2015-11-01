@@ -24,9 +24,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="User paid"
+            android:text=" User paid"
             android:id="@+id/go_out_activity_user_share_place_holder"
-            android:visibility="visible" />
+            android:visibility="invisible" />
 
         <EditText
             android:id="@+id/et_paid"
@@ -34,15 +34,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
-            android:textColorHint="#d0151515"
-            android:singleLine="false"
-            android:textColor="#b33b3b3b"
+            android:textColorHint="#b33b3b3b"
+            android:textColor="#000000"
             android:digits="0123456789."
             android:textSize="14sp"
-            android:layout_marginRight="20dp"
             android:gravity="center"
             android:visibility="visible"
-            android:hint="_" />
+            android:hint="_"
+
+            />
     </FrameLayout>
 
     <FrameLayout
@@ -59,13 +59,11 @@
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
             android:focusable="true"
-            android:textColorHint="#d0151515"
-            android:textColor="#b33b3b3b"
+            android:textColorHint="#b33b3b3b"
+            android:textColor="#000000"
             android:digits="0123456789."
             android:textSize="14sp"
             android:gravity="center"
-
-
             android:hint="_" />
 
         <TextView
@@ -73,7 +71,7 @@
             android:layout_height="wrap_content"
             android:text="User share"
             android:id="@+id/go_out_activity_user_paid_place_holder"
-            android:visibility="visible" />
+            android:visibility="invisible" />
     </FrameLayout>
 
 </RelativeLayout>
