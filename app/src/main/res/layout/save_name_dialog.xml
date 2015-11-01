@@ -32,7 +32,8 @@
             android:layout_height="wrap_content"
             android:text="Save"
             android:id="@+id/name_save_button"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:textAllCaps="false"/>
 
     </LinearLayout>
 

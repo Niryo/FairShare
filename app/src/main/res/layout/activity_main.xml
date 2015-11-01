@@ -29,7 +29,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="+Create New Group"
-            android:background="@drawable/round_button" />
+            android:background="@drawable/round_button"
+            android:textAllCaps="false"/>
 
     </LinearLayout>
 

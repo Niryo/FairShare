@@ -6,25 +6,97 @@
     >
 
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Calculate debts/credits"
-        android:id="@+id/calculate_button"
-        />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back to Group"
-        android:id="@+id/back_to_group_button"
-        />
-    <EditText
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/description"
-        android:hint="Description of event"
-        />
+        android:background="@drawable/picture_frame"
+        android:layout_marginLeft="-10dp"
+        android:layout_marginTop="-10dp"
+        android:layout_marginRight="-10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/back_to_group_button"
+                android:background="@drawable/back"
+                android:layout_gravity="center_vertical"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Done"
+                android:id="@+id/calculate_button"
+                android:textAllCaps="false"
+                android:background="@drawable/round_button"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+               />
+        </RelativeLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/description"
+            android:textSize="40dp"
+            android:hint="Bill description"
+            android:gravity="center_horizontal"
+            android:singleLine= "true"
+           android:imeOptions="actionDone"
+            android:background="@android:color/transparent"
+            />
+
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User name"
+            android:id="@+id/go_out_activity_user_title"
+            android:layout_alignParentLeft="true"
+
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User paid"
+            android:id="@+id/sum_paid_title"
+            android:layout_toLeftOf="@+id/user_share_title"
+
+
+            android:layout_marginRight="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User share"
+            android:id="@+id/user_share_title"
+            android:layout_alignParentRight="true"
+
+
+            />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
 
     <ScrollView
         android:layout_width="wrap_content"
@@ -42,8 +114,6 @@
 
         </LinearLayout>
     </ScrollView>
-
-
 
 
 </LinearLayout>
