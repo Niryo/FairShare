@@ -83,7 +83,7 @@ public class UserContextMenuDialog extends DialogFragment {
         });
         //==================================== Second Item ==========================================
 
-        TextView notifyMe = (TextView) dialogLayout.findViewById(R.id.user_context_menu_notify_me);
+        Button notifyMe = (Button) dialogLayout.findViewById(R.id.user_context_menu_notify_me);
         notifyMe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

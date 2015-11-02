@@ -10,7 +10,7 @@
         android:layout_height="0dp"
         android:orientation="horizontal"
         android:layout_weight="1"
-        android:background="@drawable/border_with_buttom"
+        android:background="@drawable/border_with_bottom"
         android:layout_gravity="center_vertical"
         android:focusable="true"
         android:focusableInTouchMode="true" >
@@ -39,7 +39,8 @@ android:maxLength="15"
             android:layout_height="wrap_content"
             android:text="Next"
             android:id="@+id/next_button_user_context_menu"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:textAllCaps="false"/>
 
         <Button
             style="?android:attr/buttonStyleSmall"
@@ -48,23 +49,19 @@ android:maxLength="15"
             android:text="Done"
             android:id="@+id/done_button_user_context_menu"
             android:layout_gravity="center_vertical"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:textAllCaps="false"/>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <Button
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:text="Notify on balance change"
+        android:id="@+id/user_context_menu_notify_me"
+        android:background="@drawable/menu_item_button"
+        android:layout_gravity="center_vertical|left"
         android:layout_weight="1"
-        android:background="@drawable/border_with_buttom"
-        android:layout_gravity="center_vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Notify on balance change"
-            android:id="@+id/user_context_menu_notify_me"
-            android:layout_gravity="center" />
-    </LinearLayout>
+        android:gravity="center_vertical|left"
+        android:textAllCaps="false"/>
 </LinearLayout>

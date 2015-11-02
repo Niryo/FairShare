@@ -4,14 +4,21 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -40,12 +47,9 @@ public class GoOutActivity extends Activity {
         nameList = (ArrayList<User>) getIntent().getSerializableExtra("goOutList");
         final ArrayList<View> viewsList = new ArrayList<>();
         LinearLayout list = (LinearLayout) findViewById(R.id.list_of_users);
-        LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         for (User user : nameList) {
-            View newView = vi.inflate(R.layout.user_go_out_row, null);
-            ((TextView) newView.findViewById(R.id.tv_go_out_user_name)).setText(user.getName());
-            String textBalance = Double.toString(user.getBalance());
-            ((TextView) newView.findViewById(R.id.tv_go_out_user_balance)).setText(textBalance);
+
+   View newView = getNewGoOutRow(user);
             list.addView(newView);
             viewsList.add(newView);
         }
@@ -110,10 +114,105 @@ public class GoOutActivity extends Activity {
             }
         });
         description = (EditText) findViewById(R.id.description);
+        initLayoutPreferences();
     }
 
     private void toastGen(Context context, String msg) {
         Log.w("user", "in toastGen: " + msg);
 //        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
+
+    private View getNewGoOutRow(User user){
+        int regularTextSizeFactor;
+
+        int configuration = getResources().getConfiguration().orientation;
+        if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
+
+            regularTextSizeFactor=30;
+        } else {
+
+            regularTextSizeFactor=30;
+        }
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+
+        LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View newView = vi.inflate(R.layout.user_go_out_row, null);
+
+        TextView userName= (TextView) newView.findViewById(R.id.tv_go_out_user_name);
+        userName.setText(user.getName());
+        userName.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularTextSizeFactor));
+
+        TextView userPaidPlaceHolder= (TextView) newView.findViewById(R.id.go_out_activity_user_paid_place_holder);
+        userPaidPlaceHolder.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularTextSizeFactor));
+
+        TextView userSharePlaceHolder= (TextView) newView.findViewById(R.id.go_out_activity_user_share_place_holder);
+        userSharePlaceHolder.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularTextSizeFactor));
+
+        EditText userPaidEditText = (EditText) newView.findViewById(R.id.et_paid);
+        userPaidEditText.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularTextSizeFactor));
+        userPaidEditText.setWidth(userPaidPlaceHolder.getWidth());
+
+        EditText userShareEditText = (EditText) newView.findViewById(R.id.et_special_share);
+        userShareEditText.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularTextSizeFactor));
+        userShareEditText.setWidth(userSharePlaceHolder.getWidth());
+
+
+        return newView;
+    }
+    private void initLayoutPreferences() {
+
+        int headLineFactor;
+        double backButtonFactor;
+        double regularButtonSizeFactor;
+        double regularTextSizeFactor;
+
+        int screenSize;
+        int configuration = getResources().getConfiguration().orientation;
+        if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
+            headLineFactor=10;
+            backButtonFactor=15;
+            regularButtonSizeFactor=40;
+            regularTextSizeFactor=30;
+
+        } else {
+            headLineFactor=10;
+            backButtonFactor=15;
+            regularButtonSizeFactor=40;
+            regularTextSizeFactor=30;
+        }
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+
+
+//        TextView headLine = (TextView) findViewById(R.id.new_bill_headline);
+//        headLine.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/headLineFactor));
+
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) backToGroup.getLayoutParams();
+        params.width = (int)(height / backButtonFactor);
+        params.height = (int) (height / backButtonFactor);
+        backToGroup.setLayoutParams(params);
+
+
+        calculateButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularButtonSizeFactor));
+
+//        TextView shortDescription = (TextView) findViewById(R.id.go_out_activity_short_desctiption);
+//        shortDescription.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/ regularTextSizeFactor));
+
+        TextView sumPaidTitle = (TextView) findViewById(R.id.sum_paid_title);
+        sumPaidTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/ regularTextSizeFactor));
+
+        TextView userShareTitle = (TextView) findViewById(R.id.user_share_title);
+        userShareTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/ regularTextSizeFactor));
+
+        TextView userTitle = (TextView) findViewById(R.id.go_out_activity_user_title);
+        userTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/ regularTextSizeFactor));
+    }
+
+
 }

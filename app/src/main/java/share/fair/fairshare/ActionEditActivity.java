@@ -44,8 +44,8 @@ public class ActionEditActivity extends AppCompatActivity {
             return;
         }
 
-        Long groupId = getIntent().getLongExtra("groupId",-1);
-        if(groupId==-1){
+        String groupId = getIntent().getStringExtra("groupId");
+        if(groupId.isEmpty()){
             //todo: problem
         }
         group= FairShareGroup.loadGroupFromStorage(groupId);

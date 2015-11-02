@@ -42,8 +42,8 @@ public class ActionsActivity extends AppCompatActivity {
         actionList = (LinearLayout) findViewById(R.id.list_of_actions);
         LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final ArrayList<View> viewsList = new ArrayList<>();
-      Long groupId = getIntent().getLongExtra("groupId",-1);
-        if(groupId==-1){
+      String groupId = getIntent().getStringExtra("groupId");
+        if(groupId.isEmpty()){
             //todo: problem
         }
         group= FairShareGroup.loadGroupFromStorage(groupId);
@@ -67,7 +67,7 @@ public class ActionsActivity extends AppCompatActivity {
                     toastGen(getApplicationContext(), "clicked"); //debug
                     Intent editAction = new Intent(getApplicationContext(), ActionEditActivity.class);
                     editAction.putExtra("actionIndex", (int) v.getTag());
-                    editAction.putExtra("groupId", group.getId());
+                    editAction.putExtra("groupId", group.getCloudGroupKey());
                     startActivity(editAction);
                 }
             });

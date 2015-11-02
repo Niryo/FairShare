@@ -17,11 +17,10 @@ public class Operation extends SugarRecord<Operation> implements Serializable {
     public double share;
     boolean hasUserAddedShare;
     Long belongingActionId;
-
-
-
     public Operation() {
     }
+
+
 
     public Operation(String userId, String username, double paid, double share, boolean hasUserAddedShare) {
         this.userId = userId;
@@ -30,7 +29,6 @@ public class Operation extends SugarRecord<Operation> implements Serializable {
         this.share = share;
         this.hasUserAddedShare =hasUserAddedShare;
     }
-
 
     public Operation(JSONObject jsonOperation) {
         try {
@@ -42,6 +40,10 @@ public class Operation extends SugarRecord<Operation> implements Serializable {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getUserId() {
+        return userId;
     }
 
     public void setBelongingActionId(Long belongingActionId) {

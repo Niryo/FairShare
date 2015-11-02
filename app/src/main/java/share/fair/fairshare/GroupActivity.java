@@ -25,6 +25,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.ParseException;
+import com.parse.ParsePush;
+import com.parse.SendCallback;
+
 import java.util.ArrayList;
 
 public class GroupActivity extends FragmentActivity {
@@ -49,16 +53,20 @@ public class GroupActivity extends FragmentActivity {
     private Handler messageHandler;
     private ArrayList<Alert.AlertObject> alertObjects=new ArrayList<>();
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+       // ((App)getApplication()).registerGroupAcrivity(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
-        long groupId = getIntent().getLongExtra("groupId", -1);
-        if (groupId == -1) {
+        String groupId = getIntent().getStringExtra("groupId");
+        if (groupId.isEmpty()) {
             //todo: handle problem;
         }
 
         this.group = FairShareGroup.loadGroupFromStorage(groupId);
+
         groupNameTextView = (TextView) findViewById(R.id.tv_grp_name);
         groupNameTextView.setText(group.getName());
         this.users = new ArrayList<>(group.getUsers());
@@ -81,6 +89,7 @@ public class GroupActivity extends FragmentActivity {
                     alertObjects.add(alert);
                     alertButton.setBackgroundResource(R.drawable.popup_reminder_active);
                     alertButton.setText(Integer.toString(alertObjects.size()));
+                    notifyUserListChanged();
 
                 }
             }
@@ -130,7 +139,7 @@ public class GroupActivity extends FragmentActivity {
                 int[] location= new int[2];
                 v.getLocationOnScreen(location);
                 optionsMenuDialog.setX(location[0]);
-                optionsMenuDialog.setY(location[1]-v.getHeight());
+                optionsMenuDialog.setY(location[1] - v.getHeight());
                 optionsMenuDialog.show(getFragmentManager(), "optionsMenueDialog");
 
             }
@@ -181,13 +190,14 @@ public class GroupActivity extends FragmentActivity {
         syncButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                group.syncUsers();
+                group.syncUsers(null);
                 group.getGroupLog().syncActions(getApplicationContext());
                 syncButton.startAnimation(AnimationUtils.loadAnimation(GroupActivity.this, R.anim.rotate_360));
             }
         });
-        this.group.syncUsers();
+        this.group.syncUsers(null);
         group.getGroupLog().syncActions(getApplicationContext());
+
         notifyUserListChanged();
         this.userListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -231,7 +241,7 @@ public class GroupActivity extends FragmentActivity {
 
 public void goToActionActivity(){
     Intent actions = new Intent(getApplicationContext(), ActionsActivity.class);
-    actions.putExtra("groupId", group.getId());
+    actions.putExtra("groupId", group.getCloudGroupKey());
     startActivity(actions);
 }
     public void notifyUserAdded(String name, String emailAddress) {
@@ -277,6 +287,8 @@ public void goToActionActivity(){
             checkBox.setChecked(false);
         }
         this.userCheckBoxAdapter.clearChecked();
+        goOutCheckedButton.setVisibility(View.GONE);
+        goOutAllButton.setVisibility(View.VISIBLE);
     }
 
     public void fastCheckoutCalculation(User user, double paid, double share) {

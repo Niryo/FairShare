@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
@@ -15,6 +16,10 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.parse.ParseException;
+import com.parse.ParseInstallation;
+import com.parse.SaveCallback;
 
 import java.util.List;
 
@@ -30,6 +35,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         initLayoutPreferences();
         SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
@@ -55,7 +61,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent openGroup = new Intent(getApplicationContext(), GroupActivity.class);
-                openGroup.putExtra("groupId", groupNames.get(position).getId());
+                openGroup.putExtra("groupId", groupNames.get(position).getGroupId());
                 startActivity(openGroup);
             }
         });
