@@ -1,6 +1,7 @@
 package share.fair.fairshare;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -59,7 +60,7 @@ public class ActionEditActivity extends AppCompatActivity {
         LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         for (Operation oper : operationList) {
             View newView = vi.inflate(R.layout.operation_row, null);
-            toastGen(this, "username: " + oper.username);
+            toastGen(this, "username: " + oper.username); //debug
             ((TextView) newView.findViewById(R.id.username_oper_row)).setText(oper.username);
             String textPaid = Double.toString(oper.getPaid());
             ((EditText) newView.findViewById(R.id.et_paid_oper)).setText(textPaid);
@@ -74,7 +75,6 @@ public class ActionEditActivity extends AppCompatActivity {
             list.addView(newView);
             viewsList.add(newView);
         }
-
 
         editActionButton = (Button) findViewById(R.id.save_changes_action_button);
         editActionButton.setOnClickListener(new View.OnClickListener() {
@@ -94,36 +94,66 @@ public class ActionEditActivity extends AppCompatActivity {
                     oppositeOperationList.add(new Operation(oppositeId,oppositeUsername,oppositePaid,oppositeShare,oper.getHasShare()));
                 }
 
-                Action oppositeAction = new Action(creatorName, creatorId, action.getDescription() + " (Cancellation(edit))");
+                Action oppositeAction = new Action(creatorName, creatorId, action.getDescription() + " (CANCELED(edit))");
                 oppositeAction.setGroupLogId(group.getGroupLog().getId());
                 oppositeAction.operations = oppositeOperationList;
                 oppositeAction.setTimeStamp(action.getTimeStamp());
+
+                //todo: make this action uneditable
 
                 group.consumeAction(oppositeAction);
                 group.getGroupLog().addAction(getApplicationContext(), oppositeAction);
 
                 //2. create the new action
 
-                ArrayList<Operation> newOperations = new ArrayList<Operation>();
-                for (int j = 0; j < viewsList.size(); j++) {
-                    View row = viewsList.get(j);
-                    String newUsername = ((TextView) row.findViewById(R.id.username_oper_row)).getText().toString();
-                    Double newPaid = Double.parseDouble(((EditText) row.findViewById(R.id.et_paid_oper)).getText().toString());
-                    Double newShare = Double.parseDouble(((EditText) row.findViewById(R.id.et_share_oper)).getText().toString());
-                    String newId = (String) viewsList.get(j).getTag();
-                    newOperations.add(new Operation(newId, newUsername, newPaid, newShare, (boolean)row.getTag(R.string.for_tag_id)));
-                    toastGen(getApplicationContext(), "id: " + newId + " user: " + newUsername);
+                double totalPaid = 0.0;
+                double totalShare = 0.0;
+                SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
+                String creatorName = settings.getString("name", "");
+                String creatorId = settings.getString("id", "");
+                Action editAction = new Action(creatorName, creatorId,action.getDescription()+"(Edited)" );
+                ArrayList<Integer> noShareUsersIndexes = new ArrayList<Integer>();
+                for(int i =0; i < viewsList.size(); i++){
+                    String userId = viewsList.get(i).getTag().toString();
+                    String userName = ((TextView)viewsList.get(i).findViewById(R.id.username_oper_row)).getText().toString();
+                    String userPaidStr =((EditText)viewsList.get(i).findViewById(R.id.et_paid_oper)).getText().toString();
+                    double userPaid = 0.0;
+                    if(!userPaidStr.isEmpty()) {
+                        userPaid = Double.parseDouble(userPaidStr);
+                    }
+                    totalPaid += userPaid;
+                    double userShare;
+                    String userShareStr = ((EditText)viewsList.get(i).findViewById(R.id.et_share_oper)).getText().toString();
+                    if(!userShareStr.isEmpty()){
+                        userShare = Double.parseDouble(userShareStr);
+                        totalShare += userShare;
+                        //can add the oper
+                        editAction.addOperation(userId,userName,userPaid, userShare, true);
+                    }else{
+                        noShareUsersIndexes.add(i);
+                    }
                 }
-
-                Action newAction= new Action(creatorName, creatorId, action.getDescription() +"(Edited");
-                newAction.setGroupLogId(group.getGroupLog().getId());
-
-                newAction.setOperations(newOperations);
-                newAction.setTimeStamp(action.getTimeStamp());
-                group.consumeAction(newAction);
-
-                group.getGroupLog().addAction(getApplicationContext(),newAction);
-                toastGen(getApplicationContext(), "the action: " + action.getDescription() + "was succesfully edited.");
+                double totalPaidWithoutShares = totalPaid - totalShare;
+                if (totalPaidWithoutShares < 0) {
+                    //todo: Other solution for error(unable to press calculate while share is bigger than paid)
+                    toastGen(getApplicationContext(), "Invalid input(Share sum is larger than paid)");
+                    return;
+                }
+                if(noShareUsersIndexes.size() > 0) {
+                    double splitEvenShare = totalPaidWithoutShares / noShareUsersIndexes.size();
+                    for(int index:noShareUsersIndexes ){
+                        String userId = viewsList.get(index).getTag().toString();
+                        String userName = ((TextView)viewsList.get(index).findViewById(R.id.username_oper_row)).getText().toString();
+                        String userPaidStr =((EditText)viewsList.get(index).findViewById(R.id.et_paid_oper)).getText().toString();
+                        double userPaid = 0.0;
+                        if(!userPaidStr.isEmpty()) {
+                            userPaid = Double.parseDouble(userPaidStr);
+                        }
+                        editAction.addOperation(userId, userName, userPaid, splitEvenShare, false);
+                    }
+                }
+                group.consumeAction(editAction);
+                group.getGroupLog().addAction(getApplicationContext(),editAction);
                 finish();
             }
         });
@@ -148,7 +178,7 @@ public class ActionEditActivity extends AppCompatActivity {
                     double oppositeShare = -1 * oper.share;
                     oppositeOperationList.add(new Operation(oppositeId, oppositeUsername, oppositePaid, oppositeShare, oper.getHasShare()));
                 }
-                Action oppositeAction = new Action(creatorName, creatorId, action.getDescription() + "(Edited");
+                Action oppositeAction = new Action(creatorName, creatorId, action.getDescription() + "(CANCELED)");
                 oppositeAction.setGroupLogId(group.getGroupLog().getId());
                 oppositeAction.operations = oppositeOperationList;
                 oppositeAction.setTimeStamp(action.getTimeStamp());

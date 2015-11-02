@@ -1,0 +1,16 @@
+
+Todo list(Ori):
+
+    *  <DONE> Add the user himself to any group he creates
+        - Give an option to change the name for this particular group
+
+    *  <DONE> Stop the option for one user alone in a bill.
+
+    * Make the change in action be visible immediately.
+
+    * Make the save changes calculate the new bill by itself.
+
+    * Make deleted actions uneditable.
+
+    * Solve cases of deleted user in an action.
+
