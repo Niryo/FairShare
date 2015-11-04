@@ -20,7 +20,6 @@ import java.security.SecureRandom;
 public class SaveNameDialog extends DialogFragment {
     public SaveNameDialog() {
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View dialogLayout = inflater.inflate(R.layout.save_name_dialog, container);
@@ -60,10 +59,7 @@ public class SaveNameDialog extends DialogFragment {
                     saveButton.setEnabled(false);
                 }
             }
-
         });
-
-
         return dialogLayout;
     }
 }

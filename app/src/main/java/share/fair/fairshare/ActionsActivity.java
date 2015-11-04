@@ -122,5 +122,4 @@ public class ActionsActivity extends AppCompatActivity {
             return "hour failed";
         }
     }
-
 }

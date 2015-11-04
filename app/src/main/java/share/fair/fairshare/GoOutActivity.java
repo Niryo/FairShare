@@ -65,8 +65,6 @@ public class GoOutActivity extends Activity {
                 String id = settings.getString("id", "");
                 String descriptionStr = description.getText().toString();
                 Action action = new Action(name, id, descriptionStr);
-
-
                 ArrayList<Integer> noShareUsersIndexes = new ArrayList<Integer>();
 
                 for (int i = 0; i < nameList.size(); i++) {

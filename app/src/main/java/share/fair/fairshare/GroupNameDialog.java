@@ -1,5 +1,6 @@
 package share.fair.fairshare;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
@@ -29,17 +30,25 @@ public class GroupNameDialog extends DialogFragment {
         getDialog().setContentView(R.layout.new_group_dialog_layout);
         getDialog().setTitle("Choose group name:");
 
-
         final EditText nameEditText = (EditText) dialogLayout.findViewById(R.id.group_name_edit_text);
+        final EditText specialUserNameText = (EditText) dialogLayout.findViewById(R.id.special_name_edit_text);
         nameEditText.setHint("Group's name");
         final Button createButton = (Button) dialogLayout.findViewById(R.id.create_button);
         final Button cancelButton = (Button) dialogLayout.findViewById(R.id.cancel_button);
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                String userNameInGroup= specialUserNameText.getText().toString();
+                if(userNameInGroup.isEmpty()){
+                    SharedPreferences settings = getActivity().getSharedPreferences("MAIN_PREFERENCES", 0);
+                    userNameInGroup = settings.getString("name","default_name_debug");
+                }
+
                 String name = nameEditText.getText().toString();
-                FairShareGroup.groupBuilder(getContext(),name);
+                FairShareGroup.groupBuilder(getContext(),name, userNameInGroup);
                 ((GroupCreatedListener) getActivity()).notifyGroupCreated();
+
                 getDialog().dismiss();
             }
         });

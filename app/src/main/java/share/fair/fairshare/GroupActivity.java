@@ -165,6 +165,10 @@ public class GroupActivity extends FragmentActivity {
                     toastGen(getApplicationContext(), "No user is checked!");
                     return;
                 } else {
+                    if(checkedUsers.size() == 1){
+                        toastGen(getApplicationContext(), "Only one person in the bill(Pointless). Have fun though");
+                        return;
+                    }
                     Intent goOut = new Intent(getApplicationContext(), GoOutActivity.class);
                     goOut.putExtra("goOutList", checkedUsers);
                     startActivityForResult(goOut, GO_OUT_REQUEST);
@@ -299,7 +303,6 @@ public void goToActionActivity(){
     protected void onResume()
     {
         super.onResume();
-        toastGen(this, "on resume called");
         notifyUserListChanged();
     }
 

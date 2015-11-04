@@ -325,5 +325,3 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
 
     }
 }
-
-
