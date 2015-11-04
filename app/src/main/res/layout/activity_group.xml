@@ -29,7 +29,7 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:background="@drawable/back"
+                android:background="@drawable/back_button"
                 android:layout_marginLeft="4dp" />
 
             <Button
@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/group_activity_options_button"
-                android:background="@drawable/options_icon"
+                android:background="@drawable/options_menu_button"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/bt_back_to_info"
                 android:layout_toEndOf="@+id/bt_back_to_info" />
