@@ -19,6 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Pay for all: "
+            android:textColor="#000000"
             android:id="@+id/textView"
             android:layout_gravity="center" />
 

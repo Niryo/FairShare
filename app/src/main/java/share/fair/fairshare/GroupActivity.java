@@ -325,7 +325,7 @@ public void goToActionActivity(){
              groupNameFactor=10;
              backButtonFactor=15;
              regularButtonSizeFactor=40;
-            optionManuFactor=25;
+            optionManuFactor=12;
             alertButtonFactor=25;
             alertButtonTextSizeFactor=50;
         }

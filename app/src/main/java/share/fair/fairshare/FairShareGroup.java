@@ -38,7 +38,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
     private long groupLogId;
     private String cloudLogKey = "";
     private String cloudGroupKey = "";
-
+    private long lastUserSync= Long.valueOf(0);
     public String getOwnerId() {
         return ownerId;
     }
@@ -67,8 +67,6 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
 
     public static FairShareGroup groupBuilder(Context context, String name) {
         FairShareGroup group = new FairShareGroup(name);
-        Date zeroDate = new Date();
-        zeroDate.setTime(0);
         String cloudGroupKey = "a" + new BigInteger(130, new SecureRandom()).toString(32);
         String cloudLogKey = "a" + new BigInteger(130, new SecureRandom()).toString(32);
         group.setCloudGroupKey(cloudGroupKey);
@@ -132,6 +130,8 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         parseGroup.put("userName", user.getName());
         parseGroup.put("userEmail", user.getEmail());
         parseGroup.put("userBalance",user.getBalance());
+        parseGroup.put("action", "USER_ADDED");
+        parseGroup.put("creatorId", ownerId);
         parseGroup.saveEventually(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -148,43 +148,50 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
     public void syncUsers(final FairShareCallback callback) {
         final ArrayList<User> usersCopy = new ArrayList<>(users); //a copy so we wan't run on mutable list;
         ParseQuery<ParseObject> query = ParseQuery.getQuery(this.cloudGroupKey);
+        final Date date = new Date(lastUserSync);
+        query.whereNotEqualTo("creatorId", ownerId);
+        query.whereGreaterThan("createdAt", date);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, ParseException e) {
-                if (e == null && list != null) {
+                if (e == null && list != null && lastUserSync == date.getTime()) { //the last check is to avoid dirty date
                     boolean dirty = false;
-                    Hashtable<String, String> currentUserTable = new Hashtable<String, String>();
-                    Hashtable<String, String> cloudUserTable = new Hashtable<String, String>();
-                    for (User user : usersCopy) {
-                        currentUserTable.put(user.getUserId(), ""); //name is not relevant here
-                    }
                     for (ParseObject parseObject : list) {
                         String userId = parseObject.getString("userId");
-                        String userName = parseObject.getString("userName");
-                        if (userId != null && userName != null) {
-                            cloudUserTable.put(parseObject.getString("userId"), parseObject.getString("userName"));
+                        String action= parseObject.getString("action");
+                        lastUserSync = Math.max(parseObject.getCreatedAt().getTime(), lastUserSync);
+                        if(action.equals("USER_ADDED") ){
+                            boolean isUserExist=false;
+                            for(User user : usersCopy){
+                                if(user.getUserId().equals(userId)){
+                                    isUserExist=true;
+                                    break; //id user already exist, skip it.
+                                }
+                            }
+                            if(!isUserExist) {
+                                String userName = parseObject.getString("userName");
+                                User newUser = new User(userName, 0);
+                                newUser.setUserId(userId);
+                                newUser.setBelongingGroupId(getCloudGroupKey());
+                                newUser.save();
+                                users.add(newUser);
+                                dirty = true;
+                            }
                         }
+                        if(action.equals("USER_REMOVED")){
+                            for(User user: usersCopy){
+                                if(user.getUserId().equals(userId)){
+                                    users.remove(user);
+                                    user.delete();
+                                    dirty = true;
+                                    continue;
+                                }
+                            }
+                        }
+
                     }
 
-                    for (User user : usersCopy) {
-                        if (!cloudUserTable.containsKey(user.getUserId())) {
-                            users.remove(user);
-                            user.delete();
-                            dirty = true;
-                        }
-                    }
-                    Enumeration<String> keys = cloudUserTable.keys();
-                    while (keys.hasMoreElements()) {
-                        String id = keys.nextElement();
-                        if (!currentUserTable.containsKey(id)) {
-                            User newUser = new User(cloudUserTable.get(id), 0);
-                            newUser.setUserId(id);
-                            newUser.setBelongingGroupId(getCloudGroupKey());
-                            newUser.save();
-                            users.add(newUser);
-                            dirty = true;
-                        }
-                    }
+
                     if (dirty) {
                         Message msg = Message.obtain();
                         msg.what=GroupActivity.NOTIFY_USER_CHANGE;
