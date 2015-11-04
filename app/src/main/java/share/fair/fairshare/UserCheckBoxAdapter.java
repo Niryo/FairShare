@@ -2,6 +2,7 @@ package share.fair.fairshare;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Handler;
 import android.os.Message;
@@ -56,16 +57,16 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
                 Log.w("user", "Clicked on Checkbox: " + cb.getText() + " is " + cb.isChecked());
                 if (cb.isChecked()) {
                     checkedUsers.add(userList.get(position));
-                    if(checkedUsers.size()>0){
-                    Message msg = Message.obtain();
-                    msg.what=GroupActivity.CHECKED_AVAILABLE;
-                    parentActivityMessageHandler.sendMessage(msg);
+                    if (checkedUsers.size() > 0) {
+                        Message msg = Message.obtain();
+                        msg.what = GroupActivity.CHECKED_AVAILABLE;
+                        parentActivityMessageHandler.sendMessage(msg);
                     }
                 } else {
                     checkedUsers.remove(userList.get(position));
-                    if(checkedUsers.size()==0){
+                    if (checkedUsers.size() == 0) {
                         Message msg = Message.obtain();
-                        msg.what=GroupActivity.CHECKED_UNAVAILABLE;
+                        msg.what = GroupActivity.CHECKED_UNAVAILABLE;
                         parentActivityMessageHandler.sendMessage(msg);
                     }
                 }
@@ -73,6 +74,12 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
         });
 
         cbUserRow.setText(userList.get(position).getName() + "   ");
+        if(userList.get(position).isNotified()){
+            cbUserRow.setTextColor(Color.parseColor("#38B074"));
+        }
+        else{
+            cbUserRow.setTextColor(Color.BLACK);
+        }
 //            String userN = (userListView.get(position)).getName();
 //            holder.hUserName = userN;
 
