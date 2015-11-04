@@ -290,6 +290,12 @@ public void goToActionActivity(){
     public void fastCheckoutCalculation(User user, double paid, double share) {
 
     }
+
+    public void showGroupKeyDialog(){
+        GroupKeyDialog dialog = new GroupKeyDialog();
+        dialog.setGroupKey(group.getCloudGroupKey());
+        dialog.show(getSupportFragmentManager(), "group_key");
+    }
     protected void onResume()
     {
         super.onResume();
