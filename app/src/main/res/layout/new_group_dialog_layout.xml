@@ -29,17 +29,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Choose a special name for yourself in this particular group, or leave it blank to use your previously chosen full name"
+        android:text="Choose a special name for yourself in this particular group, or leave it blank to use your default name"
         android:id="@+id/speical_name_text_msg" />
-    <TextView
-        android:layout_width="277dp"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Your full name"
-        android:id="@+id/special_show_full_name"
-        android:gravity="center"/>
-
-
 
 
     <LinearLayout

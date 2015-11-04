@@ -35,14 +35,16 @@ public class GroupNameDialog extends DialogFragment {
         nameEditText.setHint("Group's name");
         final Button createButton = (Button) dialogLayout.findViewById(R.id.create_button);
         final Button cancelButton = (Button) dialogLayout.findViewById(R.id.cancel_button);
+        SharedPreferences settings = getActivity().getSharedPreferences("MAIN_PREFERENCES", 0);
+        final String ownerName= settings.getString("name", "");
+        specialUserNameText.setHint("Default name: "+ ownerName);
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String userNameInGroup= specialUserNameText.getText().toString();
                 if(userNameInGroup.isEmpty()){
-                    SharedPreferences settings = getActivity().getSharedPreferences("MAIN_PREFERENCES", 0);
-                    userNameInGroup = settings.getString("name","default_name_debug");
+                    userNameInGroup =  ownerName;
+
                 }
 
                 String name = nameEditText.getText().toString();
