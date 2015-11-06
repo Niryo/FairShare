@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="2">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -63,6 +62,16 @@ android:maxLength="15"
         android:background="@drawable/menu_item_button"
         android:layout_gravity="center_vertical|left"
         android:layout_weight="1"
+        android:gravity="center_vertical|left"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="Remove user"
+        android:id="@+id/user_context_menu_delete"
+        android:layout_weight="1"
+        android:background="@drawable/menu_item_button"
         android:gravity="center_vertical|left"
         android:textAllCaps="false"/>
 </LinearLayout>

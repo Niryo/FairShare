@@ -102,26 +102,15 @@
                 android:layout_toRightOf="@+id/add_user_button"
                 android:layout_toEndOf="@+id/add_user_button" />
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/sync_button"
-                android:background="@android:drawable/stat_notify_sync"
-
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginRight="10dp" />
-
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/group_activity_alert_button"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/sync_button"
                 android:background="@drawable/popup_reminder"
                 android:gravity="center"
                 android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
                 android:textAllCaps="false"/>
 
         </RelativeLayout>

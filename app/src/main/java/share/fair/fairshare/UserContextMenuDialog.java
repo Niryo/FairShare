@@ -7,14 +7,11 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import java.security.acl.Group;
 import java.util.List;
 
 /**
@@ -118,6 +115,16 @@ public class UserContextMenuDialog extends DialogFragment {
                 }
             });
         }
+
+        //======================================Delete user =================================================
+        Button deleteButton = (Button) dialogLayout.findViewById(R.id.user_context_menu_delete);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((GroupActivity) getActivity()).removeUser(user);
+                dismiss();
+            }
+        });
         return dialogLayout;
     }
 }

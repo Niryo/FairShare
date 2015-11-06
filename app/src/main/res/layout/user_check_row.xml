@@ -21,9 +21,9 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/cb_user_row"
         android:layout_alignBottom="@+id/cb_user_row"
-        android:layout_toRightOf="@+id/cb_user_row"
+        android:layout_alignParentRight="true"
         android:longClickable="true"
 
-        />
+        android:layout_marginRight="22dp" />
 
 </RelativeLayout>
