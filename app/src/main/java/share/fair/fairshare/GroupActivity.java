@@ -301,7 +301,8 @@ public void goToActionActivity(){
     public void removeUser(final User user){
         //todo: what to do when user removed from one group but not from other group and action has been made
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Are you sure that you want to remove " +user.getName() + " from the group?");
+        alert.setTitle("Wait!");
+        alert.setMessage("Are you sure that you want to remove " +user.getName() + " from the group?");
         alert.setPositiveButton("Remove", new DialogInterface.OnClickListener()
         {
             @Override
@@ -361,15 +362,15 @@ public void goToActionActivity(){
             backButtonFactor=15;
             regularButtonSizeFactor=40;
             optionManuFactor=25;
-            alertButtonFactor=25;
+            alertButtonFactor=10;
             alertButtonTextSizeFactor=50;
         } else {
              syncButtonFactor=18;
              groupNameFactor=10;
              backButtonFactor=15;
              regularButtonSizeFactor=40;
-            optionManuFactor=12;
-            alertButtonFactor=25;
+            optionManuFactor=10;
+            alertButtonFactor=12;
             alertButtonTextSizeFactor=50;
         }
         Display display = getWindowManager().getDefaultDisplay();
