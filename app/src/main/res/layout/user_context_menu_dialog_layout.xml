@@ -54,24 +54,38 @@ android:maxLength="15"
 
     </LinearLayout>
 
-    <Button
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:text="Notify on balance change"
-        android:id="@+id/user_context_menu_notify_me"
-        android:background="@drawable/menu_item_button"
-        android:layout_gravity="center_vertical|left"
         android:layout_weight="1"
-        android:gravity="center_vertical|left"
-        android:textAllCaps="false"/>
+        android:background="@drawable/border_with_bottom">
 
-    <Button
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Notify on balance change"
+            android:id="@+id/user_context_menu_notify_me"
+            android:background="@drawable/menu_item_button"
+            android:layout_gravity="center_vertical|left"
+            android:layout_weight="1"
+            android:gravity="center_vertical|left"
+            android:textAllCaps="false"/>
+    </FrameLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:text="Remove user"
-        android:id="@+id/user_context_menu_delete"
         android:layout_weight="1"
-        android:background="@drawable/menu_item_button"
-        android:gravity="center_vertical|left"
-        android:textAllCaps="false"/>
+        android:background="@drawable/border_with_bottom">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Remove user"
+            android:id="@+id/user_context_menu_delete"
+            android:layout_weight="1"
+            android:background="@drawable/menu_item_button"
+            android:gravity="center_vertical|left"
+            android:textAllCaps="false"/>
+    </FrameLayout>
 </LinearLayout>

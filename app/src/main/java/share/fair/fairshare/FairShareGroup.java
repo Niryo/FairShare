@@ -143,7 +143,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         parseGroup.saveEventually(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if(e==null){
+                if (e == null) {
                     reportUserChangeViaPush();
                 }
             }
@@ -179,12 +179,14 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, ParseException e) {
-                if (e == null && list != null && lastUserSync == date.getTime()) { //the last check is to avoid dirty date
+                if (e == null && list != null && lastUserSync == date.getTime()) {//the last check is to avoid dirty date
+                    boolean isNeedToSaveGroup = false;
                     boolean dirty = false;
                     for (ParseObject parseObject : list) {
                         String userId = parseObject.getString("userId");
                         String action = parseObject.getString("action");
                         lastUserSync = Math.max(parseObject.getCreatedAt().getTime(), lastUserSync);
+                        isNeedToSaveGroup = true;
                         if (action.equals("USER_ADDED")) {
                             boolean isUserExist = false;
                             for (User user : usersCopy) {
@@ -227,7 +229,9 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
                     if (callback != null) {
                         callback.doAction();
                     }
-                    save();
+                    if (isNeedToSaveGroup) {
+                        save();
+                    }
                 }
 
             }
@@ -329,25 +333,15 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
 
         }
         //report user changed to notify the adapter:
-        if (parentActivityMessageHandler != null) { //todo: check if uerlist is being updated
-            Message msg=new Message();
-            msg.what=GroupActivity.BALANCE_CHANGED;
-            msg = Message.obtain();
+        if (parentActivityMessageHandler != null) {
+            Message msg=Message.obtain();
+            msg.what=GroupActivity.NOTIFY_USER_CHANGE;
             parentActivityMessageHandler.sendMessage(msg);
         }
 
     }
 
 
-    @Override
-    public void save() {
-        super.save();
-
-        this.groupLog.save();
-        for (User user : users) {
-            user.save();
-        }
-    }
 
     public static class GroupNameRecord extends SugarRecord<GroupNameRecord> {
         private String groupName;

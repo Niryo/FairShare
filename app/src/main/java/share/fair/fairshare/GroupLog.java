@@ -93,6 +93,7 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
                     @Override
                     public void done(List<ParseObject> list, ParseException e) {
                         if (e == null && list != null) {
+                            boolean isNeedToSaveGroup = false;
                             Hashtable<String, Boolean> actionsIdTable = getActionsIdTable();
                             for (ParseObject parseObject : list) {
                                 JSONObject jsonObject = parseObject.getJSONObject("jsonAction");
@@ -107,10 +108,13 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
                                     newAction.save();
                                     actions.add(newAction);
                                     lastActionTimestampInMilisec = Math.max(parseObject.getCreatedAt().getTime(), lastActionTimestampInMilisec);
+                                    isNeedToSaveGroup = true;
                                     parentGroup.consumeAction(newAction);
                                 }
                             }
-                            save();
+                            if (isNeedToSaveGroup) {
+                                save();
+                            }
                         }
                     }
                 });
@@ -123,7 +127,7 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
         if(getId()==null) {
         save();
         }
-            action.setGroupLogId(getId());
+        action.setGroupLogId(getId());
         this.actions.add(action);
         action.save();
         save();
@@ -163,21 +167,14 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
         parseGroupLog.saveEventually(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if(e==null) {
+                if (e == null) {
                     reportActionViaPush(action);
                 }
             }
         });
     }
 
-    @Override
-    public void save() {
-        super.save();
 
-        for (Action action : actions) {
-            action.save();
-        }
-    }
 
 }
 

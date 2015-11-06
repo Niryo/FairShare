@@ -41,18 +41,15 @@ public class FairShareReceiver extends ParsePushBroadcastReceiver {
                         return;
                     } else {
                         List<Alert.NotifiedId> notifiedIds = (List<Alert.NotifiedId>) Alert.NotifiedId.listAll(Alert.NotifiedId.class);
-                        boolean isNotifiedId = false;
                         for (Alert.NotifiedId notifiedId : notifiedIds) {
                             if (data.has(notifiedId.userId)) {
-                                isNotifiedId = true;
+                                String groupName = data.getString("groupName");
+                                String groupId = data.getString("groupId");
+                                sendNotification(context, intent, groupName, groupId);
                                 break;
                             }
                         }
-                        if (isNotifiedId) {
-                            String groupName = data.getString("groupName");
-                            String groupId = data.getString("groupId");
-                            sendNotification(context, intent, groupName, groupId);
-                        }
+
                         // Toast.makeText(context, "got new message", Toast.LENGTH_SHORT).show();
                     }
                 }
