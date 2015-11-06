@@ -11,7 +11,8 @@
         android:layout_weight="1"
         android:background="@drawable/menu_item_button"
         android:gravity="center|left"
-        android:textAllCaps="false"/>
+        android:textAllCaps="false"
+        android:layout_marginLeft="15dp" />
 
     <Button
         android:layout_width="match_parent"
@@ -21,7 +22,8 @@
         android:layout_weight="1"
         android:background="@drawable/menu_item_button"
         android:gravity="center|left"
-        android:textAllCaps="false"/>
+        android:textAllCaps="false"
+        android:layout_marginLeft="15dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -30,5 +32,6 @@
         android:id="@+id/options_menu_group_key"
         android:textAllCaps="false"
         android:background="@drawable/menu_item_button"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:layout_marginLeft="15dp" />
 </LinearLayout>
