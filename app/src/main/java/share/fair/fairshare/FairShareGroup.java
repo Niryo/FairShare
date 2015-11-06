@@ -107,6 +107,14 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
 
 
     public static void joinGroupWithKey(Context context, String name, String cloudGroupKey, String cloudLogKey) {
+        //check that group doesn't already exdist:
+        for (GroupNameRecord groupNameRecord : getSavedGroupNames()){
+            if(groupNameRecord.getGroupId().equals(cloudGroupKey)){
+                Toast.makeText(context, "Group already exist", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+
         FairShareGroup group = new FairShareGroup(name);
         GroupLog groupLog = new GroupLog(group, cloudLogKey);
         groupLog.save();
