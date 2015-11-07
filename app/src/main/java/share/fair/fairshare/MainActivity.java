@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.parse.ParseException;
@@ -45,6 +46,8 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
             ;
         }
 
+
+
         Button createNewGroupButton = (Button) findViewById(R.id.create_new_group_button);
         createNewGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,6 +55,20 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
                 new GroupNameDialog().show(getSupportFragmentManager(), "add_new_group");
             }
         });
+
+        Button optionsMenuButton= (Button) findViewById(R.id.activity_main_options_menu);
+        optionsMenuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    MainOptionsMenuDialog optionsMenuDialog =new MainOptionsMenuDialog();
+                    int[] location= new int[2];
+                    v.getLocationOnScreen(location);
+                    optionsMenuDialog.setX(location[0]);
+                    optionsMenuDialog.setY(location[1] - v.getHeight());
+                    optionsMenuDialog.show(getSupportFragmentManager(), "mainOptionsMenueDialog");
+            }
+        });
+
         groupNames = FairShareGroup.getSavedGroupNames();
         groupList = (ListView) findViewById(R.id.groups_list);
         groupAdapter = new GroupsAdapter(this, R.id.group_row_container, groupNames);
@@ -81,14 +98,17 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
     private void initLayoutPreferences() {
         double titleFactor;
         double buttonFactor;
+        double optionManuFactor;
         int screenSize;
         int configuration = getResources().getConfiguration().orientation;
         if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
             titleFactor = 10;
             buttonFactor = 30;
+            optionManuFactor=10;
         } else {
             titleFactor = 10;
             buttonFactor = 40;
+            optionManuFactor=10;
         }
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -96,8 +116,16 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
         int height = size.y;
         TextView textView = (TextView) findViewById(R.id.main_activity_title);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / titleFactor));
+
         Button newGroupButton = (Button) findViewById(R.id.create_new_group_button);
         newGroupButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / buttonFactor));
+
+        Button optionsMenu = (Button) findViewById(R.id.activity_main_options_menu);
+        RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) optionsMenu.getLayoutParams();
+        params2.width = (int)(height / optionManuFactor);
+        params2.height = (int) (height / optionManuFactor);
+        optionsMenu.setLayoutParams(params2);
+
     }
 
     @Override

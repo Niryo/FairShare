@@ -2,7 +2,6 @@ package share.fair.fairshare;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,7 @@ import android.widget.Button;
 /**
  * Created by Nir on 21/10/2015.
  */
-public class OptionsMenuDialog extends DialogFragment {
+public class GroupOptionsMenuDialog extends DialogFragment {
     private int x;
     private int y;
 
@@ -25,7 +24,7 @@ public class OptionsMenuDialog extends DialogFragment {
     public void setY(int y) {
         this.y = y;
     }
-public OptionsMenuDialog(){}
+public GroupOptionsMenuDialog(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Window window = getDialog().getWindow();
@@ -37,8 +36,8 @@ public OptionsMenuDialog(){}
         params.y = y;
         window.setAttributes(params);
 
-        getDialog().setContentView(R.layout.options_menu_dialog);
-        View dialogLayout = inflater.inflate(R.layout.options_menu_dialog, container);
+        getDialog().setContentView(R.layout.group_options_menu_dialog);
+        View dialogLayout = inflater.inflate(R.layout.group_options_menu_dialog, container);
 //=========================== payment history=================================================
         Button paymentHistory= (Button) dialogLayout.findViewById(R.id.options_menu_payment_history);
         paymentHistory.setOnClickListener(new View.OnClickListener() {

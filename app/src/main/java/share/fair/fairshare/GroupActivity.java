@@ -1,7 +1,6 @@
 package share.fair.fairshare;
 
 import android.app.AlertDialog;
-import android.app.DialogFragment;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,20 +16,13 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.parse.ParseException;
-import com.parse.ParsePush;
-import com.parse.SendCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,7 +134,7 @@ public class GroupActivity extends FragmentActivity {
         optionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OptionsMenuDialog optionsMenuDialog =new OptionsMenuDialog();
+                GroupOptionsMenuDialog optionsMenuDialog =new GroupOptionsMenuDialog();
                 int[] location= new int[2];
                 v.getLocationOnScreen(location);
                 optionsMenuDialog.setX(location[0]);
