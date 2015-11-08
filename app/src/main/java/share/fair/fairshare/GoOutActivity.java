@@ -57,64 +57,78 @@ public class GoOutActivity extends Activity {
         calculateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //todo: log: group name, name : paid - share
-                double totalPaid = 0.0;
-                double totalShare = 0.0;
                 SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
                 String name = settings.getString("name", "");
                 String id = settings.getString("id", "");
                 String descriptionStr = description.getText().toString();
-                Action action = new Action(name, id, descriptionStr);
-                ArrayList<Integer> noShareUsersIndexes = new ArrayList<Integer>();
+                ArrayList<GoOutObject> goOutObjectList = new ArrayList<GoOutObject>();
 
-                for (int i = 0; i < nameList.size(); i++) {
+                for (int i=0; i< viewsList.size(); i++) {
                     double paidInput = 0.0;
-                    String paidInputStr = ((EditText) (viewsList.get(i)).findViewById(R.id.et_paid)).getText().toString();
+                    String paidInputStr = ((EditText) viewsList.get(i).findViewById(R.id.et_paid)).getText().toString();
                     if (!paidInputStr.isEmpty()) {
                         paidInput = Double.parseDouble(paidInputStr);
-                        totalPaid += paidInput;
                     }
-                    double shareInput;
-                    String shareInputStr = ((EditText) (viewsList.get(i)).findViewById(R.id.et_special_share)).getText().toString();
-                    if (shareInputStr.isEmpty()) {
-                        noShareUsersIndexes.add(i);
-                    } else {
+                    double shareInput=0.0;
+                    String shareInputStr = ((EditText) viewsList.get(i).findViewById(R.id.et_special_share)).getText().toString();
+                    if(!shareInputStr.isEmpty()) {
                         shareInput = Double.parseDouble(shareInputStr);
-                        totalShare += shareInput;
-                        //if user have share, we can calculate it's balance right now;
-                        action.addOperation(nameList.get(i).getUserId(), nameList.get(i).getName(), paidInput, shareInput , true);
                     }
+                    User user = nameList.get(i);
+                    goOutObjectList.add(new GoOutObject(user, paidInput,shareInput));
+
                 }
-                double totalPaidWithoutShares = totalPaid - totalShare;
-                if (totalPaidWithoutShares < 0) {
-                    //todo: Other solution for error(unable to press calculate while share is bigger than paid)
-                    toastGen(getApplicationContext(), "Invalid input(Share sum is larger than paid)");
-                    return;
-                }
-                double splitEvenShare = 0.0;
-                int noShareUsers = noShareUsersIndexes.size();
-                if (noShareUsers > 0) {
-                    splitEvenShare = totalPaidWithoutShares / noShareUsers;
-                }
-                for (int index : noShareUsersIndexes) {
-                    String paidInputStr = ((EditText) (viewsList.get(index)).findViewById(R.id.et_paid)).getText().toString();
-                    double paidInput = 0.0;
-                    if (!paidInputStr.isEmpty()) {
-                        paidInput = Double.parseDouble(paidInputStr);
-                    }
-                    action.addOperation(nameList.get(index).getUserId(), nameList.get(index).getName(), paidInput, splitEvenShare,false);
-                }
-                for (User user : nameList) {
-                    toastGen(getApplicationContext(), "usernameGo: " + user.getName() + " balGo: " + user.getBalance());
-                }
+
+                Action action = createAction(name, id, descriptionStr, goOutObjectList);
+
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("action", action);
                 setResult(RESULT_OK, returnIntent);
                 finish();
             }
         });
+
         description = (EditText) findViewById(R.id.description);
         initLayoutPreferences();
+    }
+
+    public static Action createAction(String creatorName, String creatorId, String description, ArrayList<GoOutObject> goOutObjectList){
+        double totalPaid = 0.0;
+        double totalShare = 0.0;
+        String descriptionStr = description;
+        Action action = new Action(creatorName, creatorId, descriptionStr);
+        ArrayList<GoOutObject> noShareUsersIndexes = new ArrayList<GoOutObject>();
+
+        for (GoOutObject goOutObject : goOutObjectList) {
+            double paidInput = 0.0;
+            paidInput = goOutObject.paid;
+            totalPaid += paidInput;
+
+            double shareInput;
+            shareInput = goOutObject.share;
+            if (shareInput == 0) {
+                noShareUsersIndexes.add(goOutObject);
+            } else {
+                totalShare += shareInput;
+                //if user have share, we can calculate it's balance right now;
+                action.addOperation(goOutObject.user.getUserId(), goOutObject.user.getName(), paidInput, shareInput , true);
+            }
+        }
+        double totalPaidWithoutShares = totalPaid - totalShare;
+        if (totalPaidWithoutShares < 0) {
+            //todo: Other solution for error(unable to press calculate while share is bigger than paid)
+            return null;
+        }
+        double splitEvenShare = 0.0;
+        int noShareUsers = noShareUsersIndexes.size();
+        if (noShareUsers > 0) {
+            splitEvenShare = totalPaidWithoutShares / noShareUsers;
+        }
+        for (GoOutObject noShareGoOutObject : noShareUsersIndexes) {
+            double paidInput = noShareGoOutObject.paid;
+            action.addOperation(noShareGoOutObject.user.getUserId(), noShareGoOutObject.user.getName(), paidInput, splitEvenShare,false);
+        }
+        return action;
     }
 
     private void toastGen(Context context, String msg) {
@@ -214,5 +228,16 @@ public class GoOutActivity extends Activity {
         userTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/ regularTextSizeFactor));
     }
 
+         public static class GoOutObject{
+             public User user;
+             public double paid;
+             public double share;
+
+             public GoOutObject(User user, double paid, double share) {
+                 this.user = user;
+                 this.paid = paid;
+                 this.share = share;
+             }
+         }
 
 }

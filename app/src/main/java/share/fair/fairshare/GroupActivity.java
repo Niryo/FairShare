@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.net.Uri;
@@ -282,6 +283,28 @@ public void goToActionActivity(){
     }
 
     public void fastCheckoutCalculation(User user, double paid, double share) {
+        SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
+        String creatorName = settings.getString("name", "");
+        String creatorId = settings.getString("id", "");
+        String description = user.getName()+ " paid for all";
+        ArrayList<GoOutActivity.GoOutObject> goOutObjectsList= new ArrayList<>();
+        for(User currentUser: users){
+            if(currentUser.getUserId().equals(user.getUserId())){
+                goOutObjectsList.add(new GoOutActivity.GoOutObject(currentUser,paid,share));
+            }
+            else{
+                goOutObjectsList.add(new GoOutActivity.GoOutObject(currentUser,0,0));
+            }
+        }
+
+        Action action= GoOutActivity.createAction(creatorName,creatorId,description,goOutObjectsList);
+        if(action == null){
+            Toast.makeText(getApplicationContext(), "Error: sum paid must be greater than sum share.\nPlease try again.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        this.group.getGroupLog().addAction(getApplicationContext(), action);
+        this.group.consumeAction(action);
+        userCheckBoxAdapter.notifyDataSetChanged();
 
     }
 
