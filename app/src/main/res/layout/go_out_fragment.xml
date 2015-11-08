@@ -1,0 +1,89 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/picture_frame"
+        android:layout_marginLeft="-10dp"
+        android:layout_marginTop="-10dp"
+        android:layout_marginRight="-10dp">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/description"
+            android:textSize="40dp"
+            android:hint="Enter bill title.."
+            android:gravity="center_horizontal"
+            android:singleLine= "true"
+            android:imeOptions="actionDone"
+            android:background="@android:color/transparent" />
+    </FrameLayout>
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User name"
+            android:id="@+id/go_out_activity_user_title"
+            android:layout_alignParentLeft="true"
+
+
+            android:textColor="#3399FF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User paid"
+            android:id="@+id/sum_paid_title"
+            android:layout_toLeftOf="@+id/user_share_title"
+
+
+            android:layout_marginRight="20dp"
+            android:textColor="#3399FF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User share"
+            android:id="@+id/user_share_title"
+            android:layout_alignParentRight="true"
+
+
+            android:textColor="#3399FF" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+
+        >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/list_of_users"
+            >
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

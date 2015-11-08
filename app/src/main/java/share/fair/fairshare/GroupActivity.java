@@ -148,8 +148,12 @@ public class GroupActivity extends FragmentActivity {
         goOutAllButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ArrayList<GoOutFragment.GoOutObject> goOutObjectsList = new ArrayList<GoOutFragment.GoOutObject>();
+                for(User user : users){
+                    goOutObjectsList.add(new GoOutFragment.GoOutObject(user.getUserId(),user.getName(),0,0));
+                }
                 Intent goOut = new Intent(getApplicationContext(), GoOutActivity.class);
-                goOut.putExtra("goOutList", users);
+                goOut.putExtra("goOutList", goOutObjectsList);
                 startActivityForResult(goOut, GO_OUT_REQUEST);
 
             }
@@ -158,7 +162,11 @@ public class GroupActivity extends FragmentActivity {
         goOutCheckedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<User> checkedUsers = userCheckBoxAdapter.getCheckedArray();
+                ArrayList<GoOutFragment.GoOutObject> checkedUsers = new ArrayList<GoOutFragment.GoOutObject>();
+                for(User user : userCheckBoxAdapter.getCheckedArray()){
+                    checkedUsers.add(new GoOutFragment.GoOutObject(user.getUserId(),user.getName(),0,0));
+                }
+
                 if (checkedUsers.isEmpty()) {
                     //todo: other way to handle error?
                     toastGen(getApplicationContext(), "No user is checked!");
@@ -168,6 +176,7 @@ public class GroupActivity extends FragmentActivity {
                         toastGen(getApplicationContext(), "Only one person in the bill(Pointless). Have fun though");
                         return;
                     }
+
                     Intent goOut = new Intent(getApplicationContext(), GoOutActivity.class);
                     goOut.putExtra("goOutList", checkedUsers);
                     startActivityForResult(goOut, GO_OUT_REQUEST);
@@ -286,17 +295,17 @@ public void goToActionActivity(){
         String creatorName = settings.getString("name", "");
         String creatorId = settings.getString("id", "");
         String description = user.getName()+ " paid for all";
-        ArrayList<GoOutActivity.GoOutObject> goOutObjectsList= new ArrayList<>();
+        ArrayList<GoOutFragment.GoOutObject> goOutObjectsList= new ArrayList<>();
         for(User currentUser: users){
             if(currentUser.getUserId().equals(user.getUserId())){
-                goOutObjectsList.add(new GoOutActivity.GoOutObject(currentUser,paid,share));
+                goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(),currentUser.getName(),paid,share));
             }
             else{
-                goOutObjectsList.add(new GoOutActivity.GoOutObject(currentUser,0,0));
+                goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(),currentUser.getName(),0,0));
             }
         }
 
-        Action action= GoOutActivity.createAction(creatorName,creatorId,description,goOutObjectsList);
+        Action action= GoOutFragment.createAction(creatorName,creatorId,description,goOutObjectsList);
         if(action == null){
             Toast.makeText(getApplicationContext(), "Error: sum paid must be greater than sum share.\nPlease try again.", Toast.LENGTH_LONG).show();
             return;

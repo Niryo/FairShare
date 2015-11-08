@@ -42,7 +42,7 @@
             android:visibility="visible"
             android:hint="_"
 
-            />
+            android:background="@android:color/transparent" />
     </FrameLayout>
 
     <FrameLayout
@@ -64,14 +64,16 @@
             android:digits="0123456789."
             android:textSize="14sp"
             android:gravity="center"
-            android:hint="_" />
+            android:hint="_"
+            android:background="@android:color/transparent" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="User share"
             android:id="@+id/go_out_activity_user_paid_place_holder"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:background="@android:color/transparent" />
     </FrameLayout>
 
 </RelativeLayout>
