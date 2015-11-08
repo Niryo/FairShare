@@ -64,7 +64,7 @@ public class GroupActivity extends FragmentActivity {
         if (groupId.isEmpty()) {
             //todo: handle problem;
         }
-
+        syncUsers();
         this.group = FairShareGroup.loadGroupFromStorage(groupId);
 
         groupNameTextView = (TextView) findViewById(R.id.tv_grp_name);
