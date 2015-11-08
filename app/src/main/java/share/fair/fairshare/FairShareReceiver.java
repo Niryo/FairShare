@@ -1,19 +1,14 @@
 package share.fair.fairshare;
 
-import android.app.Activity;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.NotificationCompat;
-import android.widget.Toast;
 
 import com.parse.ParseAnalytics;
 import com.parse.ParsePushBroadcastReceiver;
@@ -27,43 +22,47 @@ import java.util.List;
  * Created by Nir on 24/10/2015.
  */
 public class FairShareReceiver extends ParsePushBroadcastReceiver {
-public static int NOTIFICATION_ID = 0;
+    public static int NOTIFICATION_ID = 0;
 
     @Override
     protected void onPushReceive(Context context, Intent intent) {
-        SharedPreferences settings = context.getSharedPreferences("MAIN_PREFERENCES", 0);
-        String ownerId = settings.getString("id", "");
-
-//        Activity activity= ((App)context.getApplicationContext()).activity;
-//        if(activity==null){
-//            Toast.makeText(context, "App is null", Toast.LENGTH_SHORT).show();
-//        }else{
-//            Toast.makeText(context, "App is active!", Toast.LENGTH_SHORT).show();
-//        }
-
-        ParseAnalytics.trackAppOpenedInBackground(intent);
-        String rawData= intent.getExtras().getString("com.parse.Data");
-
         try {
-            JSONObject data = new JSONObject(rawData);
-            data= new JSONObject(data.getString("alert"));
-            if(data.getString("creatorId").equals(ownerId)){
-                return; //we created this changed so we don't need to be notified
-            }else{
-                List<Alert.NotifiedId> notifiedIds = (List<Alert.NotifiedId>) Alert.NotifiedId.listAll(Alert.NotifiedId.class);
-                boolean isNotifiedId=false;
-                for(Alert.NotifiedId notifiedId: notifiedIds){
-                    if(data.has(notifiedId.userId)){
-                        isNotifiedId=true;
-                        break;
+            SharedPreferences settings = context.getSharedPreferences("MAIN_PREFERENCES", 0);
+            String ownerId = settings.getString("id", "");
+            ParseAnalytics.trackAppOpenedInBackground(intent);
+            GroupActivity activity = ((App) context.getApplicationContext()).activity;
+                String rawData = intent.getExtras().getString("com.parse.Data");
+                JSONObject data = new JSONObject(rawData);
+                data = new JSONObject(data.getString("alert"));
+
+            if (activity == null) {//we need to create notification
+                if (data.getString("alertType").equals("ACTION_CHANGE")) {
+                    if (data.getString("creatorId").equals(ownerId)) {
+                        return;
+                    } else {
+                        List<Alert.NotifiedId> notifiedIds = (List<Alert.NotifiedId>) Alert.NotifiedId.listAll(Alert.NotifiedId.class);
+                        for (Alert.NotifiedId notifiedId : notifiedIds) {
+                            if (data.has(notifiedId.userId)) {
+                                String groupName = data.getString("groupName");
+                                String groupId = data.getString("groupId");
+                                sendNotification(context, intent, groupName, groupId);
+                                break;
+                            }
+                        }
+
+                        // Toast.makeText(context, "got new message", Toast.LENGTH_SHORT).show();
                     }
                 }
-                if(isNotifiedId){
-                String groupName= data.getString("groupName");
-                String groupId = data.getString("groupId");
-                sendNotification(context, intent, groupName,groupId);
+
+
+
+            } else { //we dont need to create notification
+                if (data.getString("alertType").equals("ACTION_CHANGE")) {
+                activity.syncActions();
                 }
-               // Toast.makeText(context, "got new message", Toast.LENGTH_SHORT).show();
+                if (data.getString("alertType").equals("USER_CHANGE")) {
+                    activity.syncUsers();
+                }
             }
 
         } catch (JSONException e) {
@@ -72,18 +71,17 @@ public static int NOTIFICATION_ID = 0;
 
     }
 
-    private void sendNotification(Context context,Intent recivedIntent,String groupName,String groupId){
-        Uri defaultNotificationSound= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+    private void sendNotification(Context context, Intent recivedIntent, String groupName, String groupId) {
+        Uri defaultNotificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
-        mBuilder.setSmallIcon(getSmallIconId(context,recivedIntent))
-                        .setContentTitle("Balance changed")
-                        .setContentText("Your balance in group "+groupName+ " has changed.")
+        mBuilder.setSmallIcon(getSmallIconId(context, recivedIntent))
+                .setContentTitle("Balance changed")
+                .setContentText("Your balance in group " + groupName + " has changed.")
                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-        .setSound(defaultNotificationSound);
+                .setSound(defaultNotificationSound);
 // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(context,GroupActivity.class);
+        Intent resultIntent = new Intent(context, GroupActivity.class);
         resultIntent.putExtra("groupId", groupId);
-
 
 
 // The stack builder object will contain an artificial back stack for the

@@ -19,6 +19,7 @@ public class User extends SugarRecord<User> implements Serializable {
     private String email;
     private String userId;
     private String belongingGroupId;
+    private boolean isNotified;
 
     public User() {
     }
@@ -47,6 +48,14 @@ public class User extends SugarRecord<User> implements Serializable {
             e.printStackTrace();
         }
         return resultUsers;
+    }
+
+    public boolean isNotified() {
+        return isNotified;
+    }
+
+    public void setIsNotified(boolean isNotified) {
+        this.isNotified = isNotified;
     }
 
     public void setBelongingGroupId(String belongingGroupId) {

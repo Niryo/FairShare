@@ -10,6 +10,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -92,6 +93,7 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
                     @Override
                     public void done(List<ParseObject> list, ParseException e) {
                         if (e == null && list != null) {
+                            boolean isNeedToSaveGroup = false;
                             Hashtable<String, Boolean> actionsIdTable = getActionsIdTable();
                             for (ParseObject parseObject : list) {
                                 JSONObject jsonObject = parseObject.getJSONObject("jsonAction");
@@ -106,10 +108,13 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
                                     newAction.save();
                                     actions.add(newAction);
                                     lastActionTimestampInMilisec = Math.max(parseObject.getCreatedAt().getTime(), lastActionTimestampInMilisec);
+                                    isNeedToSaveGroup = true;
                                     parentGroup.consumeAction(newAction);
                                 }
                             }
-                            save();
+                            if (isNeedToSaveGroup) {
+                                save();
+                            }
                         }
                     }
                 });
@@ -122,12 +127,12 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
         if(getId()==null) {
         save();
         }
-            action.setGroupLogId(getId());
+        action.setGroupLogId(getId());
         this.actions.add(action);
         action.save();
         save();
         sendActionToCloud(action);
-        reportActionViaPush(action);
+
     }
 
     private void reportActionViaPush(Action action){
@@ -135,6 +140,7 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
         push.setChannel(parentGroup.getCloudGroupKey());
             JSONObject jsonToPush=new JSONObject();
         try {
+            jsonToPush.put("alertType", "ACTION_CHANGE");
             jsonToPush.put("creatorId", parentGroup.getOwnerId());
             jsonToPush.put("groupName", parentGroup.getName());
             jsonToPush.put("groupId", parentGroup.getCloudGroupKey());
@@ -151,22 +157,24 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
         push.setMessage(jsonToPush.toString());
         push.sendInBackground();
     }
-    private void sendActionToCloud(Action action) {
+
+
+    private void sendActionToCloud(final Action action) {
         ParseObject parseGroupLog = new ParseObject(this.cloudLogKey);
         parseGroupLog.put("jsonAction", action.toJSON());
         parseGroupLog.put("actionId", action.getActionId());
         parseGroupLog.put("creatorId", action.getCreatorId());
-        parseGroupLog.saveEventually();
+        parseGroupLog.saveEventually(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    reportActionViaPush(action);
+                }
+            }
+        });
     }
 
-    @Override
-    public void save() {
-        super.save();
 
-        for (Action action : actions) {
-            action.save();
-        }
-    }
 
 }
 

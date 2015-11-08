@@ -1,7 +1,10 @@
 package share.fair.fairshare;
 
+import android.app.AlertDialog;
 import android.app.DialogFragment;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
@@ -30,6 +33,7 @@ import com.parse.ParsePush;
 import com.parse.SendCallback;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GroupActivity extends FragmentActivity {
 
@@ -48,16 +52,19 @@ public class GroupActivity extends FragmentActivity {
     Button goOutCheckedButton;
     Button backToMain;
     Button optionsButton;
-    ImageButton syncButton;
     Button alertButton;
     private Handler messageHandler;
     private ArrayList<Alert.AlertObject> alertObjects=new ArrayList<>();
 
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ((App) (getApplication())).registerGroupActivity(null);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-       // ((App)getApplication()).registerGroupAcrivity(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
         String groupId = getIntent().getStringExtra("groupId");
@@ -185,19 +192,10 @@ public class GroupActivity extends FragmentActivity {
         });
 
 
-        syncButton = (ImageButton) findViewById(R.id.sync_button);
-        group.setParentActivityMessageHandler(messageHandler);
-        syncButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                group.syncUsers(null);
-                group.getGroupLog().syncActions(getApplicationContext());
-                syncButton.startAnimation(AnimationUtils.loadAnimation(GroupActivity.this, R.anim.rotate_360));
-            }
-        });
-        this.group.syncUsers(null);
-        group.getGroupLog().syncActions(getApplicationContext());
 
+        group.setParentActivityMessageHandler(messageHandler);
+       syncActions();
+        syncUsers();
         notifyUserListChanged();
         this.userListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -294,12 +292,55 @@ public void goToActionActivity(){
     public void fastCheckoutCalculation(User user, double paid, double share) {
 
     }
+
+    private void removeNotificationFromStatusBar(){
+        String ns = Context.NOTIFICATION_SERVICE;
+        NotificationManager nMgr = (NotificationManager) getApplicationContext().getSystemService(ns);
+        nMgr.cancel(FairShareReceiver.NOTIFICATION_ID);
+    }
+    public void removeUser(final User user){
+        //todo: what to do when user removed from one group but not from other group and action has been made
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Wait!");
+        alert.setMessage("Are you sure that you want to remove " +user.getName() + " from the group?");
+        alert.setPositiveButton("Remove", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton)
+            {
+            group.removeUser(getApplicationContext(), user);
+                List<Alert.NotifiedId> notifiedIds = (List<Alert.NotifiedId>) Alert.NotifiedId.listAll(Alert.NotifiedId.class);
+                for(Alert.NotifiedId notifiedId : notifiedIds){
+                    if(notifiedId.userId.equals(user.getUserId())){
+                        notifiedId.delete();
+                        break;
+                    }
+                }
+            notifyUserListChanged();
+            }
+        });
+        alert.setNegativeButton("Cancel", null);
+        alert.create().show();
+    }
+
+    public void showGroupKeyDialog(){
+        GroupKeyDialog dialog = new GroupKeyDialog();
+        dialog.setGroupKey(group.getCloudGroupKey());
+        dialog.show(getSupportFragmentManager(), "group_key");
+    }
     protected void onResume()
     {
         super.onResume();
+        ((App) (getApplication())).registerGroupActivity(this);
+        removeNotificationFromStatusBar();
         notifyUserListChanged();
     }
-
+    public void syncActions(){
+        group.getGroupLog().syncActions(getApplicationContext());
+    }
+    public void syncUsers(){
+        this.group.syncUsers(null);
+    }
 
     private void initLayoutPreferences() {
         double syncButtonFactor;
@@ -321,26 +362,21 @@ public void goToActionActivity(){
             backButtonFactor=15;
             regularButtonSizeFactor=40;
             optionManuFactor=25;
-            alertButtonFactor=25;
+            alertButtonFactor=10;
             alertButtonTextSizeFactor=50;
         } else {
              syncButtonFactor=18;
              groupNameFactor=10;
              backButtonFactor=15;
              regularButtonSizeFactor=40;
-            optionManuFactor=25;
-            alertButtonFactor=25;
+            optionManuFactor=10;
+            alertButtonFactor=12;
             alertButtonTextSizeFactor=50;
         }
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int height = size.y;
-
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) syncButton.getLayoutParams();
-        params.width = (int)(height / syncButtonFactor);
-        params.height = (int) (height / syncButtonFactor);
-        syncButton.setLayoutParams(params);
 
 
         TextView groupName = (TextView) findViewById(R.id.tv_grp_name);

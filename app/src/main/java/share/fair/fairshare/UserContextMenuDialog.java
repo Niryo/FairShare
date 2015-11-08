@@ -7,12 +7,12 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+
+import java.util.List;
 
 /**
  * Created by Nir on 16/10/2015.
@@ -82,14 +82,47 @@ public class UserContextMenuDialog extends DialogFragment {
             }
         });
         //==================================== Second Item ==========================================
-
         Button notifyMe = (Button) dialogLayout.findViewById(R.id.user_context_menu_notify_me);
-        notifyMe.setOnClickListener(new View.OnClickListener() {
+        if(user.isNotified()){
+            notifyMe.setText("Remove notifications");
+            notifyMe.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    List<Alert.NotifiedId> notifiedIds = (List<Alert.NotifiedId>) Alert.NotifiedId.listAll(Alert.NotifiedId.class);
+                    for(Alert.NotifiedId notifiedId : notifiedIds){
+                        if(notifiedId.userId.equals(user.getUserId())){
+                            notifiedId.delete();
+                            break;
+                        }
+                    }
+                    user.setIsNotified(false);
+                    user.save();
+                    ((GroupActivity) getActivity()).notifyUserListChanged();
+                    getDialog().dismiss();
+                }
+            });
+        }
+        else {
+            notifyMe.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Alert.NotifiedId notifiedId = new Alert.NotifiedId(user.getUserId());
+                    notifiedId.save();
+                    user.setIsNotified(true);
+                    user.save();
+                    ((GroupActivity) getActivity()).notifyUserListChanged();
+                    getDialog().dismiss();
+                }
+            });
+        }
+
+        //======================================Delete user =================================================
+        Button deleteButton = (Button) dialogLayout.findViewById(R.id.user_context_menu_delete);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Alert.NotifiedId notifiedId= new Alert.NotifiedId(user.getUserId());
-                notifiedId.save();
-                getDialog().dismiss();
+                ((GroupActivity) getActivity()).removeUser(user);
+                dismiss();
             }
         });
         return dialogLayout;

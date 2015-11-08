@@ -19,7 +19,8 @@ import java.security.acl.Group;
  * Created by Nir on 09/10/2015.
  */
 public class App extends SugarApp {
-   // public GroupActivity activity=null;
+   public GroupActivity activity=null;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -42,7 +43,7 @@ public class App extends SugarApp {
 
     }
 
-//    public void registerGroupAcrivity(GroupActivity activity){
-//        this.activity=activity;
-//    }
+    public void registerGroupActivity(GroupActivity activity){
+        this.activity=activity;
+    }
 }

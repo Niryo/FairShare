@@ -39,13 +39,26 @@ public OptionsMenuDialog(){}
 
         getDialog().setContentView(R.layout.options_menu_dialog);
         View dialogLayout = inflater.inflate(R.layout.options_menu_dialog, container);
-
+//=========================== payment history=================================================
         Button paymentHistory= (Button) dialogLayout.findViewById(R.id.options_menu_payment_history);
         paymentHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getDialog().dismiss();
                 ((GroupActivity)getActivity()).goToActionActivity();
+            }
+        });
+
+        //=========================== settle up =================================================
+
+        //=========================== show group key =================================================
+
+        Button showGroupKey = (Button) dialogLayout.findViewById(R.id.options_menu_group_key);
+        showGroupKey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                ((GroupActivity)getActivity()).showGroupKeyDialog();
             }
         });
         return dialogLayout;

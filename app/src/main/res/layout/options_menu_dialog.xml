@@ -22,4 +22,13 @@
         android:background="@drawable/menu_item_button"
         android:gravity="center|left"
         android:textAllCaps="false"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show group key"
+        android:id="@+id/options_menu_group_key"
+        android:textAllCaps="false"
+        android:background="@drawable/menu_item_button"
+        android:layout_weight="1" />
 </LinearLayout>

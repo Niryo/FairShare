@@ -29,8 +29,7 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:background="@drawable/back"
-                android:layout_marginRight="13dp"
+                android:background="@drawable/back_button"
                 android:layout_marginLeft="4dp" />
 
             <Button
@@ -38,11 +37,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/group_activity_options_button"
-                android:background="@drawable/options_icon"
+                android:background="@drawable/options_menu_button"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/bt_back_to_info"
-                android:layout_toEndOf="@+id/bt_back_to_info"
-                android:layout_marginRight="10dp" />
+                android:layout_toEndOf="@+id/bt_back_to_info" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -67,7 +65,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+Add Person"
+                android:text="Add Person"
                 android:id="@+id/add_user_button"
                 android:background="@drawable/round_button"
                 android:padding="2dp"
@@ -104,26 +102,15 @@
                 android:layout_toRightOf="@+id/add_user_button"
                 android:layout_toEndOf="@+id/add_user_button" />
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/sync_button"
-                android:background="@android:drawable/stat_notify_sync"
-
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginRight="10dp" />
-
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/group_activity_alert_button"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/sync_button"
                 android:background="@drawable/popup_reminder"
                 android:gravity="center"
                 android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
                 android:textAllCaps="false"/>
 
         </RelativeLayout>
