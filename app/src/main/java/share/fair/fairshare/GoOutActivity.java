@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class GoOutActivity extends Activity {
@@ -44,15 +45,11 @@ public class GoOutActivity extends Activity {
 
             }
         });
-        nameList = (ArrayList<User>) getIntent().getSerializableExtra("goOutList");
-        final ArrayList<View> viewsList = new ArrayList<>();
-        LinearLayout list = (LinearLayout) findViewById(R.id.list_of_users);
-        for (User user : nameList) {
 
-   View newView = getNewGoOutRow(user);
-            list.addView(newView);
-            viewsList.add(newView);
-        }
+        final ArrayList<View> viewsList = new ArrayList<>();
+        nameList = (ArrayList<User>) getIntent().getSerializableExtra("goOutList");
+        LinearLayout list = (LinearLayout) findViewById(R.id.list_of_users);
+        description = (EditText) findViewById(R.id.description);
         calculateButton = (Button) findViewById(R.id.calculate_button);
         calculateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +85,17 @@ public class GoOutActivity extends Activity {
             }
         });
 
-        description = (EditText) findViewById(R.id.description);
+        if(getIntent().hasExtra("editMode")){
+            //todo: put correct values in each row and put the description
+        }
+        else {
+
+            for (User user : nameList) {
+                View newView = getNewGoOutRow(user);
+                list.addView(newView);
+                viewsList.add(newView);
+            }
+        }
         initLayoutPreferences();
     }
 
@@ -228,7 +235,7 @@ public class GoOutActivity extends Activity {
         userTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/ regularTextSizeFactor));
     }
 
-         public static class GoOutObject{
+         public static class GoOutObject implements Serializable{
              public User user;
              public double paid;
              public double share;

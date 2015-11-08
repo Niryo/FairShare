@@ -64,7 +64,6 @@ public class GroupActivity extends FragmentActivity {
         if (groupId.isEmpty()) {
             //todo: handle problem;
         }
-        syncUsers();
         this.group = FairShareGroup.loadGroupFromStorage(groupId);
 
         groupNameTextView = (TextView) findViewById(R.id.tv_grp_name);
@@ -187,7 +186,7 @@ public class GroupActivity extends FragmentActivity {
 
 
         group.setParentActivityMessageHandler(messageHandler);
-       syncActions();
+        syncActions();
         syncUsers();
         notifyUserListChanged();
         this.userListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
