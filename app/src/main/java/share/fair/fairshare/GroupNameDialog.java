@@ -49,6 +49,8 @@ public class GroupNameDialog extends DialogFragment {
 
                 String name = nameEditText.getText().toString();
                 FairShareGroup.groupBuilder(getContext(),name, userNameInGroup);
+//                FairShareGroup.groupBuilder(getContext(),name);
+
                 ((GroupCreatedListener) getActivity()).notifyGroupCreated();
 
                 getDialog().dismiss();

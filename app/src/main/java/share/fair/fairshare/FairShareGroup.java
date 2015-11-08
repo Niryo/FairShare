@@ -65,8 +65,15 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
     }
 
 
-    public static FairShareGroup groupBuilder(Context context, String name, String firstUserInGroup) {
-        FairShareGroup group = new FairShareGroup(name);
+//<<<<<<< HEAD
+    public static FairShareGroup groupBuilder(Context context, String groupName, String userNameInGroup) {
+        FairShareGroup group = new FairShareGroup(groupName);
+        Date zeroDate = new Date();
+        zeroDate.setTime(0);
+//=======
+//    public static FairShareGroup groupBuilder(Context context, String name, String firstUserInGroup) {
+//        FairShareGroup group = new FairShareGroup(name);
+//>>>>>>> origin/master
         String cloudGroupKey = "a" + new BigInteger(130, new SecureRandom()).toString(32);
         String cloudLogKey = "a" + new BigInteger(130, new SecureRandom()).toString(32);
         group.setCloudGroupKey(cloudGroupKey);
@@ -78,10 +85,19 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         SharedPreferences settings = context.getSharedPreferences("MAIN_PREFERENCES", 0);
         String ownerId = settings.getString("id", "");
         group.setOwnerId(ownerId);
-        User newUser = new User(firstUserInGroup, 0);
-        group.addUser(context,newUser);
+//<<<<<<< HEAD
+        group.addUser(context,new User(userNameInGroup, 0.0));
+//=======
+//        User newUser = new User(firstUserInGroup, 0);
+//        group.addUser(context,newUser);
+//>>>>>>> origin/master
         group.save();
-        GroupNameRecord groupNameRecord = new GroupNameRecord(name, group.getCloudGroupKey());
+//<<<<<<< HEAD
+//        GroupNameRecord groupNameRecord = new GroupNameRecord(groupName, group.getId());
+//=======
+        GroupNameRecord groupNameRecord = new GroupNameRecord(groupName, group.getCloudGroupKey());
+        //
+//>>>>>>> origin/master
         groupNameRecord.save();
         return group;
     }
@@ -153,6 +169,10 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         ParseObject parseGroup = new ParseObject(this.cloudGroupKey);
         parseGroup.put("userId", user.getUserId());
         parseGroup.put("userName", user.getName());
+//<<<<<<< HEAD
+//        parseGroup.put("userEmail", user.getEmail());
+//=======
+//>>>>>>> origin/master
         parseGroup.put("userBalance",user.getBalance());
         parseGroup.put("action", "USER_ADDED");
         parseGroup.put("creatorId", ownerId);
@@ -298,7 +318,6 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
 
     public String getCloudGroupKey() {
         return this.cloudGroupKey;
-
     }
 
     public void setCloudGroupKey(String cloudKey) {
@@ -365,3 +384,5 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
 
     }
 }
+
+
