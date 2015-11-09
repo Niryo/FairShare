@@ -1,50 +1,69 @@
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+android:id="@+id/action_edit_fragment_container">
+
+
+<LinearLayout
     android:orientation="vertical"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#45da8f">
 
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save changes"
-        android:id="@+id/save_changes_action_button"
-        />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back to actions"
-        android:id="@+id/back_to_actions"
-        />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delete Action"
-        android:id="@+id/delete_action_button" />
-
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/description_action"
-        android:text="No description specified"
-        />
+        android:orientation="horizontal">
 
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/back_to_actions"
+            android:background="@drawable/back_button"
+            android:layout_gravity="center_vertical"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:textAllCaps="false"
+            />
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/list_of_action_users"
-            >
-        </LinearLayout>
-    </ScrollView>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:id="@+id/save_changes_action_button"
+            android:layout_alignParentRight="true"
+            android:textAllCaps="false"
+            android:background="@drawable/round_button" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            android:id="@+id/delete_action_button"
+            android:layout_toLeftOf="@+id/save_changes_action_button"
+            android:textAllCaps="false"
+            android:background="@drawable/round_button" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit"
+            android:id="@+id/edit_action_activity_edit_button"
+            android:layout_alignBottom="@+id/delete_action_button"
+            android:layout_toLeftOf="@+id/delete_action_button"
+            android:layout_toStartOf="@+id/delete_action_button"
+            android:textAllCaps="false"
+            android:background="@drawable/round_button" />
+
+    </RelativeLayout>
+
 
 </LinearLayout>
+
+
+</LinearLayout>
+

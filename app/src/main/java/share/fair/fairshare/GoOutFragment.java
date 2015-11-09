@@ -12,6 +12,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -50,14 +51,20 @@ public class GoOutFragment extends Fragment {
 
         if(editMode){
             description.setText(billTitle);
+            description.setEnabled(false);
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
             for (GoOutObject goOutObject : goOutObjectList) {
                 View newView = getNewGoOutRow(goOutObject.userName);
                EditText paid= (EditText)newView.findViewById(R.id.et_paid);
+                if(goOutObject.paid>0){
                 paid.setText(Double.toString(goOutObject.paid));
+                }
                 paid.setEnabled(false);
 
                 EditText share= (EditText)newView.findViewById(R.id.et_special_share);
-                share.setText(Double.toString(goOutObject.share));
+                if(!Double.isNaN(goOutObject.share)){
+                share.setText(Double.toString(goOutObject.share));}
                 share.setEnabled(false);
 
                 list.addView(newView);
@@ -75,7 +82,14 @@ public class GoOutFragment extends Fragment {
 
     }
 
-
+public void enableEdit(){
+    description.setEnabled(true);
+    for(View view : viewsList){
+       view.findViewById(R.id.et_paid).setEnabled(true);
+      view.findViewById(R.id.et_special_share).setEnabled(true);
+    }
+    description.requestFocus();
+}
     public Action calculate(){
         SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences("MAIN_PREFERENCES", 0);
         String name = settings.getString("name", "");

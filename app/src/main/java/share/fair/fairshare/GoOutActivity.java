@@ -70,12 +70,8 @@ public class GoOutActivity extends Activity {
 
 
     private void initLayoutPreferences() {
-
-
         double backButtonFactor;
         double regularButtonSizeFactor;
-
-
 
         int configuration = getResources().getConfiguration().orientation;
         if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
@@ -92,17 +88,12 @@ public class GoOutActivity extends Activity {
         int height = size.y;
 
 
-
-
-
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) backToGroup.getLayoutParams();
         params.width = (int)(height / backButtonFactor);
         params.height = (int) (height / backButtonFactor);
         backToGroup.setLayoutParams(params);
 
         calculateButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularButtonSizeFactor));
-
-
 
     }
 
