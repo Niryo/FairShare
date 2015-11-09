@@ -77,13 +77,6 @@ public class ActionEditActivity extends Activity {
         ft.add(R.id.action_edit_fragment_container, goOutFragment, "goOutFragment");
         ft.commit();
 
-        editButton = (Button) findViewById(R.id.edit_action_activity_edit_button);
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goOutFragment.enableEdit();
-            }
-        });
 
         saveButton = (Button) findViewById(R.id.save_changes_action_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -114,12 +107,22 @@ public class ActionEditActivity extends Activity {
                 //2. create the new action
 
                 Action editAction = goOutFragment.calculate();
-                if(editAction==null){
+                if (editAction == null) {
                     //todo: problem
                 }
                 group.consumeAction(editAction);
                 group.getGroupLog().addAction(getApplicationContext(), editAction);
                 finish();
+            }
+        });
+
+        editButton = (Button) findViewById(R.id.edit_action_activity_edit_button);
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goOutFragment.enableEdit();
+                saveButton.setVisibility(View.VISIBLE);
+                editButton.setVisibility(View.GONE);
             }
         });
 

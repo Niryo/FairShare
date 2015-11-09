@@ -37,7 +37,8 @@ android:id="@+id/action_edit_fragment_container">
             android:id="@+id/save_changes_action_button"
             android:layout_alignParentRight="true"
             android:textAllCaps="false"
-            android:background="@drawable/round_button" />
+            android:background="@drawable/round_button"
+            android:visibility="invisible" />
 
         <Button
             android:layout_width="wrap_content"
@@ -54,8 +55,7 @@ android:id="@+id/action_edit_fragment_container">
             android:text="Edit"
             android:id="@+id/edit_action_activity_edit_button"
             android:layout_alignBottom="@+id/delete_action_button"
-            android:layout_toLeftOf="@+id/delete_action_button"
-            android:layout_toStartOf="@+id/delete_action_button"
+            android:layout_alignParentRight="true"
             android:textAllCaps="false"
             android:background="@drawable/round_button" />
 
