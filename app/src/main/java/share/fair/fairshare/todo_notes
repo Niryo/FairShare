@@ -1,11 +1,6 @@
 
 Todo list(Ori):
 
-    *  <DONE> Add the user himself to any group he creates
-        - Give an option to change the name for this particular group
-
-    *  <DONE> Stop the option for one user alone in a bill.
-
     * Make the change in action be visible immediately.
 
     * Make the save changes calculate the new bill by itself.
@@ -13,4 +8,23 @@ Todo list(Ori):
     * Make deleted actions uneditable.
 
     * Solve cases of deleted user in an action.
+
+    * Make the newer actions in the log appear higher in the page (reverse the order of action activity)
+
+    *separate add an invite by mail button to the group's options menu
+
+    *If group name is too big, shortten it with three dots indise the groups activity or make the text smaller
+
+    *Build focus hierarchy for goOutFragment.
+
+    *Dialogs crash while rotating screen - need to fix.
+
+    *Make it possible to enter zero share (will help us in the settle up)
+
+    *Implement settle up
+
+    *In edit action- grayout the scrren untill user clicks on edit button.
+
+    *Add context menue to group in the main activity, and add a delete group button.
+
 

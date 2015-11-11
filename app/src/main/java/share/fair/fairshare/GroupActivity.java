@@ -349,6 +349,8 @@ public void goToActionActivity(){
     public void showGroupKeyDialog(){
         GroupKeyDialog dialog = new GroupKeyDialog();
         dialog.setGroupKey(group.getCloudGroupKey());
+        dialog.setGroupLogKey(group.getCloudLogKey());
+        dialog.setGroupName(group.getName());
         dialog.show(getSupportFragmentManager(), "group_key");
     }
     protected void onResume()

@@ -21,7 +21,18 @@ public class GroupKeyDialog extends DialogFragment {
         this.groupKey = groupKey;
     }
 
+    public void setGroupLogKey(String groupLogKey) {
+        this.groupLogKey = groupLogKey;
+    }
+
+    private String groupLogKey;
     private String groupKey;
+    private String groupName;
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
 
     @Nullable
     @Override
@@ -29,8 +40,8 @@ public class GroupKeyDialog extends DialogFragment {
         View dialogLayout = inflater.inflate(R.layout.group_key_dialog, container);
         getDialog().setContentView(R.layout.group_key_dialog);
         getDialog().setTitle("Group key:");
-        TextView groupKeyText = (TextView) dialogLayout.findViewById(R.id.group_key_dialog_text);
-        groupKeyText.setText(groupKey);
+        final TextView groupKeyText = (TextView) dialogLayout.findViewById(R.id.group_key_dialog_text);
+        groupKeyText.setText(groupName+"&"+groupKey+"&"+groupLogKey);
         Button copyButton = (Button) dialogLayout.findViewById(R.id.group_key_dialog_copy);
         copyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,10 +49,10 @@ public class GroupKeyDialog extends DialogFragment {
                 int sdk = android.os.Build.VERSION.SDK_INT;
                 if(sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
                     android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                    clipboard.setText(groupKey);
+                    clipboard.setText(groupKeyText.getText().toString());
                 } else {
                     android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                    android.content.ClipData clip = android.content.ClipData.newPlainText("text label",groupKey);
+                    android.content.ClipData clip = android.content.ClipData.newPlainText("text label",groupKeyText.getText().toString());
                     clipboard.setPrimaryClip(clip);
                 }
                 dismiss();

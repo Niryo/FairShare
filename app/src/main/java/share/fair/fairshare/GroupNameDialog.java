@@ -37,7 +37,7 @@ public class GroupNameDialog extends DialogFragment {
         final Button cancelButton = (Button) dialogLayout.findViewById(R.id.cancel_button);
         SharedPreferences settings = getActivity().getSharedPreferences("MAIN_PREFERENCES", 0);
         final String ownerName= settings.getString("name", "");
-        specialUserNameText.setHint("Default name: "+ ownerName);
+        specialUserNameText.setHint("Your name in the group: "+ ownerName);
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

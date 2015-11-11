@@ -42,6 +42,12 @@ public class MainOptionsMenuDialog  extends DialogFragment {
 
 //=========================== Join group with key=================================================
         Button joinGroup = (Button) dialogLayout.findViewById(R.id.main_options_menu_join_group);
+        joinGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new JoinGroupWithKeyDialog().show(getFragmentManager(), "join_group_with_key_dialog");
+            }
+        });
 
 
         return dialogLayout;

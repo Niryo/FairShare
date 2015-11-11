@@ -32,8 +32,7 @@ public class ActionEditActivity extends Activity {
     Button editButton;
     FairShareGroup group;
     int actionIndex;
-    private String creatorName;
-    private String creatorId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
