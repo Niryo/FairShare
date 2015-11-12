@@ -39,31 +39,18 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
     private String cloudLogKey = "";
     private String cloudGroupKey = "";
     private long lastUserSync= Long.valueOf(0);
-    public String getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(String ownerId) {
-        this.ownerId = ownerId;
-    }
-
     private String ownerId="";
-
     @Ignore
     private List<User> users = new ArrayList<>();
     @Ignore
     private GroupLog groupLog;
     @Ignore
     private transient Handler parentActivityMessageHandler;
-
-
     public FairShareGroup() { //must ve empty constructor
     }
-
     private FairShareGroup(String name) {
         this.name = name;
     }
-
 
 //<<<<<<< HEAD
     public static FairShareGroup groupBuilder(Context context, String groupName, String userNameInGroup) {
@@ -120,8 +107,6 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         return group;
     }
 
-
-
     public static void joinGroupWithKey(Context context, String name, String cloudGroupKey, String cloudLogKey) {
         //check that group doesn't already exdist:
         for (GroupNameRecord groupNameRecord : getSavedGroupNames()){
@@ -145,6 +130,13 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         group.save();
     }
 
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
+    }
 
     public void setParentActivityMessageHandler(Handler parentActivityMessageHandler) {
         this.parentActivityMessageHandler = parentActivityMessageHandler;
@@ -361,14 +353,18 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
     }
 
 
+    @Override
+    public void delete() {
+        super.delete();
+        for(User user: users){
+            user.delete();
+        }
+        groupLog.delete();
+
+    }
 
     public static class GroupNameRecord extends SugarRecord<GroupNameRecord> {
         private String groupName;
-
-        public String getGroupId() {
-            return groupId;
-        }
-
         private String groupId;
 
         public  GroupNameRecord(){}
@@ -376,6 +372,10 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         public GroupNameRecord(String name, String groupId) {
             this.groupName = name;
             this.groupId = groupId;
+        }
+
+        public String getGroupId() {
+            return groupId;
         }
 
         public String getGroupName() {

@@ -1,7 +1,6 @@
 package share.fair.fairshare;
 
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
@@ -11,9 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-
-import java.math.BigInteger;
-import java.security.SecureRandom;
 
 /**
  * Created by Nir on 11/11/2015.
@@ -43,7 +39,7 @@ public class JoinGroupWithKeyDialog extends DialogFragment {
                 String groupKey= splittedKeys[1];
                 String groupLogKey= splittedKeys[2];
                 FairShareGroup.joinGroupWithKey(getContext(),groupName,groupKey,groupLogKey);
-                ((MainActivity)getActivity()).notifyGroupCreated();
+                ((MainActivity)getActivity()).notifyGroupListChanged();
                 getDialog().dismiss();
             }
         });

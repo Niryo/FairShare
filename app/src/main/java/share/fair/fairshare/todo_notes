@@ -13,7 +13,7 @@ Todo list(Ori):
 
     *separate add an invite by mail button to the group's options menu
 
-    *If group name is too big, shortten it with three dots indise the groups activity or make the text smaller
+    *If group name is too big, shorten it with three dots indise the groups activity or make the text smaller
 
     *Build focus hierarchy for goOutFragment.
 
@@ -25,6 +25,6 @@ Todo list(Ori):
 
     *In edit action- grayout the scrren untill user clicks on edit button.
 
-    *Add context menue to group in the main activity, and add a delete group button.
+
 
 

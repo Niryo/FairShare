@@ -1,6 +1,8 @@
 package share.fair.fairshare;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -8,7 +10,6 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
@@ -17,10 +18,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.parse.ParseException;
-import com.parse.ParseInstallation;
-import com.parse.SaveCallback;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -82,6 +80,16 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
                 startActivity(openGroup);
             }
         });
+
+        groupList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                GroupContextMenuDialog dialog = new GroupContextMenuDialog();
+                dialog.setGroupNameRecord(groupNames.get(position));
+                dialog.show(getFragmentManager(), "groupContextMenuDialog");
+                return true;
+            }
+        });
         if (getIntent() != null) {
             Intent intent = getIntent();
             if (Intent.ACTION_VIEW.equals(intent.getAction())) {
@@ -90,7 +98,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
                 String groupCloudKey = uri.getQueryParameter("groupCloudKey");
                 String cloudLogKey = uri.getQueryParameter("cloudLogKey");
                 FairShareGroup.joinGroupWithKey(getApplicationContext(), groupName, groupCloudKey, cloudLogKey);
-                notifyGroupCreated();
+                notifyGroupListChanged();
             }
         }
     }
@@ -129,9 +137,27 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
     }
 
     @Override
-    public void notifyGroupCreated() {
+    public void notifyGroupListChanged() {
         groupNames.clear();
         groupNames.addAll(FairShareGroup.getSavedGroupNames());
         groupAdapter.notifyDataSetChanged();
+    }
+
+    public void removeGroup(final FairShareGroup.GroupNameRecord groupNameRecord){
+        //todo: what to do when user removed from one group but not from other group and action has been made
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Wait!");
+        alert.setMessage("Are you sure that you want to remove " + groupNameRecord.getGroupName()+ " from your groups?");
+        alert.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                groupNameRecord.delete();
+               FairShareGroup.loadGroupFromStorage(groupNameRecord.getGroupId()).delete();
+              notifyGroupListChanged();
+                Toast.makeText(getApplicationContext(), groupNameRecord.getGroupName()+" has been removed", Toast.LENGTH_SHORT).show();
+            }
+        });
+        alert.setNegativeButton("Cancel", null);
+        alert.create().show();
     }
 }

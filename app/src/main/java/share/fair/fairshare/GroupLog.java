@@ -174,7 +174,12 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
         });
     }
 
-
-
+    @Override
+    public void delete() {
+        super.delete();
+        for(Action action : actions){
+            action.delete();
+        }
+    }
 }
 

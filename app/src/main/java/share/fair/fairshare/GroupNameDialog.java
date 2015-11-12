@@ -51,7 +51,7 @@ public class GroupNameDialog extends DialogFragment {
                 FairShareGroup.groupBuilder(getContext(),name, userNameInGroup);
 //                FairShareGroup.groupBuilder(getContext(),name);
 
-                ((GroupCreatedListener) getActivity()).notifyGroupCreated();
+                ((GroupCreatedListener) getActivity()).notifyGroupListChanged();
 
                 getDialog().dismiss();
             }
@@ -87,7 +87,7 @@ public class GroupNameDialog extends DialogFragment {
     }
 
     public interface GroupCreatedListener {
-        public void notifyGroupCreated();
+        public void notifyGroupListChanged();
     }
 }
 

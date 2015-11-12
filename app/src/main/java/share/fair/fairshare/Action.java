@@ -128,5 +128,14 @@ public class Action extends SugarRecord<Action> implements Serializable {
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
     }
+
+    @Override
+    public void delete() {
+        super.delete();
+        for(Operation operation : operations){
+            operation.delete();
+        }
+    }
 }
+
 

@@ -204,7 +204,7 @@ public class GroupActivity extends FragmentActivity {
                 UserContextMenuDialog dialog = new UserContextMenuDialog();
                 dialog.setUser(users.get(position));
                 dialog.show(getFragmentManager(), "UserContextMenuDialog");
-                return false;
+                return true;
             }
         });
 
