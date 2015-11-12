@@ -60,6 +60,17 @@ public GroupOptionsMenuDialog(){}
                 ((GroupActivity)getActivity()).showGroupKeyDialog();
             }
         });
+
+        //=========================== Invite by mail =================================================
+
+        Button inviteByMail = (Button) dialogLayout.findViewById(R.id.options_menu_invite_by_mail);
+        inviteByMail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new InviteByMailDialog().show(getFragmentManager(), "InviteByMailDialog");
+                dismiss();
+            }
+        });
         return dialogLayout;
 
 
@@ -74,4 +85,7 @@ public GroupOptionsMenuDialog(){}
         windowParams.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         window.setAttributes(windowParams);
     }
+
+
+
 }

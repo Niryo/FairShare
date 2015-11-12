@@ -216,7 +216,7 @@ public class GroupActivity extends FragmentActivity {
     private void setAlertButton(){
 
     }
-    private void inviteByMail(String emailAddress) {
+    public void inviteByMail(String emailAddress) {
         Uri.Builder uriBuilder = new Uri.Builder();
         uriBuilder.scheme("http");
         uriBuilder.authority("fair.share.fairshare");
@@ -229,7 +229,7 @@ public class GroupActivity extends FragmentActivity {
         i.setType("message/rfc822");
         i.putExtra(Intent.EXTRA_EMAIL, new String[]{emailAddress});
         i.putExtra(Intent.EXTRA_SUBJECT, "FairShare: invitation to join to a new group");
-        i.putExtra(Intent.EXTRA_TEXT, uriBuilder.build().toString());
+        i.putExtra(Intent.EXTRA_TEXT, "To join the group, click on the link below and choose to open it using FairShare app:\n\n" + uriBuilder.build().toString());
 
         try {
             startActivity(Intent.createChooser(i, "Send mail..."));

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/invite_by_mail_dialog_input"
+        android:layout_gravity="center_horizontal"
+        android:singleLine="true"
+        android:imeOptions="flagNoExtractUi"
+        android:maxLength="15"
+        android:hint="Email address" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Send invitation"
+            android:id="@+id/invite_by_mail_send"
+            android:layout_gravity="center_horizontal"
+            android:textAllCaps="false"/>
+
+    </LinearLayout>
+
+</LinearLayout>
