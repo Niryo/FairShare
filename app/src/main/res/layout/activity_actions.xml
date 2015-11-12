@@ -2,19 +2,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back to Group"
-        android:id="@+id/back_to_group_button_actions"
+    android:orientation="vertical">
 
-        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/picture_frame"
+        android:layout_marginLeft="-12dp"
+        android:layout_marginRight="-12dp"
+        android:layout_marginTop="-12dp"
+        android:padding="20dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/back_to_group_button_actions"
+            android:background="@drawable/back_button" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Payment History"
+            android:id="@+id/action_activity_title"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/back_to_group_button_actions"
+            android:layout_toEndOf="@+id/back_to_group_button_actions"
+            android:textColor="#ffffff" />
+
+    </RelativeLayout>
+
+
+
+
 
     <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
 
         >
 

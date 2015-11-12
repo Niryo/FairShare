@@ -1,16 +1,23 @@
 package share.fair.fairshare;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ActionsActivity extends AppCompatActivity {
+public class ActionsActivity extends Activity {
 
     Button backToGroup;
     LinearLayout actionList;
@@ -41,70 +48,48 @@ public class ActionsActivity extends AppCompatActivity {
 
         actionList = (LinearLayout) findViewById(R.id.list_of_actions);
         LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final ArrayList<View> viewsList = new ArrayList<>();
       String groupId = getIntent().getStringExtra("groupId");
         if(groupId.isEmpty()){
             //todo: problem
         }
         group= FairShareGroup.loadGroupFromStorage(groupId);
-//        groupLog = (GroupLog) getIntent().getSerializableExtra("groupLog");
 
-//        for(Action act : groupLog.actions){
 
-        for (int i = 0; i < group.getGroupLog().actions.size(); i++) {
-            View newView = vi.inflate(R.layout.action_row, null);
-            ((TextView) newView.findViewById(R.id.date)).setText(getDate(group.getGroupLog().actions.get(i).getTimeStamp())); //todo: add date
-            ((TextView) newView.findViewById(R.id.hour)).setText(getHour(group.getGroupLog().actions.get(i).getTimeStamp())); //todo: add hour
-            ((TextView) newView.findViewById(R.id.description)).setText(group.getGroupLog().actions.get(i).getDescription()); //todo: add description
-            newView.setTag(i);
-            actionList.addView(newView);
-            viewsList.add(newView);
-        }
-        for (View view : viewsList) {
-            view.setOnClickListener(new View.OnClickListener() {
+        for (int i = group.getGroupLog().actions.size()-1; i >= 0; i--) {
+            View actionRow= vi.inflate(R.layout.action_row, null);
+            TextView time = (TextView) actionRow.findViewById(R.id.action_row_time);
+            time.setText(getDate(group.getGroupLog().actions.get(i).getTimeStamp()));
+            initTextPreferences(time);
+
+            TextView description = (TextView) actionRow.findViewById(R.id.action_row_description);
+            description.setText(group.getGroupLog().actions.get(i).getDescription());
+            initTextPreferences(description);
+
+            final int index = i;
+            actionRow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toastGen(getApplicationContext(), "clicked"); //debug
                     Intent editAction = new Intent(getApplicationContext(), ActionEditActivity.class);
-                    editAction.putExtra("actionIndex", (int) v.getTag());
+                    editAction.putExtra("actionIndex", index);
                     editAction.putExtra("groupId", group.getCloudGroupKey());
                     startActivity(editAction);
+                    finish();
                 }
             });
-        }
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_actions, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            actionList.addView(actionRow);
         }
 
-        return super.onOptionsItemSelected(item);
+        initLayoutPreferences();
     }
 
-    private void toastGen(Context context, String msg) {
-        Log.w("user", "in toastGen: " + msg);
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-    }
+
+
 
     private String getDate(long timeStamp) {
 
         try {
-            DateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
+            DateFormat sdf = new SimpleDateFormat("dd-MM-yy  HH:mm");
             Date netDate = (new Date(timeStamp));
             return sdf.format(netDate);
         } catch (Exception ex) {
@@ -112,14 +97,54 @@ public class ActionsActivity extends AppCompatActivity {
         }
     }
 
-    private String getHour(long timeStamp) {
 
-        try {
-            DateFormat sdf = new SimpleDateFormat("hh:mm:ss aa");
-            Date netHour = (new Date(timeStamp));
-            return sdf.format(netHour);
-        } catch (Exception ex) {
-            return "hour failed";
+    private void initTextPreferences(TextView textView){
+        double textSize;
+
+        int configuration = getResources().getConfiguration().orientation;
+        if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
+            textSize=30;
+
+        } else {
+            textSize=30;
         }
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/textSize));
+
+
     }
+
+    private void initLayoutPreferences() {
+        double backButtonFactor;
+        double titleFactor;
+
+        int configuration = getResources().getConfiguration().orientation;
+        if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
+            backButtonFactor=15;
+            titleFactor=15;
+
+        } else {
+            backButtonFactor=15;
+            titleFactor=15;
+        }
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) backToGroup.getLayoutParams();
+        params.width = (int)(height / backButtonFactor);
+        params.height = (int) (height / backButtonFactor);
+        backToGroup.setLayoutParams(params);
+
+        TextView title = (TextView) findViewById(R.id.action_activity_title);
+        title.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/titleFactor));
+
+    }
+
 }

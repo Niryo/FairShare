@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Point;
@@ -43,9 +44,7 @@ public class ActionEditActivity extends Activity {
         final String creatorId= settings.getString("id", "");
 
         actionIndex = (int) getIntent().getIntExtra("actionIndex", -1);
-        toastGen(this, "Action index is: " + actionIndex); //debug
         if (actionIndex < 0) {
-            toastGen(this, "problem with action index"); //debug
             return;
         }
 
@@ -111,7 +110,8 @@ public class ActionEditActivity extends Activity {
                 }
                 group.consumeAction(editAction);
                 group.getGroupLog().addAction(getApplicationContext(), editAction);
-                finish();
+                openActionActivity();
+
             }
         });
 
@@ -150,19 +150,15 @@ public class ActionEditActivity extends Activity {
                 oppositeAction.operations = oppositeOperationList;
                 oppositeAction.setTimeStamp(action.getTimeStamp());
                 group.consumeAction(oppositeAction);
-                group.getGroupLog().addAction(getApplicationContext(),oppositeAction);
-                toastGen(getApplicationContext(), "the action: " + action.getDescription() + "was successfully deleted.");
-                finish();
+                group.getGroupLog().addAction(getApplicationContext(), oppositeAction);
+                Toast.makeText(getApplicationContext(), "the action: " + action.getDescription() + "was successfully deleted.", Toast.LENGTH_LONG).show();
+                openActionActivity();
             }
         });
         initLayoutPreferences();
     }
 
 
-    private void toastGen(Context context, String msg) {
-        Log.w("user", "in toastGen: " + msg);
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-    }
 
     private void initLayoutPreferences() {
         double backButtonFactor;
@@ -192,6 +188,13 @@ public class ActionEditActivity extends Activity {
         deleteAction.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularButtonSizeFactor));
         editButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularButtonSizeFactor));
 
+    }
+
+    private void openActionActivity(){
+        Intent actions = new Intent(getApplicationContext(), ActionsActivity.class);
+        actions.putExtra("groupId", group.getCloudGroupKey());
+        startActivity(actions);
+        finish();
     }
 }
 

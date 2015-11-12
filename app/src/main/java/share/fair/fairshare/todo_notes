@@ -9,10 +9,6 @@ Todo list(Ori):
 
     * Solve cases of deleted user in an action.
 
-    * Make the newer actions in the log appear higher in the page (reverse the order of action activity)
-
-    *separate add an invite by mail button to the group's options menu
-
     *If group name is too big, shorten it with three dots indise the groups activity or make the text smaller
 
     *Build focus hierarchy for goOutFragment.

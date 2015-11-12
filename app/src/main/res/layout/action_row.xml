@@ -1,38 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
      android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:weightSum="1"
-        >
+    android:background="@drawable/menu_item_button"
+    android:padding="12dp">
 
 
     <TextView
-        android:layout_width="105dp"
-        android:layout_height="70dp"
-        android:text="date"
-        android:id="@+id/date"
-        android:textSize="20dp"
-        android:layout_gravity="left"
-        />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="time"
+        android:id="@+id/action_row_time"
+        android:textColor="#000000"
+        android:layout_gravity="center" />
 
     <TextView
-        android:layout_width="105dp"
-        android:layout_height="70dp"
-        android:text="hour"
-        android:id="@+id/hour"
-        android:layout_gravity="left"
-        android:textSize="20dp"
-        android:layout_marginLeft="20dp"
-        />
-
-    <TextView
-        android:layout_width="63dp"
-        android:layout_height="70dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="description"
-        android:id="@+id/description"
+        android:id="@+id/action_row_description"
         android:layout_alignParentRight="@+id/date"
-        android:layout_gravity="left"
-        android:textSize="15dp"
         android:layout_marginLeft="20dp"
-        />
+        android:textColor="#45da8f"
+        android:layout_gravity="center" />
+
+
 </LinearLayout>

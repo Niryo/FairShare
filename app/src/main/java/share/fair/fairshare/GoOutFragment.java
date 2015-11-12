@@ -95,6 +95,9 @@ public void enableEdit(){
         String name = settings.getString("name", "");
         String id = settings.getString("id", "");
         String descriptionStr = description.getText().toString();
+        if(descriptionStr.isEmpty()){
+            descriptionStr="...";
+        }
         ArrayList<GoOutObject> goOutObjectList = new ArrayList<>();
 
         for (int i=0; i< viewsList.size(); i++) {
