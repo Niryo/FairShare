@@ -243,12 +243,8 @@ public void goToActionActivity(){
     actions.putExtra("groupId", group.getCloudGroupKey());
     startActivity(actions);
 }
-    public void notifyUserAdded(String name, String emailAddress) {
-        if (!emailAddress.isEmpty()) {
-            inviteByMail(emailAddress);
-        }
+    public void notifyUserAdded(String name) {
         User newUser = new User(name, 0);
-        newUser.setEmail(emailAddress);
         this.group.addUser(getApplicationContext(), newUser);
         notifyUserListChanged();
 

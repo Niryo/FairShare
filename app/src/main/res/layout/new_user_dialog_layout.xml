@@ -14,14 +14,27 @@
         android:maxLength="15"
         android:hint="User's name" />
 
-    <EditText
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:id="@+id/user_mail_edit_text"
-        android:autoText="true"
-        android:hint="Optional: Invite user by email" />
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:id="@+id/user_mail_edit_text"
+            android:autoText="true"
+            android:hint="Optional: Invite user by email" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Optional: Invite user by email"
+            android:visibility="invisible" />
+
+    </FrameLayout>
 
     <LinearLayout
         android:orientation="horizontal"
