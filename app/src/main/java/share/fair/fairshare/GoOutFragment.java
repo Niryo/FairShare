@@ -106,7 +106,7 @@ public void enableEdit(){
             if (!paidInputStr.isEmpty()) {
                 paidInput = Double.parseDouble(paidInputStr);
             }
-            double shareInput=0.0;
+            double shareInput=Double.NaN;
             String shareInputStr = ((EditText) viewsList.get(i).findViewById(R.id.et_special_share)).getText().toString();
             if(!shareInputStr.isEmpty()) {
                 shareInput = Double.parseDouble(shareInputStr);
@@ -128,13 +128,12 @@ public void enableEdit(){
         ArrayList<GoOutObject> noShareUsersIndexes = new ArrayList<GoOutObject>();
 
         for (GoOutObject goOutObject : goOutObjectList) {
-            double paidInput = 0.0;
-            paidInput = goOutObject.paid;
+            double paidInput =  goOutObject.paid;
             totalPaid += paidInput;
 
             double shareInput;
             shareInput = goOutObject.share;
-            if (shareInput == 0) {
+            if (Double.isNaN(shareInput)) {
                 noShareUsersIndexes.add(goOutObject);
             } else {
                 totalShare += shareInput;
@@ -152,6 +151,11 @@ public void enableEdit(){
         if (noShareUsers > 0) {
             splitEvenShare = totalPaidWithoutShares / noShareUsers;
         }
+        if(noShareUsers == 0 && totalPaidWithoutShares>0){
+            //todo: problem - there is no one left to pay the debt!
+            return null;
+        }
+
         for (GoOutObject noShareGoOutObject : noShareUsersIndexes) {
             double paidInput = noShareGoOutObject.paid;
             action.addOperation(noShareGoOutObject.userId, noShareGoOutObject.userName, paidInput, splitEvenShare,false);

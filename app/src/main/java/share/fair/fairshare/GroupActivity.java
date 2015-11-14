@@ -30,10 +30,10 @@ import java.util.List;
 
 public class GroupActivity extends FragmentActivity {
 
-    static final int NOTIFY_USER_CHANGE=1;
-    static final int CHECKED_AVAILABLE=2;
-    static final int CHECKED_UNAVAILABLE=3;
-    static final int BALANCE_CHANGED=4;
+    static final int NOTIFY_USER_CHANGE = 1;
+    static final int CHECKED_AVAILABLE = 2;
+    static final int CHECKED_UNAVAILABLE = 3;
+    static final int BALANCE_CHANGED = 4;
     static final int GO_OUT_REQUEST = 1;  // The request code
     TextView groupNameTextView;
     Button addUserButton;
@@ -47,7 +47,7 @@ public class GroupActivity extends FragmentActivity {
     Button optionsButton;
     Button alertButton;
     private Handler messageHandler;
-    private ArrayList<Alert.AlertObject> alertObjects=new ArrayList<>();
+    private ArrayList<Alert.AlertObject> alertObjects = new ArrayList<>();
 
 
     @Override
@@ -73,18 +73,19 @@ public class GroupActivity extends FragmentActivity {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                if(msg.what==NOTIFY_USER_CHANGE){
-                notifyUserListChanged();}
-                if(msg.what==CHECKED_AVAILABLE){
+                if (msg.what == NOTIFY_USER_CHANGE) {
+                    notifyUserListChanged();
+                }
+                if (msg.what == CHECKED_AVAILABLE) {
                     goOutCheckedButton.setVisibility(View.VISIBLE);
                     goOutAllButton.setVisibility(View.GONE);
                 }
-                if(msg.what==CHECKED_UNAVAILABLE){
+                if (msg.what == CHECKED_UNAVAILABLE) {
                     goOutCheckedButton.setVisibility(View.GONE);
                     goOutAllButton.setVisibility(View.VISIBLE);
                 }
-                if(msg.what==BALANCE_CHANGED){
-                    Alert.AlertObject alert =(Alert.AlertObject) msg.obj;
+                if (msg.what == BALANCE_CHANGED) {
+                    Alert.AlertObject alert = (Alert.AlertObject) msg.obj;
                     alertObjects.add(alert);
                     alertButton.setBackgroundResource(R.drawable.popup_reminder_active);
                     alertButton.setText(Integer.toString(alertObjects.size()));
@@ -113,11 +114,11 @@ public class GroupActivity extends FragmentActivity {
         alertButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(alertObjects.size()>0) {
+                if (alertObjects.size() > 0) {
                     v.setBackgroundResource(R.drawable.popup_reminder);
-                    ((Button)v).setText("");
+                    ((Button) v).setText("");
                     AlertsDialog alertsDialog = new AlertsDialog();
-                    int[] location= new int[2];
+                    int[] location = new int[2];
                     v.getLocationOnScreen(location);
                     alertsDialog.setX(location[0]);
                     alertsDialog.setY(location[1]);
@@ -134,8 +135,8 @@ public class GroupActivity extends FragmentActivity {
         optionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GroupOptionsMenuDialog optionsMenuDialog =new GroupOptionsMenuDialog();
-                int[] location= new int[2];
+                GroupOptionsMenuDialog optionsMenuDialog = new GroupOptionsMenuDialog();
+                int[] location = new int[2];
                 v.getLocationOnScreen(location);
                 optionsMenuDialog.setX(location[0]);
                 optionsMenuDialog.setY(location[1] - v.getHeight());
@@ -149,8 +150,8 @@ public class GroupActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 ArrayList<GoOutFragment.GoOutObject> goOutObjectsList = new ArrayList<GoOutFragment.GoOutObject>();
-                for(User user : users){
-                    goOutObjectsList.add(new GoOutFragment.GoOutObject(user.getUserId(),user.getName(),0,0));
+                for (User user : users) {
+                    goOutObjectsList.add(new GoOutFragment.GoOutObject(user.getUserId(), user.getName(), 0, 0));
                 }
                 Intent goOut = new Intent(getApplicationContext(), GoOutActivity.class);
                 goOut.putExtra("goOutList", goOutObjectsList);
@@ -163,8 +164,8 @@ public class GroupActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 ArrayList<GoOutFragment.GoOutObject> checkedUsers = new ArrayList<GoOutFragment.GoOutObject>();
-                for(User user : userCheckBoxAdapter.getCheckedArray()){
-                    checkedUsers.add(new GoOutFragment.GoOutObject(user.getUserId(),user.getName(),0,0));
+                for (User user : userCheckBoxAdapter.getCheckedArray()) {
+                    checkedUsers.add(new GoOutFragment.GoOutObject(user.getUserId(), user.getName(), 0, 0));
                 }
 
                 if (checkedUsers.isEmpty()) {
@@ -172,7 +173,7 @@ public class GroupActivity extends FragmentActivity {
                     toastGen(getApplicationContext(), "No user is checked!");
                     return;
                 } else {
-                    if(checkedUsers.size() == 1){
+                    if (checkedUsers.size() == 1) {
                         toastGen(getApplicationContext(), "Only one person in the bill(Pointless). Have fun though");
                         return;
                     }
@@ -191,7 +192,6 @@ public class GroupActivity extends FragmentActivity {
                 finish();
             }
         });
-
 
 
         group.setParentActivityMessageHandler(messageHandler);
@@ -213,9 +213,8 @@ public class GroupActivity extends FragmentActivity {
 
     }
 
-    private void setAlertButton(){
 
-    }
+
     public void inviteByMail(String emailAddress) {
         Uri.Builder uriBuilder = new Uri.Builder();
         uriBuilder.scheme("http");
@@ -238,11 +237,12 @@ public class GroupActivity extends FragmentActivity {
         }
     }
 
-public void goToActionActivity(){
-    Intent actions = new Intent(getApplicationContext(), ActionsActivity.class);
-    actions.putExtra("groupId", group.getCloudGroupKey());
-    startActivity(actions);
-}
+    public void goToActionActivity() {
+        Intent actions = new Intent(getApplicationContext(), ActionsActivity.class);
+        actions.putExtra("groupId", group.getCloudGroupKey());
+        startActivity(actions);
+    }
+
     public void notifyUserAdded(String name) {
         User newUser = new User(name, 0);
         this.group.addUser(getApplicationContext(), newUser);
@@ -255,7 +255,12 @@ public void goToActionActivity(){
         clearChecked();
         if (requestCode == GO_OUT_REQUEST) {
             if (resultCode == RESULT_OK) {
+
                 Action action = (Action) data.getSerializableExtra("action");
+                if (action == null) {
+                    Toast.makeText(getApplicationContext(), "Error: sum paid must be greater than sum share.\nPlease try again.", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 this.group.getGroupLog().addAction(getApplicationContext(), action);//todo: find a way to remove the context
                 this.group.consumeAction(action);
                 //users = resultList; //todo: problem if checked list was sent
@@ -286,23 +291,60 @@ public void goToActionActivity(){
         goOutAllButton.setVisibility(View.VISIBLE);
     }
 
+    public boolean clearUserDebts(User user) {
+        SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
+        String creatorName = settings.getString("name", "");
+        String creatorId = settings.getString("id", "");
+        String description = user.getName() + "'s debts has been settled up";
+        ArrayList<GoOutFragment.GoOutObject> goOutObjectsList = new ArrayList<>();
+        double balance = user.getBalance();
+        if (balance >= 0) {
+            for (User currentUser : users) {
+                double othersPaid = balance / (users.size() - 1); //user's positive balance is evenly split between all the other users.
+                if (currentUser.getUserId().equals(user.getUserId())) {
+                    goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getName(), 0, balance));
+                } else {
+                    goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getName(), othersPaid, 0));
+                }
+            }
+        } else {
+            for (User currentUser : users) {
+                if (currentUser.getUserId().equals(user.getUserId())) {
+                    goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getName(), Math.abs(balance), 0));
+                } else {
+                    goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getName(), 0, Double.NaN));
+                }
+            }
+        }
+
+        Action action = GoOutFragment.createAction(creatorName, creatorId, description, goOutObjectsList);
+        if (action == null) {
+            Toast.makeText(getApplicationContext(), "Error: can't settle up user's debts", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        this.group.getGroupLog().addAction(getApplicationContext(), action);
+        this.group.consumeAction(action);
+        userCheckBoxAdapter.notifyDataSetChanged();
+        return true;
+
+    }
+
     public void fastCheckoutCalculation(User user, double paid, double share) {
         SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
         String creatorName = settings.getString("name", "");
         String creatorId = settings.getString("id", "");
-        String description = user.getName()+ " paid for all";
-        ArrayList<GoOutFragment.GoOutObject> goOutObjectsList= new ArrayList<>();
-        for(User currentUser: users){
-            if(currentUser.getUserId().equals(user.getUserId())){
-                goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(),currentUser.getName(),paid,share));
-            }
-            else{
-                goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(),currentUser.getName(),0,0));
+        String description = user.getName() + " paid for all";
+        ArrayList<GoOutFragment.GoOutObject> goOutObjectsList = new ArrayList<>();
+        for (User currentUser : users) {
+            if (currentUser.getUserId().equals(user.getUserId())) {
+                goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getName(), paid, share));
+            } else {
+                goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getName(), 0, Double.NaN));
             }
         }
 
-        Action action= GoOutFragment.createAction(creatorName,creatorId,description,goOutObjectsList);
-        if(action == null){
+        Action action = GoOutFragment.createAction(creatorName, creatorId, description, goOutObjectsList);
+        if (action == null) {
             Toast.makeText(getApplicationContext(), "Error: sum paid must be greater than sum share.\nPlease try again.", Toast.LENGTH_LONG).show();
             return;
         }
@@ -312,54 +354,90 @@ public void goToActionActivity(){
 
     }
 
-    private void removeNotificationFromStatusBar(){
+    private void removeNotificationFromStatusBar() {
         String ns = Context.NOTIFICATION_SERVICE;
         NotificationManager nMgr = (NotificationManager) getApplicationContext().getSystemService(ns);
         nMgr.cancel(FairShareReceiver.NOTIFICATION_ID);
     }
-    public void removeUser(final User user){
+
+    public void removeUser(final User user) {
         //todo: what to do when user removed from one group but not from other group and action has been made
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Wait!");
-        alert.setMessage("Are you sure that you want to remove " +user.getName() + " from the group?");
-        alert.setPositiveButton("Remove", new DialogInterface.OnClickListener()
-        {
+        alert.setMessage("Are you sure you want to remove " + user.getName() + " from the group?\n (user's debts within the group would automatically be settled up )");
+        alert.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int whichButton)
-            {
-            group.removeUser(getApplicationContext(), user);
-                List<Alert.NotifiedId> notifiedIds = (List<Alert.NotifiedId>) Alert.NotifiedId.listAll(Alert.NotifiedId.class);
-                for(Alert.NotifiedId notifiedId : notifiedIds){
-                    if(notifiedId.userId.equals(user.getUserId())){
-                        notifiedId.delete();
-                        break;
+            public void onClick(DialogInterface dialog, int whichButton) {
+                if (clearUserDebts(user)) {
+                    group.removeUser(getApplicationContext(), user);
+                    List<Alert.NotifiedId> notifiedIds = (List<Alert.NotifiedId>) Alert.NotifiedId.listAll(Alert.NotifiedId.class);
+                    for (Alert.NotifiedId notifiedId : notifiedIds) {
+                        if (notifiedId.userId.equals(user.getUserId())) {
+                            notifiedId.delete();
+                            break;
+                        }
                     }
-                }
-            notifyUserListChanged();
+                    notifyUserListChanged();
+            }
+
             }
         });
         alert.setNegativeButton("Cancel", null);
         alert.create().show();
     }
 
-    public void showGroupKeyDialog(){
+    public void settleUp() {
+        SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
+        String creatorName = settings.getString("name", "");
+        String creatorId = settings.getString("id", "");
+        String description = "Settel up";
+
+        ArrayList<GoOutFragment.GoOutObject> goOutObjects = new ArrayList<>();
+        for (User user : users) {
+            double balance = user.getBalance();
+            double sumPaid;
+            double sumShare;
+            if (balance >= 0) {
+                sumPaid = 0;
+                sumShare = balance;
+            } else {
+                sumPaid = Math.abs(balance);
+                ;
+                sumShare = 0;
+            }
+            goOutObjects.add(new GoOutFragment.GoOutObject(user.getUserId(), user.getName(), sumPaid, sumShare));
+        }
+
+        Action action = GoOutFragment.createAction(creatorName, creatorId, description, goOutObjects);
+        if (action == null) {
+            Toast.makeText(getApplicationContext(), "Error: can't settle up", Toast.LENGTH_LONG).show();
+            return;
+        }
+        this.group.getGroupLog().addAction(getApplicationContext(), action);
+        this.group.consumeAction(action);
+        userCheckBoxAdapter.notifyDataSetChanged();
+    }
+
+    public void showGroupKeyDialog() {
         GroupKeyDialog dialog = new GroupKeyDialog();
         dialog.setGroupKey(group.getCloudGroupKey());
         dialog.setGroupLogKey(group.getCloudLogKey());
         dialog.setGroupName(group.getName());
         dialog.show(getSupportFragmentManager(), "group_key");
     }
-    protected void onResume()
-    {
+
+    protected void onResume() {
         super.onResume();
         ((App) (getApplication())).registerGroupActivity(this);
         removeNotificationFromStatusBar();
         notifyUserListChanged();
     }
-    public void syncActions(){
+
+    public void syncActions() {
         group.getGroupLog().syncActions(getApplicationContext());
     }
-    public void syncUsers(){
+
+    public void syncUsers() {
         this.group.syncUsers(null);
     }
 
@@ -378,21 +456,21 @@ public void goToActionActivity(){
         int screenSize;
         int configuration = getResources().getConfiguration().orientation;
         if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
-            syncButtonFactor=18;
-            groupNameFactor=10;
-            backButtonFactor=15;
-            regularButtonSizeFactor=40;
-            optionManuFactor=25;
-            alertButtonFactor=10;
-            alertButtonTextSizeFactor=50;
+            syncButtonFactor = 18;
+            groupNameFactor = 10;
+            backButtonFactor = 15;
+            regularButtonSizeFactor = 40;
+            optionManuFactor = 25;
+            alertButtonFactor = 10;
+            alertButtonTextSizeFactor = 50;
         } else {
-             syncButtonFactor=18;
-             groupNameFactor=10;
-             backButtonFactor=15;
-             regularButtonSizeFactor=40;
-            optionManuFactor=10;
-            alertButtonFactor=12;
-            alertButtonTextSizeFactor=50;
+            syncButtonFactor = 18;
+            groupNameFactor = 10;
+            backButtonFactor = 15;
+            regularButtonSizeFactor = 40;
+            optionManuFactor = 10;
+            alertButtonFactor = 12;
+            alertButtonTextSizeFactor = 50;
         }
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -401,25 +479,25 @@ public void goToActionActivity(){
 
 
         TextView groupName = (TextView) findViewById(R.id.tv_grp_name);
-        groupName.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/groupNameFactor));
+        groupName.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / groupNameFactor));
 
         RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) optionsButton.getLayoutParams();
-        params2.width = (int)(height / optionManuFactor);
+        params2.width = (int) (height / optionManuFactor);
         params2.height = (int) (height / optionManuFactor);
         optionsButton.setLayoutParams(params2);
 
 
         RelativeLayout.LayoutParams params3 = (RelativeLayout.LayoutParams) backToMain.getLayoutParams();
-        params3.width = (int)(height / backButtonFactor);
+        params3.width = (int) (height / backButtonFactor);
         params3.height = (int) (height / backButtonFactor);
         backToMain.setLayoutParams(params3);
 
         addUserButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularButtonSizeFactor));
-        goOutAllButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/regularButtonSizeFactor));
+        goOutAllButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularButtonSizeFactor));
         goOutCheckedButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularButtonSizeFactor));
 
         RelativeLayout.LayoutParams params4 = (RelativeLayout.LayoutParams) alertButton.getLayoutParams();
-        params4.width = (int)(height / alertButtonFactor);
+        params4.width = (int) (height / alertButtonFactor);
         params4.height = (int) (height / alertButtonFactor);
         alertButton.setLayoutParams(params4);
         alertButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / alertButtonTextSizeFactor));

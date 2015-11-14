@@ -84,7 +84,7 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
 //            holder.hUserName = userN;
 
 //            userBalMap.get(userN).toString();
-        userBalance.setText(new DecimalFormat("##.##").format(userList.get(position).getBalance()));
+        userBalance.setText(new DecimalFormat("##.##").format(userList.get(position).getBalance()+0));
         return convertView;
     }
 

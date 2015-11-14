@@ -49,7 +49,14 @@ public GroupOptionsMenuDialog(){}
         });
 
         //=========================== settle up =================================================
-
+        Button settleUpButton = (Button) dialogLayout.findViewById(R.id.options_menu_settle_up);
+        settleUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                ((GroupActivity)getActivity()).settleUp();
+            }
+        });
         //=========================== show group key =================================================
 
         Button showGroupKey = (Button) dialogLayout.findViewById(R.id.options_menu_group_key);

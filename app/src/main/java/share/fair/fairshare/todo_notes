@@ -1,8 +1,6 @@
 
 Todo list(Ori):
 
-    * Make the change in action be visible immediately.
-
     * Make the save changes calculate the new bill by itself.
 
     * Make deleted actions uneditable.
@@ -14,8 +12,6 @@ Todo list(Ori):
     *Build focus hierarchy for goOutFragment.
 
     *Dialogs crash while rotating screen - need to fix.
-
-    *Make it possible to enter zero share (will help us in the settle up)
 
     *Implement settle up
 

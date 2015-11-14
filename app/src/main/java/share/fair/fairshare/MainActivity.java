@@ -147,7 +147,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
         //todo: what to do when user removed from one group but not from other group and action has been made
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Wait!");
-        alert.setMessage("Are you sure that you want to remove " + groupNameRecord.getGroupName()+ " from your groups?");
+        alert.setMessage("Are you sure you want to remove " + groupNameRecord.getGroupName()+ " from your groups?");
         alert.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {

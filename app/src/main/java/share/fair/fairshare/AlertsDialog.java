@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -72,7 +73,7 @@ public class AlertsDialog extends DialogFragment {
             userName.setTextSize((float) (height / textSizeFactor));
 
             TextView paid = (TextView) alertRow.findViewById(R.id.alert_row_paid);
-            paid.setText(Double.toString(alert.paid));
+            paid.setText(new DecimalFormat("##.##").format(alert.paid+0));
             paid.setTextSize((float) (height / textSizeFactor));
             alertsContainer.addView(alertRow);
 

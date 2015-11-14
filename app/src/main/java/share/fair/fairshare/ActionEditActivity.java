@@ -129,7 +129,7 @@ public class ActionEditActivity extends Activity {
         backToActionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                openActionActivity();
             }
         });
         deleteAction = (Button) findViewById(R.id.delete_action_button);
