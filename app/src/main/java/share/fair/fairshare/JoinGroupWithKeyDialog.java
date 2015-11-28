@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * Created by Nir on 11/11/2015.
@@ -32,6 +33,7 @@ public class JoinGroupWithKeyDialog extends DialogFragment {
                 //todo: check correct string format
                 String[] splittedKeys = rawKey.split("&");
                 if(splittedKeys.length<3){
+                    Toast.makeText(getContext(),"Error: Wrong key", Toast.LENGTH_LONG);
                     getDialog().dismiss();
                     return;
                 }

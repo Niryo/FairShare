@@ -1,5 +1,7 @@
 package share.fair.fairshare;
 
+import org.acra.*;
+import org.acra.annotation.*;
 import android.util.Log;
 
 import com.orm.SugarApp;
@@ -18,12 +20,19 @@ import java.security.acl.Group;
 /**
  * Created by Nir on 09/10/2015.
  */
+@ReportsCrashes(mailTo = "niryosef89@gmail.com",
+        mode = ReportingInteractionMode.DIALOG,
+        resDialogText = R.string.crash_dialog_text,
+        resDialogIcon = android.R.drawable.ic_dialog_info, //optional. default is a warning sign
+        resDialogTitle = R.string.crash_dialog_title // optional. default is your application name
+        )
 public class App extends SugarApp {
    public GroupActivity activity=null;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        ACRA.init(this);
         Parse.enableLocalDatastore(getApplicationContext());
         Parse.initialize(this, "nLLyqbfak5UsJbwJ086zWMCr5Ux6RvzXOM1kBpX3", "sauupds6DzHf2EroSxBjbnORMgMLbY87UKbFW0u9");
         Parse.setLogLevel(Parse.LOG_LEVEL_VERBOSE);

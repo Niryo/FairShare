@@ -36,7 +36,6 @@ import java.util.List;
 public class FairShareGroup extends SugarRecord<FairShareGroup>  {
     private String name;
     private long groupLogId;
-    private String cloudLogKey = "";
     private String cloudGroupKey = "";
     private long lastUserSync= Long.valueOf(0);
     private String ownerId="";
@@ -52,20 +51,16 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         this.name = name;
     }
 
-//<<<<<<< HEAD
+
     public static FairShareGroup groupBuilder(Context context, String groupName, String userNameInGroup) {
         FairShareGroup group = new FairShareGroup(groupName);
         Date zeroDate = new Date();
         zeroDate.setTime(0);
-//=======
-//    public static FairShareGroup groupBuilder(Context context, String name, String firstUserInGroup) {
-//        FairShareGroup group = new FairShareGroup(name);
-//>>>>>>> origin/master
+
         String cloudGroupKey = "a" + new BigInteger(130, new SecureRandom()).toString(32);
         String cloudLogKey = "a" + new BigInteger(130, new SecureRandom()).toString(32);
         group.setCloudGroupKey(cloudGroupKey);
         ParsePush.subscribeInBackground(cloudGroupKey);//subscribe to the group chanel
-        group.setCloudLogKey(cloudLogKey);
         GroupLog groupLog = new GroupLog(group, cloudLogKey);
         groupLog.save();
         group.setGroupLog(groupLog);
@@ -263,13 +258,8 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         push.sendInBackground();
     }
 
-    public String getCloudLogKey() {
-        return cloudLogKey;
-    }
 
-    public void setCloudLogKey(String cloudLogKey) {
-        this.cloudLogKey = cloudLogKey;
-    }
+
 
     public GroupLog getGroupLog() {
         return groupLog;

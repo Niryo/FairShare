@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fairshare = "http://schemas.android.com/apk/res/share.fair.fairshare"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -17,7 +18,12 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
+            <share.fair.fairshare.RelativeButton
+                fairshare:landscapeWidthFactor="15"
+                fairshare:portraitWidthFactor="15"
+                fairshare:landscapeHeightFactor="15"
+                fairshare:portraitHeightFactor="15"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/back_to_group_button"
@@ -26,7 +32,10 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true" />
 
-            <Button
+            <share.fair.fairshare.RelativeButton
+                fairshare:landscapeTextFactor="40"
+                fairshare:portraitTextFactor="40"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Done"

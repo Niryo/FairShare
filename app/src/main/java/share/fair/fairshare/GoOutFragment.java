@@ -44,8 +44,6 @@ public class GoOutFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         LinearLayout list = (LinearLayout) getActivity().findViewById(R.id.list_of_users);
         description = (EditText) getActivity().findViewById(R.id.description);
-        initLayoutPreferences();
-
 
 
 
@@ -57,9 +55,8 @@ public class GoOutFragment extends Fragment {
             for (GoOutObject goOutObject : goOutObjectList) {
                 View newView = getNewGoOutRow(goOutObject.userName);
                EditText paid= (EditText)newView.findViewById(R.id.et_paid);
-                if(goOutObject.paid>0){
                 paid.setText(Double.toString(goOutObject.paid));
-                }
+
                 paid.setEnabled(false);
 
                 EditText share= (EditText)newView.findViewById(R.id.et_special_share);
@@ -78,7 +75,6 @@ public class GoOutFragment extends Fragment {
                 viewsList.add(newView);
             }
         }
-        initLayoutPreferences();
 
     }
 
@@ -142,10 +138,11 @@ public void enableEdit(){
             }
         }
         double totalPaidWithoutShares = totalPaid - totalShare;
-        if (totalPaidWithoutShares < 0) {
-            //todo: Other solution for error(unable to press calculate while share is bigger than paid)
-            return null;
-        }
+
+//        if (totalPaidWithoutShares < 0) {
+//            //todo: Other solution for error(unable to press calculate while share is bigger than paid)
+//            return null;
+//        }
         double splitEvenShare = 0.0;
         int noShareUsers = noShareUsersIndexes.size();
         if (noShareUsers > 0) {
@@ -205,34 +202,7 @@ public void enableEdit(){
     }
 
 
-    private void initLayoutPreferences() {
 
-        double regularTextSizeFactor;
-
-        int configuration = getResources().getConfiguration().orientation;
-        if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
-
-            regularTextSizeFactor=30;
-
-        } else {
-            regularTextSizeFactor=30;
-        }
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int height = size.y;
-
-
-
-        TextView sumPaidTitle = (TextView) getActivity().findViewById(R.id.sum_paid_title);
-        sumPaidTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/ regularTextSizeFactor));
-
-        TextView userShareTitle = (TextView) getActivity().findViewById(R.id.user_share_title);
-        userShareTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/ regularTextSizeFactor));
-
-        TextView userTitle = (TextView) getActivity().findViewById(R.id.go_out_activity_user_title);
-        userTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/ regularTextSizeFactor));
-    }
 
 
     public static class GoOutObject implements Serializable {

@@ -74,7 +74,7 @@ public class UserContextMenuDialog extends DialogFragment {
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                share = inputEditText.getText().toString().isEmpty() ? 0.0 : Double.parseDouble(inputEditText.getText().toString());
+                share = inputEditText.getText().toString().isEmpty() ? Double.NaN : Double.parseDouble(inputEditText.getText().toString());
                 InputMethodManager imm = (InputMethodManager) getDialog().getContext().getSystemService(getDialog().getContext().INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getDialog().getCurrentFocus().getWindowToken(), 0);
                 ((GroupActivity) getActivity()).fastCheckoutCalculation(user, paid, share);

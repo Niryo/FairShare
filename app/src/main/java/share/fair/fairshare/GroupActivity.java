@@ -17,6 +17,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -207,10 +208,7 @@ public class GroupActivity extends FragmentActivity {
                 return true;
             }
         });
-
-        initLayoutPreferences();
-
-
+        
     }
 
 
@@ -222,7 +220,7 @@ public class GroupActivity extends FragmentActivity {
         uriBuilder.appendPath("");
         uriBuilder.appendQueryParameter("groupName", group.getName());
         uriBuilder.appendQueryParameter("groupCloudKey", group.getCloudGroupKey());
-        uriBuilder.appendQueryParameter("cloudLogKey", group.getCloudLogKey());
+        uriBuilder.appendQueryParameter("cloudLogKey", group.getGroupLog().getCloudLogKey());
 
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
@@ -421,7 +419,7 @@ public class GroupActivity extends FragmentActivity {
     public void showGroupKeyDialog() {
         GroupKeyDialog dialog = new GroupKeyDialog();
         dialog.setGroupKey(group.getCloudGroupKey());
-        dialog.setGroupLogKey(group.getCloudLogKey());
+        dialog.setGroupLogKey(group.getGroupLog().getCloudLogKey());
         dialog.setGroupName(group.getName());
         dialog.show(getSupportFragmentManager(), "group_key");
     }
@@ -441,67 +439,6 @@ public class GroupActivity extends FragmentActivity {
         this.group.syncUsers(null);
     }
 
-    private void initLayoutPreferences() {
-        double syncButtonFactor;
-        double groupNameFactor;
-        double backButtonFactor;
-        double regularButtonSizeFactor;
-        double goOutCheckedFactor;
-        double goOutAllFactor;
-        double optionManuFactor;
-        double alertButtonFactor;
-        double alertButtonTextSizeFactor;
-
-
-        int screenSize;
-        int configuration = getResources().getConfiguration().orientation;
-        if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
-            syncButtonFactor = 18;
-            groupNameFactor = 10;
-            backButtonFactor = 15;
-            regularButtonSizeFactor = 40;
-            optionManuFactor = 25;
-            alertButtonFactor = 10;
-            alertButtonTextSizeFactor = 50;
-        } else {
-            syncButtonFactor = 18;
-            groupNameFactor = 10;
-            backButtonFactor = 15;
-            regularButtonSizeFactor = 40;
-            optionManuFactor = 10;
-            alertButtonFactor = 12;
-            alertButtonTextSizeFactor = 50;
-        }
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int height = size.y;
-
-
-        TextView groupName = (TextView) findViewById(R.id.tv_grp_name);
-        groupName.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / groupNameFactor));
-
-        RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) optionsButton.getLayoutParams();
-        params2.width = (int) (height / optionManuFactor);
-        params2.height = (int) (height / optionManuFactor);
-        optionsButton.setLayoutParams(params2);
-
-
-        RelativeLayout.LayoutParams params3 = (RelativeLayout.LayoutParams) backToMain.getLayoutParams();
-        params3.width = (int) (height / backButtonFactor);
-        params3.height = (int) (height / backButtonFactor);
-        backToMain.setLayoutParams(params3);
-
-        addUserButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularButtonSizeFactor));
-        goOutAllButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularButtonSizeFactor));
-        goOutCheckedButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularButtonSizeFactor));
-
-        RelativeLayout.LayoutParams params4 = (RelativeLayout.LayoutParams) alertButton.getLayoutParams();
-        params4.width = (int) (height / alertButtonFactor);
-        params4.height = (int) (height / alertButtonFactor);
-        alertButton.setLayoutParams(params4);
-        alertButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / alertButtonTextSizeFactor));
-    }
 
 }
 

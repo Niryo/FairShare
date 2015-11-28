@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fairshare = "http://schemas.android.com/apk/res/share.fair.fairshare"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -31,7 +32,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <TextView
+        <share.fair.fairshare.RelativeTextView
+            fairshare:landscapeFactor="30"
+            fairshare:portraitFactor="30"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="User name"
@@ -41,7 +45,10 @@
 
             android:textColor="#3399FF" />
 
-        <TextView
+        <share.fair.fairshare.RelativeTextView
+            fairshare:landscapeFactor="30"
+            fairshare:portraitFactor="30"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="User paid"
@@ -52,7 +59,10 @@
             android:layout_marginRight="20dp"
             android:textColor="#3399FF" />
 
-        <TextView
+        <share.fair.fairshare.RelativeTextView
+            fairshare:landscapeFactor="30"
+            fairshare:portraitFactor="30"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="User share"

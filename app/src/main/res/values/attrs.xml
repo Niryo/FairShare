@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="RelativeTextView">
+        <attr name="landscapeFactor" format="integer" />
+        <attr name="portraitFactor" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="RelativeButton">
+        <attr name="landscapeWidthFactor" format="integer" />
+        <attr name="portraitWidthFactor" format="integer" />
+        <attr name="landscapeHeightFactor" format="integer" />
+        <attr name="portraitHeightFactor" format="integer" />
+        <attr name="landscapeTextFactor" format="integer" />
+        <attr name="portraitTextFactor" format="integer" />
+
+    </declare-styleable>
+
+</resources>

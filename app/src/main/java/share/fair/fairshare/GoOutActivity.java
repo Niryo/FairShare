@@ -62,40 +62,11 @@ public class GoOutActivity extends Activity {
         });
 
 
-        initLayoutPreferences();
     }
 
 
 
 
-
-    private void initLayoutPreferences() {
-        double backButtonFactor;
-        double regularButtonSizeFactor;
-
-        int configuration = getResources().getConfiguration().orientation;
-        if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
-            backButtonFactor=15;
-            regularButtonSizeFactor=40;
-
-        } else {
-            backButtonFactor=15;
-            regularButtonSizeFactor=40;
-        }
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int height = size.y;
-
-
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) backToGroup.getLayoutParams();
-        params.width = (int)(height / backButtonFactor);
-        params.height = (int) (height / backButtonFactor);
-        backToGroup.setLayoutParams(params);
-
-        calculateButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularButtonSizeFactor));
-
-    }
 
 
 }

@@ -25,14 +25,18 @@ public class Action extends SugarRecord<Action> implements Serializable {
     private String creatorName;
     private String creatorId;
     private String actionId;
+    private boolean isEditable;
+
     public Action(String creatorName, String creatorId, String description) {
         this.timeStamp = System.currentTimeMillis();
         this.description = description;
         this.actionId = new BigInteger(130, new SecureRandom()).toString(32).substring(0, 10);
         this.creatorName = creatorName;
         this.creatorId = creatorId;
+        this.isEditable=true;
         operations = new ArrayList<>();
     }
+
     public Action() {
     }
 
@@ -51,6 +55,18 @@ public class Action extends SugarRecord<Action> implements Serializable {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isEditable() {
+        return isEditable;
+    }
+
+    public void makeUneditable() {
+        this.isEditable = false;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
     }
 
     public void setGroupLogId(Long groupLogId) {

@@ -28,6 +28,11 @@ import java.util.List;
 public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
     @Ignore
     List<Action> actions = new ArrayList<>();
+
+    public String getCloudLogKey() {
+        return cloudLogKey;
+    }
+
     private String cloudLogKey;
     private Long lastActionTimestampInMilisec;
     @Ignore

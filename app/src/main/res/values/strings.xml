@@ -7,5 +7,8 @@
     <string name="title_activity_actions">ActionsActivity</string>
     <string name="title_activity_action_edit">ActionEditActivity</string>
     <string name="for_tag_id">tagId</string>
+    <string name="crash_dialog_title">Opps...</string>
+    <string name="crash_dialog_text">Something went wrong! Please send us the crash-log so we could fix it as soon as possible!</string>
+
 
 </resources>

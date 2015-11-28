@@ -57,15 +57,13 @@ public class ActionsActivity extends Activity {
 
         for (int i = group.getGroupLog().actions.size()-1; i >= 0; i--) {
             View actionRow= vi.inflate(R.layout.action_row, null);
+            Action action =group.getGroupLog().actions.get(i);
             TextView time = (TextView) actionRow.findViewById(R.id.action_row_time);
-            time.setText(getDate(group.getGroupLog().actions.get(i).getTimeStamp()));
-            initTextPreferences(time);
-
+            time.setText(getDate(action.getTimeStamp()));
             TextView description = (TextView) actionRow.findViewById(R.id.action_row_description);
-            description.setText(group.getGroupLog().actions.get(i).getDescription());
-            initTextPreferences(description);
-
+            description.setText(action.getDescription());
             final int index = i;
+
             actionRow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -76,11 +74,15 @@ public class ActionsActivity extends Activity {
                     finish();
                 }
             });
+            if(!action.isEditable()){
+                time.setTextColor(Color.GRAY);
+                description.setTextColor(Color.GRAY);
+            }
 
-            actionList.addView(actionRow);
+
+                 actionList.addView(actionRow);
         }
 
-        initLayoutPreferences();
     }
 
 
@@ -98,53 +100,6 @@ public class ActionsActivity extends Activity {
     }
 
 
-    private void initTextPreferences(TextView textView){
-        double textSize;
 
-        int configuration = getResources().getConfiguration().orientation;
-        if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
-            textSize=30;
-
-        } else {
-            textSize=30;
-        }
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int height = size.y;
-
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/textSize));
-
-
-    }
-
-    private void initLayoutPreferences() {
-        double backButtonFactor;
-        double titleFactor;
-
-        int configuration = getResources().getConfiguration().orientation;
-        if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
-            backButtonFactor=15;
-            titleFactor=15;
-
-        } else {
-            backButtonFactor=15;
-            titleFactor=15;
-        }
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int height = size.y;
-
-
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) backToGroup.getLayoutParams();
-        params.width = (int)(height / backButtonFactor);
-        params.height = (int) (height / backButtonFactor);
-        backToGroup.setLayoutParams(params);
-
-        TextView title = (TextView) findViewById(R.id.action_activity_title);
-        title.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/titleFactor));
-
-    }
 
 }

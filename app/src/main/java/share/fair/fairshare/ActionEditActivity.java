@@ -3,21 +3,16 @@ package share.fair.fairshare;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +26,7 @@ public class ActionEditActivity extends Activity {
     Button backToActionsButton;
     Button deleteAction;
     Button editButton;
+    TextView createdBy;
     FairShareGroup group;
     int actionIndex;
 
@@ -57,8 +53,8 @@ public class ActionEditActivity extends Activity {
 
         final Action action = group.getGroupLog().actions.get(actionIndex);
         final ArrayList<Operation> operationList = (ArrayList<Operation>) action.getOperations();
-        final ArrayList<View> viewsList = new ArrayList<>();
         String actionDescription = action.getDescription();
+        String actionCreatedBy = action.getCreatorName();
         ArrayList<GoOutFragment.GoOutObject> goOutObjectsList= new ArrayList<>();
 
         for (Operation oper : operationList) {
@@ -75,12 +71,17 @@ public class ActionEditActivity extends Activity {
         ft.add(R.id.action_edit_fragment_container, goOutFragment, "goOutFragment");
         ft.commit();
 
+         createdBy= (TextView) findViewById(R.id.action_edit_created_by);
+        createdBy.setText("Created by: " + actionCreatedBy);
+        createdBy.setTextColor(Color.BLACK);
 
         saveButton = (Button) findViewById(R.id.save_changes_action_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //todo: check if change is needed
+                action.makeUneditable();
+                action.save();
                 //1. create opposite action:
                 ArrayList<Operation> oppositeOperationList = new ArrayList<Operation>();
                 for (Operation oper : operationList) {
@@ -92,12 +93,13 @@ public class ActionEditActivity extends Activity {
                     oppositeOperationList.add(new Operation(oppositeId, oppositeUsername, oppositePaid, oppositeShare, oper.getHasShare()));
                 }
 
-                Action oppositeAction = new Action(creatorName, creatorId, action.getDescription() + " (CANCELED(edit))");
+                Action oppositeAction = new Action(creatorName, creatorId, action.getDescription() + " (CANCELED)");
+                oppositeAction.makeUneditable();
+                oppositeAction.save();
                 oppositeAction.setGroupLogId(group.getGroupLog().getId());
                 oppositeAction.operations = oppositeOperationList;
                 oppositeAction.setTimeStamp(action.getTimeStamp());
 
-                //todo: make this action uneditable
 
                 group.consumeAction(oppositeAction);
                 group.getGroupLog().addAction(getApplicationContext(), oppositeAction);
@@ -136,6 +138,8 @@ public class ActionEditActivity extends Activity {
         deleteAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                action.makeUneditable();
+                action.save();
                 //1. create opposite action:
                 ArrayList<Operation> oppositeOperationList = new ArrayList<Operation>();
                 for (Operation oper : operationList) {
@@ -145,7 +149,8 @@ public class ActionEditActivity extends Activity {
                     double oppositeShare = -1 * oper.share;
                     oppositeOperationList.add(new Operation(oppositeId, oppositeUsername, oppositePaid, oppositeShare, oper.getHasShare()));
                 }
-                Action oppositeAction = new Action(creatorName, creatorId, action.getDescription() + "(CANCELED)");
+                Action oppositeAction = new Action(creatorName, creatorId, action.getDescription() + " (CANCELED)");
+                oppositeAction.makeUneditable();
                 oppositeAction.setGroupLogId(group.getGroupLog().getId());
                 oppositeAction.operations = oppositeOperationList;
                 oppositeAction.setTimeStamp(action.getTimeStamp());
@@ -155,40 +160,15 @@ public class ActionEditActivity extends Activity {
                 openActionActivity();
             }
         });
-        initLayoutPreferences();
-    }
 
-
-
-    private void initLayoutPreferences() {
-        double backButtonFactor;
-        double regularButtonSizeFactor;
-
-        int configuration = getResources().getConfiguration().orientation;
-        if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
-            backButtonFactor=15;
-            regularButtonSizeFactor=40;
-
-        } else {
-            backButtonFactor=15;
-            regularButtonSizeFactor=40;
+        if(!action.isEditable()){
+            editButton.setVisibility(View.INVISIBLE);
+            deleteAction.setVisibility(View.INVISIBLE);
         }
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int height = size.y;
-
-
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) backToActionsButton.getLayoutParams();
-        params.width = (int)(height / backButtonFactor);
-        params.height = (int) (height / backButtonFactor);
-        backToActionsButton.setLayoutParams(params);
-
-        saveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularButtonSizeFactor));
-        deleteAction.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularButtonSizeFactor));
-        editButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularButtonSizeFactor));
-
     }
+
+
+
 
     private void openActionActivity(){
         Intent actions = new Intent(getApplicationContext(), ActionsActivity.class);

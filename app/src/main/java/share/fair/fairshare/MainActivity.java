@@ -36,7 +36,6 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        initLayoutPreferences();
         SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
         String name = settings.getString("name", "");
         if (name.isEmpty()) {
@@ -103,38 +102,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
         }
     }
 
-    private void initLayoutPreferences() {
-        double titleFactor;
-        double buttonFactor;
-        double optionManuFactor;
-        int screenSize;
-        int configuration = getResources().getConfiguration().orientation;
-        if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
-            titleFactor = 10;
-            buttonFactor = 30;
-            optionManuFactor=10;
-        } else {
-            titleFactor = 10;
-            buttonFactor = 40;
-            optionManuFactor=10;
-        }
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int height = size.y;
-        TextView textView = (TextView) findViewById(R.id.main_activity_title);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / titleFactor));
 
-        Button newGroupButton = (Button) findViewById(R.id.create_new_group_button);
-        newGroupButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / buttonFactor));
-
-        Button optionsMenu = (Button) findViewById(R.id.activity_main_options_menu);
-        RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) optionsMenu.getLayoutParams();
-        params2.width = (int)(height / optionManuFactor);
-        params2.height = (int) (height / optionManuFactor);
-        optionsMenu.setLayoutParams(params2);
-
-    }
 
     @Override
     public void notifyGroupListChanged() {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="share.fair.fairshare" >
+    package="share.fair.fairshare">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -8,9 +8,10 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
     <permission
-        android:protectionLevel="signature"
-        android:name="share.fair.fairshare.permission.C2D_MESSAGE" />
+        android:name="share.fair.fairshare.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
     <uses-permission android:name="share.fair.fairshare.permission.C2D_MESSAGE" />
 
     <application
@@ -18,24 +19,31 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-        <meta-data android:name="DATABASE" android:value="fairsharedb.db" />
-        <meta-data android:name="VERSION" android:value="2" />
-        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="share.fair.fairshare" />
+        android:theme="@style/AppTheme">
+        <meta-data
+            android:name="DATABASE"
+            android:value="fairsharedb.db" />
+        <meta-data
+            android:name="VERSION"
+            android:value="2" />
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="share.fair.fairshare" />
         />
 
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustPan"
-            >
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -46,23 +54,28 @@
         </activity>
         <activity
             android:name=".GroupActivity"
-            android:label="@string/title_activity_group" >
-        </activity>
+            android:label="@string/title_activity_group"></activity>
         <activity
             android:name=".GoOutActivity"
-            android:label="@string/title_activity_go_out" >
-        </activity>
+            android:label="@string/title_activity_go_out"></activity>
         <activity
             android:name=".ActionsActivity"
-            android:label="@string/title_activity_actions" >
-        </activity>
+            android:label="@string/title_activity_actions"></activity>
         <activity
             android:name=".ActionEditActivity"
-            android:label="@string/title_activity_action_edit" >
-        </activity>
+            android:label="@string/title_activity_action_edit"></activity>
+
+        <activity android:name="org.acra.CrashReportDialog"
+            android:theme="@style/Theme.Dialog"
+            android:process=":error_report"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true"
+            android:finishOnTaskLaunch="true" />
 
         <service android:name="com.parse.PushService" />
-        <receiver android:name=".FairShareReceiver"
+
+        <receiver
+            android:name=".FairShareReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE" />
@@ -70,11 +83,13 @@
                 <action android:name="com.parse.push.intent.OPEN" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.parse.GcmBroadcastReceiver"
+        <receiver
+            android:name="com.parse.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
                 <category android:name="share.fair.fairshare" />
             </intent-filter>
         </receiver>

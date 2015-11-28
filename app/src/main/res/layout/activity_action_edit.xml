@@ -1,6 +1,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fairshare = "http://schemas.android.com/apk/res/share.fair.fairshare"
+
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="vertical"
@@ -18,7 +19,12 @@ android:id="@+id/action_edit_fragment_container">
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
+        <share.fair.fairshare.RelativeButton
+            fairshare:landscapeWidthFactor="15"
+            fairshare:portraitWidthFactor="15"
+            fairshare:landscapeHeightFactor="15"
+            fairshare:portraitHeightFactor="15"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/back_to_actions"
@@ -30,7 +36,10 @@ android:id="@+id/action_edit_fragment_container">
             />
 
 
-        <Button
+        <share.fair.fairshare.RelativeButton
+            fairshare:landscapeTextFactor="40"
+            fairshare:portraitTextFactor="40"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Save"
@@ -40,7 +49,10 @@ android:id="@+id/action_edit_fragment_container">
             android:background="@drawable/round_button"
             android:visibility="invisible" />
 
-        <Button
+        <share.fair.fairshare.RelativeButton
+            fairshare:landscapeTextFactor="40"
+            fairshare:portraitTextFactor="40"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Delete"
@@ -49,7 +61,10 @@ android:id="@+id/action_edit_fragment_container">
             android:textAllCaps="false"
             android:background="@drawable/round_button" />
 
-        <Button
+        <share.fair.fairshare.RelativeButton
+            fairshare:landscapeTextFactor="40"
+            fairshare:portraitTextFactor="40"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Edit"
@@ -58,6 +73,18 @@ android:id="@+id/action_edit_fragment_container">
             android:layout_alignParentRight="true"
             android:textAllCaps="false"
             android:background="@drawable/round_button" />
+
+        <share.fair.fairshare.RelativeTextView
+            fairshare:landscapeFactor="55"
+            fairshare:portraitFactor="55"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/action_edit_created_by"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/delete_action_button"
+            android:layout_marginRight="15dp" />
 
     </RelativeLayout>
 
