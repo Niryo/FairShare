@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fairshare = "http://schemas.android.com/apk/res/share.fair.fairshare"
+
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
 
-    <TextView
+    <share.fair.fairshare.RelativeTextView
+        fairshare:landscapeFactor="30"
+        fairshare:portraitFactor="30"
+
         android:id="@+id/tv_go_out_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,14 +26,11 @@
         android:layout_toLeftOf="@+id/sum_share_frame"
         android:layout_marginRight="20dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" User paid"
-            android:id="@+id/go_out_activity_user_share_place_holder"
-            android:visibility="invisible" />
 
-        <EditText
+        <share.fair.fairshare.RelativeEditText
+            fairshare:landscapeFactor="30"
+            fairshare:portraitFactor="30"
+            fairshare:placeHolderText="User paid"
             android:id="@+id/et_paid"
             android:inputType="numberDecimal"
             android:layout_width="match_parent"
@@ -52,7 +54,11 @@
         android:id="@+id/sum_share_frame"
         >
 
-        <EditText
+        <share.fair.fairshare.RelativeEditText
+            fairshare:landscapeFactor="30"
+            fairshare:portraitFactor="30"
+            fairshare:placeHolderText="User share"
+
             android:id="@+id/et_special_share"
             android:inputType="numberDecimal"
             android:layout_width="match_parent"
@@ -67,13 +73,6 @@
             android:hint="_"
             android:background="@android:color/transparent" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="User share"
-            android:id="@+id/go_out_activity_user_paid_place_holder"
-            android:visibility="invisible"
-            android:background="@android:color/transparent" />
     </FrameLayout>
 
 </RelativeLayout>

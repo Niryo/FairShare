@@ -3,38 +3,33 @@ package share.fair.fairshare;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
+import android.widget.ImageView;
 
 /**
- * Created by Nir on 28/11/2015.
+ * Created by Nir on 29/11/2015.
  */
-public class RelativeButton extends Button {
+public class RelativeImageView extends ImageView {
 
-    public RelativeButton(Context context, AttributeSet attrs) {
+
+    public RelativeImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray attributes = context.getTheme().obtainStyledAttributes(
                 attrs,
                 R.styleable.RelativeView,
                 0, 0);
 
-         final int buttonSizeFactor;
-         final int textSizeFactor;
+        final int imageSizeFactor;
         int configuration = getResources().getConfiguration().orientation;
         if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
-            buttonSizeFactor= attributes.getInteger(R.styleable.RelativeView_landscapeButtonSizeFactor, -1);
-            textSizeFactor=attributes.getInteger(R.styleable.RelativeView_landscapeTextSizeFactor, -1);
+            imageSizeFactor= attributes.getInteger(R.styleable.RelativeView_landscapeFactor, -1);
         }else{
-            buttonSizeFactor=attributes.getInteger(R.styleable.RelativeView_portraitButtonSizeFactor, -1);
-            textSizeFactor=attributes.getInteger(R.styleable.RelativeView_portraitTextSizeFactor, -1);
+            imageSizeFactor=attributes.getInteger(R.styleable.RelativeView_portraitFactor, -1);
         }
 
 
@@ -51,21 +46,16 @@ public class RelativeButton extends Button {
                 ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) getLayoutParams();
                 double originalFactor = getBackground().getIntrinsicHeight() / getBackground().getIntrinsicWidth();
                 int newWidth = 0;
-                if (buttonSizeFactor != -1) {
-                    newWidth = (int) (height / buttonSizeFactor);
+                if (imageSizeFactor != -1) {
+                    newWidth = (int) (height / imageSizeFactor);
                     params.width = newWidth;
                 }
-                if (buttonSizeFactor != -1) {
+                if (imageSizeFactor != -1) {
                     params.height = (int) (originalFactor * newWidth);
                 }
                 setLayoutParams(params);
 
-                if (textSizeFactor != -1) {
-                    setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / textSizeFactor));
-                }
             }
         });
-
     }
-
 }

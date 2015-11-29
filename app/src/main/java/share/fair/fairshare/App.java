@@ -20,12 +20,12 @@ import java.security.acl.Group;
 /**
  * Created by Nir on 09/10/2015.
  */
-@ReportsCrashes(mailTo = "niryosef89@gmail.com",
-        mode = ReportingInteractionMode.DIALOG,
-        resDialogText = R.string.crash_dialog_text,
-        resDialogIcon = android.R.drawable.ic_dialog_info, //optional. default is a warning sign
-        resDialogTitle = R.string.crash_dialog_title // optional. default is your application name
-        )
+//@ReportsCrashes(mailTo = "niryosef89@gmail.com",
+//        mode = ReportingInteractionMode.DIALOG,
+//        resDialogText = R.string.crash_dialog_text,
+//        resDialogIcon = android.R.drawable.ic_dialog_info, //optional. default is a warning sign
+//        resDialogTitle = R.string.crash_dialog_title // optional. default is your application name
+//        )
 public class App extends SugarApp {
    public GroupActivity activity=null;
 

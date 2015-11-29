@@ -20,10 +20,9 @@ android:id="@+id/action_edit_fragment_container">
         android:orientation="horizontal">
 
         <share.fair.fairshare.RelativeButton
-            fairshare:landscapeWidthFactor="15"
-            fairshare:portraitWidthFactor="15"
-            fairshare:landscapeHeightFactor="15"
-            fairshare:portraitHeightFactor="15"
+            fairshare:landscapeButtonSizeFactor="15"
+            fairshare:portraitButtonSizeFactor="15"
+
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,8 +36,8 @@ android:id="@+id/action_edit_fragment_container">
 
 
         <share.fair.fairshare.RelativeButton
-            fairshare:landscapeTextFactor="40"
-            fairshare:portraitTextFactor="40"
+            fairshare:landscapeTextSizeFactor="40"
+            fairshare:portraitTextSizeFactor="40"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,8 +49,8 @@ android:id="@+id/action_edit_fragment_container">
             android:visibility="invisible" />
 
         <share.fair.fairshare.RelativeButton
-            fairshare:landscapeTextFactor="40"
-            fairshare:portraitTextFactor="40"
+            fairshare:landscapeTextSizeFactor="40"
+            fairshare:portraitTextSizeFactor="40"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -62,8 +61,8 @@ android:id="@+id/action_edit_fragment_container">
             android:background="@drawable/round_button" />
 
         <share.fair.fairshare.RelativeButton
-            fairshare:landscapeTextFactor="40"
-            fairshare:portraitTextFactor="40"
+            fairshare:landscapeTextSizeFactor="40"
+            fairshare:portraitTextSizeFactor="40"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

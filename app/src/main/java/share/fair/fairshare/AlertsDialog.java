@@ -52,12 +52,7 @@ public class AlertsDialog extends DialogFragment {
         params.y = y;
         window.setAttributes(params);
 
-        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int height = size.y;
-        double textSizeFactor = 45;
+
 
         View dialogLayout = inflater.inflate(R.layout.alert_dialog_layout, container);
         LinearLayout alertsContainer = (LinearLayout) dialogLayout.findViewById(R.id.alert_dialog_container);
@@ -66,15 +61,12 @@ public class AlertsDialog extends DialogFragment {
             View alertRow = inflater.inflate(R.layout.alert_row, null);
             TextView description = (TextView) alertRow.findViewById(R.id.alert_row_description);
             description.setText(alert.description);
-            description.setTextSize((float) (height / textSizeFactor));
 
             TextView userName = (TextView) alertRow.findViewById(R.id.alert_row_username);
             userName.setText(alert.useNrame);
-            userName.setTextSize((float) (height / textSizeFactor));
 
             TextView paid = (TextView) alertRow.findViewById(R.id.alert_row_paid);
             paid.setText(new DecimalFormat("##.##").format(alert.paid+0));
-            paid.setTextSize((float) (height / textSizeFactor));
             alertsContainer.addView(alertRow);
 
         }

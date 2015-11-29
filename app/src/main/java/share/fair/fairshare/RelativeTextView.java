@@ -18,26 +18,39 @@ public class RelativeTextView extends TextView {
         super(context, attrs);
         TypedArray attributes = context.getTheme().obtainStyledAttributes(
                 attrs,
-                R.styleable.RelativeTextView,
+                R.styleable.RelativeView,
                 0, 0);
+        int factor;
+        int configuration = getResources().getConfiguration().orientation;
+        if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
+            factor= attributes.getInteger(R.styleable.RelativeView_landscapeFactor, -1);;
+        }else{
+            factor= attributes.getInteger(R.styleable.RelativeView_portraitFactor, -1);
+        }
 
+        initTextSize(context,factor);
 
+    }
 
+    public RelativeTextView(Context context, int landscapeFactor, int portraitFactor){
+        super(context);
+        int configuration = getResources().getConfiguration().orientation;
+        int factor;
+        if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
+            factor= landscapeFactor;
+        }else{
+            factor=portraitFactor;
+        }
+        initTextSize(context,factor);
+    }
+
+    private void initTextSize(Context context , int factor){
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int height = size.y;
-        int factor;
-        int configuration = getResources().getConfiguration().orientation;
-        if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
-            factor= attributes.getInteger(R.styleable.RelativeTextView_landscapeFactor, -1);;
-        }else{
-            factor= attributes.getInteger(R.styleable.RelativeTextView_portraitFactor, -1);
-        }
-
         setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / factor));
-
     }
 
 

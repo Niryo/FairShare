@@ -161,48 +161,12 @@ public void enableEdit(){
     }
 
     private View getNewGoOutRow(String userName){
-        int regularTextSizeFactor;
-
-        int configuration = getResources().getConfiguration().orientation;
-        if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
-
-            regularTextSizeFactor=30;
-        } else {
-
-            regularTextSizeFactor=30;
-        }
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int height = size.y;
-
         LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View newView = vi.inflate(R.layout.user_go_out_row, null);
-
         TextView userNameText= (TextView) newView.findViewById(R.id.tv_go_out_user_name);
         userNameText.setText(userName);
-        userNameText.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularTextSizeFactor));
-
-        TextView userPaidPlaceHolder= (TextView) newView.findViewById(R.id.go_out_activity_user_paid_place_holder);
-        userPaidPlaceHolder.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularTextSizeFactor));
-
-        TextView userSharePlaceHolder= (TextView) newView.findViewById(R.id.go_out_activity_user_share_place_holder);
-        userSharePlaceHolder.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularTextSizeFactor));
-
-        EditText userPaidEditText = (EditText) newView.findViewById(R.id.et_paid);
-        userPaidEditText.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularTextSizeFactor));
-        userPaidEditText.setWidth(userPaidPlaceHolder.getWidth());
-
-        EditText userShareEditText = (EditText) newView.findViewById(R.id.et_special_share);
-        userShareEditText.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / regularTextSizeFactor));
-        userShareEditText.setWidth(userSharePlaceHolder.getWidth());
-
-
         return newView;
     }
-
-
-
 
 
     public static class GoOutObject implements Serializable {

@@ -15,10 +15,9 @@
         android:padding="20dp">
 
         <share.fair.fairshare.RelativeButton
-            fairshare:landscapeWidthFactor="15"
-            fairshare:portraitWidthFactor="15"
-            fairshare:landscapeHeightFactor="15"
-            fairshare:portraitHeightFactor="15"
+            fairshare:landscapeButtonSizeFactor="15"
+            fairshare:portraitButtonSizeFactor="15"
+
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
