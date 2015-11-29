@@ -74,6 +74,7 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
         });
 
         cbUserRow.setText(userList.get(position).getName());
+
         if(userList.get(position).isNotified()){
             cbUserRow.setTextColor(Color.parseColor("#38B074"));
         }

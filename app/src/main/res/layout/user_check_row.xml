@@ -16,6 +16,7 @@
         android:longClickable="true"
         />
 
+
     <share.fair.fairshare.RelativeTextView
         fairshare:landscapeFactor="30"
         fairshare:portraitFactor="30"

@@ -196,8 +196,8 @@ public class GroupActivity extends FragmentActivity {
 
 
         group.setParentActivityMessageHandler(messageHandler);
-        syncActions();
         syncUsers();
+        syncActions();
         notifyUserListChanged();
         this.userListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -432,11 +432,11 @@ public class GroupActivity extends FragmentActivity {
     }
 
     public void syncActions() {
-        group.getGroupLog().syncActions(getApplicationContext());
+        group.getGroupLog().syncActions(getApplicationContext(),false);
     }
 
     public void syncUsers() {
-        this.group.syncUsers(null);
+        this.group.syncUsers(getApplicationContext(),false);
     }
 
 

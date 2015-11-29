@@ -85,14 +85,13 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
         return table;
     }
 
-    public void syncActions(final Context context) {
-        parentGroup.syncUsers(new FairShareCallback() { //we sync the users
-            @Override
-            public void doAction() {
+    public void syncActions(final Context context, boolean firstTime ) {
                 ParseQuery<ParseObject> query = ParseQuery.getQuery(cloudLogKey);
                 SharedPreferences settings = context.getSharedPreferences("MAIN_PREFERENCES", 0);
                 String creatorId = settings.getString("id", "");
-                query.whereNotEqualTo("creatorId", creatorId); //we don't want to fetch our own updates
+        if(!firstTime) {
+            query.whereNotEqualTo("creatorId", creatorId); //we don't want to fetch our own updates
+        }
                 query.whereGreaterThan("createdAt", new Date(lastActionTimestampInMilisec));
                 query.findInBackground(new FindCallback<ParseObject>() {
                     @Override
@@ -123,8 +122,8 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
                         }
                     }
                 });
-            }
-        });
+
+
 
 
     }

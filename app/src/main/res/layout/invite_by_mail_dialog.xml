@@ -16,7 +16,6 @@
         android:layout_gravity="center_horizontal"
         android:singleLine="true"
         android:imeOptions="flagNoExtractUi"
-        android:maxLength="15"
         android:hint="Email address" />
 
     <LinearLayout
