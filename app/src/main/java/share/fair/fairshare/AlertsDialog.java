@@ -59,10 +59,10 @@ public class AlertsDialog extends DialogFragment {
         if(alerts!=null){
         for (Alert.AlertObject alert : alerts) {
             View alertRow = inflater.inflate(R.layout.alert_row, null);
-            TextView description = (TextView) alertRow.findViewById(R.id.alert_row_description);
+            RelativeTextView description = (RelativeTextView) alertRow.findViewById(R.id.alert_row_description);
             description.setText(alert.description);
 
-            TextView userName = (TextView) alertRow.findViewById(R.id.alert_row_username);
+            RelativeTextView userName = (RelativeTextView) alertRow.findViewById(R.id.alert_row_username);
             userName.setText(alert.useNrame);
 
             TextView paid = (TextView) alertRow.findViewById(R.id.alert_row_paid);

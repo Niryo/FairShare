@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    xmlns:fairshare = "http://schemas.android.com/apk/res/share.fair.fairshare"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:gravity="center_horizontal">
 
-    <EditText
+    <share.fair.fairshare.RelativeEditText
+        fairshare:landscapeFactor="30"
+        fairshare:portraitFactor="30"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/user_name_edit_text"
@@ -18,21 +22,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <EditText
-            android:layout_width="match_parent"
+        <share.fair.fairshare.RelativeEditText
+            fairshare:landscapeFactor="30"
+            fairshare:portraitFactor="30"
+            fairshare:placeHolderText = "Optional: Invite user by email"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
-            android:ems="10"
             android:id="@+id/user_mail_edit_text"
             android:autoText="true"
             android:hint="Optional: Invite user by email" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Optional: Invite user by email"
-            android:visibility="invisible" />
 
     </FrameLayout>
 
@@ -42,14 +42,18 @@
         android:layout_height="match_parent"
         android:gravity="center_horizontal">
 
-        <Button
+        <share.fair.fairshare.RelativeButton
+            fairshare:landscapeTextSizeFactor="40"
+            fairshare:portraitTextSizeFactor="40"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Create"
             android:id="@+id/create_button_user"
             android:layout_gravity="center_horizontal" />
 
-        <Button
+        <share.fair.fairshare.RelativeButton
+            fairshare:landscapeTextSizeFactor="40"
+            fairshare:portraitTextSizeFactor="40"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cancel"

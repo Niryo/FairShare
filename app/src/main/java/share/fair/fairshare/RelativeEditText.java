@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 
@@ -28,7 +29,7 @@ public class RelativeEditText extends EditText {
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        int height = size.y;
+        final int height = size.y;
         int factor;
         int configuration = getResources().getConfiguration().orientation;
         if (configuration == Configuration.ORIENTATION_LANDSCAPE) {
@@ -41,9 +42,20 @@ public class RelativeEditText extends EditText {
         String placeHolderText= attributes.getString(R.styleable.RelativeView_placeHolderText);
         if(placeHolderText!=null){
             RelativeTextView relativeTextView= new RelativeTextView(context,attributes.getInteger(R.styleable.RelativeView_landscapeFactor, -1),attributes.getInteger(R.styleable.RelativeView_portraitFactor, -1));
-            Rect bounds = new Rect();
+            final Rect bounds = new Rect();
             Paint textPaint = relativeTextView.getPaint();
             textPaint.getTextBounds(placeHolderText, 0, placeHolderText.length(), bounds);
+            int test = bounds.width();
+
+//            post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) getLayoutParams();
+//                    params.width = bounds.width();
+//                    setLayoutParams(params);
+//                }
+//            }
+//        );
             setWidth(bounds.width());
         }
 

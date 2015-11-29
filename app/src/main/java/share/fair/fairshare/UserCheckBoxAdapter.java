@@ -119,8 +119,6 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
         display.getSize(size);
         int height = size.y;
 
-        TextView userBalance = (TextView) convertView.findViewById(R.id.tv_user_balance);
-        userBalance.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/fontSizeFactor));
 
         CheckBox cbUserRow = (CheckBox) convertView.findViewById(R.id.cb_user_row);
         cbUserRow.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height/fontSizeFactor));

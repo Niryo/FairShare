@@ -15,11 +15,13 @@
         android:layout_marginTop="-10dp"
         android:layout_marginRight="-10dp">
 
-        <EditText
+        <share.fair.fairshare.RelativeEditText
+            fairshare:landscapeFactor="15"
+            fairshare:portraitFactor="15"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/description"
-            android:textSize="40dp"
             android:hint="Enter bill title.."
             android:gravity="center_horizontal"
             android:singleLine= "true"

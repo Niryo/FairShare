@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fairshare = "http://schemas.android.com/apk/res/share.fair.fairshare"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal">
 
-    <EditText
+    <share.fair.fairshare.RelativeEditText
+        fairshare:landscapeFactor="30"
+        fairshare:portraitFactor="30"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/group_name_edit_text"
@@ -15,7 +19,10 @@
         android:hint="Group's name" />
 
 
-    <EditText
+    <share.fair.fairshare.RelativeEditText
+        fairshare:landscapeFactor="30"
+        fairshare:portraitFactor="30"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/special_name_edit_text"
@@ -25,7 +32,9 @@
         android:maxLength="15"
         android:hint="Your name in this group" />
 
-    <TextView
+    <share.fair.fairshare.RelativeTextView
+        fairshare:landscapeFactor="45"
+        fairshare:portraitFactor="45"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
@@ -41,14 +50,18 @@
 
 
 
-        <Button
+        <share.fair.fairshare.RelativeButton
+            fairshare:landscapeTextSizeFactor="40"
+            fairshare:portraitTextSizeFactor="40"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Create"
             android:id="@+id/create_button"
             android:layout_gravity="center_horizontal" />
 
-        <Button
+        <share.fair.fairshare.RelativeButton
+            fairshare:landscapeTextSizeFactor="40"
+            fairshare:portraitTextSizeFactor="40"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cancel"
