@@ -25,7 +25,7 @@
         <share.fair.fairshare.RelativeEditText
             fairshare:landscapeFactor="30"
             fairshare:portraitFactor="30"
-            fairshare:placeHolderText = "Optional: Invite user by email"
+            fairshare:placeHolderText = "Optional: Invite user by email..."
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"

@@ -12,6 +12,7 @@ import android.view.Display;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 /**
  * Created by Nir on 29/11/2015.
@@ -41,22 +42,15 @@ public class RelativeEditText extends EditText {
 
         String placeHolderText= attributes.getString(R.styleable.RelativeView_placeHolderText);
         if(placeHolderText!=null){
-            RelativeTextView relativeTextView= new RelativeTextView(context,attributes.getInteger(R.styleable.RelativeView_landscapeFactor, -1),attributes.getInteger(R.styleable.RelativeView_portraitFactor, -1));
+            TextView textView= new TextView(context);
+            textView.setText(placeHolderText);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / factor));
             final Rect bounds = new Rect();
-            Paint textPaint = relativeTextView.getPaint();
+            Paint textPaint = textView.getPaint();
             textPaint.getTextBounds(placeHolderText, 0, placeHolderText.length(), bounds);
             int test = bounds.width();
-
-//            post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) getLayoutParams();
-//                    params.width = bounds.width();
-//                    setLayoutParams(params);
-//                }
-//            }
-//        );
             setWidth(bounds.width());
+
         }
 
         setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / factor));

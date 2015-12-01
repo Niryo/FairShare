@@ -31,15 +31,11 @@ public class JoinGroupWithKeyDialog extends DialogFragment {
             public void onClick(View v) {
                 String rawKey = groupKeyEditText.getText().toString();
                 //todo: check correct string format
-                String[] splittedKeys = rawKey.split("&");
-                if(splittedKeys.length<3){
-                    Toast.makeText(getContext(),"Error: Wrong key", Toast.LENGTH_LONG);
-                    getDialog().dismiss();
-                    return;
-                }
-                String groupName=splittedKeys[0];
-                String groupKey= splittedKeys[1];
-                String groupLogKey= splittedKeys[2];
+                int groupNameLength= Integer.parseInt(rawKey.substring(0, 2));
+
+                String groupName=rawKey.substring(2, groupNameLength+2);
+                String groupKey= rawKey.substring(groupNameLength+2,groupNameLength+29);
+                String groupLogKey= rawKey.substring(groupNameLength+29);
                 FairShareGroup.joinGroupWithKey(getContext(),groupName,groupKey,groupLogKey);
                 ((MainActivity)getActivity()).notifyGroupListChanged();
                 getDialog().dismiss();

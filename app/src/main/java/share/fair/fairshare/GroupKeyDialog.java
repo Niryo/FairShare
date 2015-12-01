@@ -33,15 +33,31 @@ public class GroupKeyDialog extends DialogFragment {
         this.groupName = groupName;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("groupLogKey", groupLogKey);
+        outState.putString("groupKey", groupKey);
+        outState.putString("groupName", groupName);
+    }
+
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if(savedInstanceState!=null){
+          groupLogKey= savedInstanceState.getString("groupLogKey");
+             groupKey= savedInstanceState.getString("groupKey");
+             groupName= savedInstanceState.getString("groupName");
+
+        }
         View dialogLayout = inflater.inflate(R.layout.group_key_dialog, container);
         getDialog().setContentView(R.layout.group_key_dialog);
         getDialog().setTitle("Group key:");
         final TextView groupKeyText = (TextView) dialogLayout.findViewById(R.id.group_key_dialog_text);
-        groupKeyText.setText(groupName+"&"+groupKey+"&"+groupLogKey);
+        String stringLength= groupName.length()<9? "0"+groupName.length(): String.valueOf(groupName.length());
+        groupKeyText.setText(stringLength+groupName+groupKey+groupLogKey);
         Button copyButton = (Button) dialogLayout.findViewById(R.id.group_key_dialog_copy);
         copyButton.setOnClickListener(new View.OnClickListener() {
             @Override

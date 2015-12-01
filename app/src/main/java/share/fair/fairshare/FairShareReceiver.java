@@ -57,12 +57,7 @@ public class FairShareReceiver extends ParsePushBroadcastReceiver {
 
 
             } else { //we dont need to create notification
-                if (data.getString("alertType").equals("ACTION_CHANGE")) {
-                activity.syncActions();
-                }
-                if (data.getString("alertType").equals("USER_CHANGE")) {
-                    activity.syncUsers();
-                }
+                    activity.sync();
             }
 
         } catch (JSONException e) {

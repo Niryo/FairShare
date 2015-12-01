@@ -58,6 +58,12 @@ public class ActionsActivity extends Activity {
         for (int i = group.getGroupLog().actions.size()-1; i >= 0; i--) {
             View actionRow= vi.inflate(R.layout.action_row, null);
             Action action =group.getGroupLog().actions.get(i);
+            if(action.isEditable()){
+                boolean isActionLegal= action.isLegal(group.getUsers());
+                if(!isActionLegal){
+                    action.makeUneditable();
+                }
+            }
             TextView time = (TextView) actionRow.findViewById(R.id.action_row_time);
             time.setText(getDate(action.getTimeStamp()));
             TextView description = (TextView) actionRow.findViewById(R.id.action_row_description);

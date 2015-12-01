@@ -28,10 +28,18 @@ public class GroupContextMenuDialog extends DialogFragment {
         // Empty constructor required for DialogFragment
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("groupNameRecord", groupNameRecord);
 
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if(savedInstanceState!=null){
+            this.groupNameRecord = (FairShareGroup.GroupNameRecord) savedInstanceState.getSerializable("groupNameRecord");
+        }
         View dialogLayout = inflater.inflate(R.layout.group_context_menu_dialog, container);
         getDialog().setTitle(groupNameRecord.getGroupName());
 

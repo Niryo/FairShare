@@ -16,19 +16,20 @@ import android.widget.EditText;
 
 
 public class UserNameDialog extends DialogFragment {
-    private FairShareGroup group;
+
 
     public UserNameDialog() {
         // Empty constructor required for DialogFragment
     }
 
-    public void setGroup(FairShareGroup group) {
-        this.group = group;
-    }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         View dialogLayout = inflater.inflate(R.layout.new_user_dialog_layout, container);
         getDialog().setContentView(R.layout.new_user_dialog_layout);
         getDialog().setTitle("Choose user name:");
@@ -38,11 +39,7 @@ public class UserNameDialog extends DialogFragment {
         final Button createButton = (Button) dialogLayout.findViewById(R.id.create_button_user);
         final Button cancelButton = (Button) dialogLayout.findViewById(R.id.cancel_button_user);
         final EditText emailEditText = (EditText) dialogLayout.findViewById(R.id.user_mail_edit_text);
-        if (this.group.getCloudGroupKey().isEmpty()) {
-            emailEditText.setVisibility(View.GONE);
-            //todo: show button that suggest you to sync with cloud
 
-        }
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

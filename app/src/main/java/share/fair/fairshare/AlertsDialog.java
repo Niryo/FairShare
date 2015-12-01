@@ -40,9 +40,19 @@ public class AlertsDialog extends DialogFragment {
     public void setY(int y) {
         this.y = y;
     }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("x", x);
+        outState.putInt("y", y);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if(savedInstanceState!=null){
+            this.x= savedInstanceState.getInt("x");
+            this.y= savedInstanceState.getInt("y");
+        }
         Window window = getDialog().getWindow();
         window.requestFeature(Window.FEATURE_NO_TITLE);
         window.setGravity(Gravity.TOP | Gravity.LEFT);

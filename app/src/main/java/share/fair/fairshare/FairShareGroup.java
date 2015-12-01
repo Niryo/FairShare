@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.orm.SugarRecord;
@@ -23,7 +24,6 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -115,8 +115,8 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         String ownerId = settings.getString("id", "");
         group.setOwnerId(ownerId);
         group.save();
-        group.syncUsers(context,true);
-        group.getGroupLog().syncActions(context,true);
+        group.sync(context, true);
+
     }
 
     public String getOwnerId() {
@@ -167,7 +167,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         });
     }
 
-    public void syncUsers(final Context context,boolean firstTime) {
+    public void sync(final Context context, final boolean firstTime) {
         ParseQuery<ParseObject> query = ParseQuery.getQuery(this.cloudGroupKey);
         final Date date = new Date(lastUserSync);
         if(!firstTime){
@@ -180,12 +180,15 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
                 if (e == null && list != null && lastUserSync == date.getTime()) {//the last check is to avoid dirty date
                     boolean isNeedToSaveGroup = false;
                     ArrayList<String> userIdToIgnore = new ArrayList<String>();
+                    List<User> userToSave = new ArrayList<User>();
+                    long lastUserSyncCopy= lastUserSync;
+
                     boolean dirty = false;
                     for (ParseObject parseObject : list) {
                         final ArrayList<User> usersCopy = new ArrayList<>(users);
                         String userId = parseObject.getString("userId");
                         String action = parseObject.getString("action");
-                        lastUserSync = Math.max(parseObject.getCreatedAt().getTime(), lastUserSync);
+                        lastUserSyncCopy = Math.max(parseObject.getCreatedAt().getTime(), lastUserSyncCopy);
                         isNeedToSaveGroup = true;
                         if (action.equals("USER_ADDED")) {
                             boolean isUserExist = false;
@@ -205,7 +208,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
                                 User newUser = new User(userName, 0);
                                 newUser.setUserId(userId);
                                 newUser.setBelongingGroupId(getCloudGroupKey());
-                                newUser.save();
+                                userToSave.add(newUser);
                                 users.add(newUser);
                                 dirty = true;
                             }
@@ -215,7 +218,13 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
                             for (User user : usersCopy) {
                                 if (user.getUserId().equals(userId)) {
                                     users.remove(user);
-                                    user.delete();
+                                    if(userToSave.contains(user)){
+                                        userToSave.remove(user); //no need to delete becuase user hasn't been save yet.
+                                    }
+                                    else{
+                                        user.delete();
+                                    }
+
                                     success=true;
                                     dirty = true;
                                     break;
@@ -228,7 +237,10 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
 
                     }
 
-
+                    for(User user : userToSave){
+                        user.save();
+                    }
+                    lastUserSync= lastUserSyncCopy; //only if after saving the users we update lastSync
                     if (dirty) {
                         Message msg = Message.obtain();
                         msg.what = GroupActivity.NOTIFY_USER_CHANGE;
@@ -242,7 +254,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
                         save();
                     }
                 }
-
+                groupLog.syncActions(context,firstTime);
             }
         });
     }
@@ -355,7 +367,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
 
     }
 
-    public static class GroupNameRecord extends SugarRecord<GroupNameRecord> {
+    public static class GroupNameRecord extends SugarRecord<GroupNameRecord>  implements Serializable{
         private String groupName;
         private String groupId;
 

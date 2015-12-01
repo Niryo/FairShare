@@ -56,6 +56,21 @@ public class Action extends SugarRecord<Action> implements Serializable {
             e.printStackTrace();
         }
     }
+    public boolean isLegal(List<User> users){
+            for(Operation operation: operations){
+                boolean operationIsLegal=false;
+                for (User user : users){
+                    if(user.getUserId().equals(operation.getUserId())){
+                        operationIsLegal=true;
+                        break;
+                    }
+                }
+                if(!operationIsLegal){
+                    return false;
+                }
+            }
+        return true;
+    }
 
     public boolean isEditable() {
         return isEditable;

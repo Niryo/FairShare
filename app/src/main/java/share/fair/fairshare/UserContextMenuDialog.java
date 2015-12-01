@@ -22,6 +22,13 @@ public class UserContextMenuDialog extends DialogFragment {
     private double paid;
     private double share;
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("user", user);
+    }
+
+
     public UserContextMenuDialog() {
         // Empty constructor required for DialogFragment
     }
@@ -32,6 +39,10 @@ public class UserContextMenuDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if(savedInstanceState!=null){
+            this.user= (User) savedInstanceState.getSerializable("user");
+        }
+
         View dialogLayout = inflater.inflate(R.layout.user_context_menu_dialog_layout, container);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
        getDialog().setTitle(user.getName());
