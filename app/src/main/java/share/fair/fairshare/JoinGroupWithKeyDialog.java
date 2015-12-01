@@ -31,9 +31,23 @@ public class JoinGroupWithKeyDialog extends DialogFragment {
             public void onClick(View v) {
                 String rawKey = groupKeyEditText.getText().toString();
                 //todo: check correct string format
-                int groupNameLength= Integer.parseInt(rawKey.substring(0, 2));
+                if(rawKey.length()<2){
+                    Toast.makeText(getContext(), "Key error: cannot join group", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                int groupNameLength=0;
+                try{
+                     groupNameLength= Integer.parseInt(rawKey.substring(0, 2));
+                }catch(NumberFormatException e){
+                    Toast.makeText(getContext(), "Key error: cannot join group", Toast.LENGTH_LONG).show();
+                    return;
+                }
 
-                String groupName=rawKey.substring(2, groupNameLength+2);
+                if(groupNameLength+56!= rawKey.length()){
+                    Toast.makeText(getContext(), "Key error: cannot join group", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                String groupName=rawKey.substring(2, groupNameLength +2);
                 String groupKey= rawKey.substring(groupNameLength+2,groupNameLength+29);
                 String groupLogKey= rawKey.substring(groupNameLength+29);
                 FairShareGroup.joinGroupWithKey(getContext(),groupName,groupKey,groupLogKey);
