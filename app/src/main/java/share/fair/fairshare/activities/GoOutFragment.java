@@ -17,6 +17,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -34,6 +38,7 @@ public class GoOutFragment extends Fragment {
     boolean editMode=false;
     ArrayList<View> viewsList = new ArrayList<>();
     String billTitle;
+
 
 
     @Nullable
@@ -232,4 +237,6 @@ public void enableEdit(){
             this.share = share;
         }
     }
+
+
 }

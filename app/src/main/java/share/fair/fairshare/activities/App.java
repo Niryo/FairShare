@@ -1,4 +1,4 @@
-package share.fair.fairshare;
+package share.fair.fairshare.activities;
 
 import org.acra.*;
 import org.acra.annotation.*;
@@ -21,18 +21,19 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.List;
 
+import share.fair.fairshare.R;
 import share.fair.fairshare.activities.GroupActivity;
 
 
 /**
  * Created by Nir on 09/10/2015.
  */
-@ReportsCrashes(mailTo = "niryosef89@gmail.com",
-        mode = ReportingInteractionMode.DIALOG,
-        resDialogText = R.string.crash_dialog_text,
-        resDialogIcon = android.R.drawable.ic_dialog_info, //optional. default is a warning sign
-        resDialogTitle = R.string.crash_dialog_title // optional. default is your application name
-        )
+//@ReportsCrashes(mailTo = "niryosef89@gmail.com",
+//        mode = ReportingInteractionMode.DIALOG,
+//        resDialogText = R.string.crash_dialog_text,
+//        resDialogIcon = android.R.drawable.ic_dialog_info, //optional. default is a warning sign
+//        resDialogTitle = R.string.crash_dialog_title // optional. default is your application name
+//        )
 public class App extends SugarApp {
     private String currentVersion="betaV1.3";
    public GroupActivity activity=null;

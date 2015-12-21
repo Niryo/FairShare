@@ -21,7 +21,7 @@ public class User extends SugarRecord<User> implements Serializable {
     private String userId;
     private boolean isNotified;
     private boolean isGhost;
-    private List<Long> ghostActionIdHistory;
+   // private List<Long> ghostActionIdHistory;
     private String belongingGroupId;
 
 public User(){}
@@ -31,14 +31,14 @@ public User(){}
         this.userId= id;
         this.isGhost=true;
         this.balance = balance;
-        this.ghostActionIdHistory = new ArrayList<>();
+    //    this.ghostActionIdHistory = new ArrayList<>();
     }
 
     public User(String name, double balance) {
         this.name = name;
         this.balance = balance;
         this.isGhost=false;
-        this.ghostActionIdHistory=null;
+    //    this.ghostActionIdHistory=null;
     }
 
     public static ArrayList<User> parseUsers(JSONObject jsonUsers) {

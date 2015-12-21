@@ -20,14 +20,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.parse.Parse;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import share.fair.fairshare.Action;
 import share.fair.fairshare.Alert;
-import share.fair.fairshare.App;
 import share.fair.fairshare.FairShareGroup;
 import share.fair.fairshare.FairShareReceiver;
 import share.fair.fairshare.R;
@@ -60,6 +61,14 @@ public class GroupActivity extends FragmentActivity {
     private Handler messageHandler;
     private ArrayList<Alert.AlertObject> alertObjects = new ArrayList<>();
 
+    ShowcaseView showcaseView;
+    Target targetNewBill;
+    Target targetAddPerson;
+    Target targetOptionsMenu;
+    Target targetAlertsIcon;
+
+    int counter=0;
+
 
     @Override
     protected void onPause() {
@@ -79,6 +88,7 @@ public class GroupActivity extends FragmentActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
+         isFirstRun();
         String groupId = getIntent().getStringExtra("groupId");
         if (groupId.isEmpty()) {
             //todo: handle problem;
@@ -456,8 +466,77 @@ public class GroupActivity extends FragmentActivity {
         notifyUserListChanged();
     }
 
+    private void isFirstRun(){
+        final SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
+        boolean isFirstRun = settings.getBoolean("isFirstRunGroupActivity", true);
+        if(isFirstRun){
+            showTutorial();
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putBoolean("isFirstRunGroupActivity", false);
+            editor.commit();
+        }
+    }
 
+    private void showTutorial(){
+         targetNewBill= new ViewTarget(R.id.bt_go_out_all,this);
+         targetAddPerson= new ViewTarget(R.id.add_user_button,this);
+         targetOptionsMenu= new ViewTarget(R.id.group_activity_options_button,this);;;
+         targetAlertsIcon = new ViewTarget(R.id.group_activity_alert_button,this);;
 
+        showcaseView = new ShowcaseView.Builder(this)
+                .setTarget(Target.NONE).setContentTitle("Group's page").setContentText("This is the group's page. Here you can see all the users in the group and their balance.").setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (counter == 0) {
+                            showcaseView.setShowcase(targetAddPerson, true);
+                            showcaseView.setContentTitle("Add new person");
+                            showcaseView.setContentText("Click here if you want to add new person to the group");
+                        }
+
+                        if (counter == 1) {
+                            showcaseView.setShowcase(targetNewBill, true);
+                            showcaseView.setContentTitle("New bill button");
+                            showcaseView.setContentText("Click here if you want to add a new bill with all the persons in the group involved.\n If you want to make a bill with specific persons, just choose " +
+                                    "all the persons you want before clicking the 'New Bill' button");
+                        }
+
+                        if (counter == 2) {
+                            showcaseView.setShowcase(targetAlertsIcon, true);
+                            showcaseView.setContentTitle("Alert Icon");
+                            showcaseView.setContentText("You can choose to be notified on changes to the balance of a specific person in the group.\n In order to do so, click and hold a person's name and " +
+                                    "choose 'Notify on balance change'.");
+                        }
+
+                        if (counter == 3) {
+                            showcaseView.setShowcase(targetAlertsIcon, true);
+                            showcaseView.setContentTitle("Alert Icon");
+                            showcaseView.setContentText("If someone makes a payment that effect this user's balance, this icon will turn red and clicking on it will show you the changes that has been made.");
+                        }
+                        if (counter == 4) {
+                            showcaseView.setShowcase(targetOptionsMenu, true);
+                            showcaseView.setContentTitle("Options menu");
+                            showcaseView.setContentText("From here you can access the payment history, settle up all group debts, invite someone to the group and more..");
+                        }
+
+                        if (counter == 5) {
+                            showcaseView.setTarget(Target.NONE);
+                            showcaseView.setContentTitle("Few more things..");
+                            showcaseView.setContentText("User options menu: click and hold a persons name to show the user menu.\n" +
+                                    "Ghosts: in rare occasions there can be out-of-sync conflicts. For example, if someone remove a person from the list and at the same time you include this user in a bill. " +
+                                    "In that case, the user will reappear as a ghost, indicating for you that there has been a conflict, and you will need to cancel that bill and re-delete the user.");
+                        }
+
+                        if (counter == 6) {
+                            showcaseView.hide();
+                        }
+                        counter++;
+
+                    }
+                }).build();
+
+        showcaseView.setStyle(R.style.ShowCaseCustomStyle);
+        showcaseView.setButtonText("Next");
+    }
     public void sync() {
         this.group.sync(getApplicationContext(), false);
     }

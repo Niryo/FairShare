@@ -18,6 +18,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import share.fair.fairshare.activities.App;
 import share.fair.fairshare.activities.GroupActivity;
 
 /**

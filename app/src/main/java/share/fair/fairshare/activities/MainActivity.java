@@ -14,6 +14,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -32,6 +35,12 @@ import share.fair.fairshare.dialogs.SaveNameDialog;
 
 public class MainActivity extends FragmentActivity implements GroupNameDialog.GroupCreatedListener {
 
+    ShowcaseView showcaseView;
+    Target targetCreateButton;
+    Target targetOptionsMenu;
+    Button optionsMenuButton;
+    int counter=0;
+
 
     ListView groupList;
     GroupsAdapter groupAdapter;
@@ -41,20 +50,14 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+        isFirstRun();
         SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
         boolean isLegalVersion = settings.getBoolean("isLegalVersion", true);
         if(!isLegalVersion){
             Intent intent = new Intent(getApplicationContext(), OldVersionScreenActivity.class);
             startActivity(intent);
             finish();
-        }
-
-        String name = settings.getString("name", "");
-        if (name.isEmpty()) {
-            new SaveNameDialog().show(getSupportFragmentManager(), "save_name_dialog");
-            ;
         }
 
 
@@ -67,7 +70,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
             }
         });
 
-        Button optionsMenuButton= (Button) findViewById(R.id.activity_main_options_menu);
+        optionsMenuButton= (Button) findViewById(R.id.activity_main_options_menu);
         optionsMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,14 +136,63 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
                 groupNameRecord.delete();
-               FairShareGroup.loadGroupFromStorage(groupNameRecord.getGroupId()).delete();
-              notifyGroupListChanged();
-                Toast.makeText(getApplicationContext(), groupNameRecord.getGroupName()+" has been removed", Toast.LENGTH_SHORT).show();
+                FairShareGroup.loadGroupFromStorage(groupNameRecord.getGroupId()).delete();
+                notifyGroupListChanged();
+                Toast.makeText(getApplicationContext(), groupNameRecord.getGroupName() + " has been removed", Toast.LENGTH_SHORT).show();
             }
         });
         alert.setNegativeButton("Cancel", null);
         alert.create().show();
     }
 
+    private void isFirstRun(){
+        final SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
+        boolean isFirstRun = settings.getBoolean("isFirstRunMainActivity", true);
+        if(isFirstRun){
+            showTutorial();
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putBoolean("isFirstRunMainActivity", false);
+            editor.commit();
+        }
+    }
+
+  private void showTutorial(){
+      targetCreateButton =  new ViewTarget(R.id.create_new_group_button,this);
+      targetOptionsMenu = new ViewTarget(R.id.activity_main_options_menu,this);
+      showcaseView = new ShowcaseView.Builder(this)
+              .setTarget(Target.NONE).setContentTitle("Welcome to FaireShare!").setContentText("The best app for keeping track of group expenses!").setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                      if(counter==0){
+                          showcaseView.setShowcase(targetCreateButton, true);
+                          showcaseView.setContentTitle("Create new group button");
+                          showcaseView.setContentText("Click here if you want to create a new group");
+                      }
+
+                      if(counter==1){
+                          showcaseView.setShowcase(targetOptionsMenu, true);
+                          showcaseView.setContentTitle("Options menu");
+                          showcaseView.setContentText("This is the options menu button.\n from here you can join to an existing group if you have its key.");
+                      }
+
+
+                      if(counter==2){
+                          showcaseView.hide();
+                          SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
+                          String name = settings.getString("name", "");
+                          if (name.isEmpty()) {
+                              new SaveNameDialog().show(getSupportFragmentManager(), "save_name_dialog");
+
+                          }
+                      }
+
+                      counter++;
+
+                  }
+              }).build();
+
+      showcaseView.setStyle(R.style.ShowCaseCustomStyle);
+      showcaseView.setButtonText("Next");
+  }
 
 }
