@@ -1,20 +1,18 @@
-package share.fair.fairshare;
+package share.fair.fairshare.activities;
 
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.Point;
 import android.os.Bundle;
-import android.util.TypedValue;
-import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
+
+import share.fair.fairshare.Action;
+import share.fair.fairshare.R;
 
 public class GoOutActivity extends Activity {
 

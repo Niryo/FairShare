@@ -1,30 +1,24 @@
-package share.fair.fairshare;
+package share.fair.fairshare.activities;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+
+import share.fair.fairshare.Action;
+import share.fair.fairshare.FairShareGroup;
+import share.fair.fairshare.R;
+import share.fair.fairshare.activities.ActionEditActivity;
 
 public class ActionsActivity extends Activity {
 
@@ -42,6 +36,9 @@ public class ActionsActivity extends Activity {
         backToGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent openGroup = new Intent(getApplicationContext(), GroupActivity.class);
+                openGroup.putExtra("groupId", group.getCloudGroupKey());
+                startActivity(openGroup);
                 finish();
             }
         });

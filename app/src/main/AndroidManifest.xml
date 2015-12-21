@@ -12,12 +12,13 @@
     <permission
         android:name="share.fair.fairshare.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="share.fair.fairshare.permission.C2D_MESSAGE" />
 
     <application
         android:name=".App"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/launcher_icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <meta-data
@@ -30,9 +31,8 @@
             android:name="DOMAIN_PACKAGE_NAME"
             android:value="share.fair.fairshare" />
         />
-
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
@@ -53,24 +53,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".GroupActivity"
-            android:label="@string/title_activity_group"></activity>
+            android:name=".activities.GroupActivity"
+            android:label="@string/title_activity_group" />
         <activity
-            android:name=".GoOutActivity"
-            android:label="@string/title_activity_go_out"></activity>
+            android:name=".activities.GoOutActivity"
+            android:label="@string/title_activity_go_out" />
         <activity
-            android:name=".ActionsActivity"
-            android:label="@string/title_activity_actions"></activity>
+            android:name=".activities.ActionsActivity"
+            android:label="@string/title_activity_actions" />
         <activity
-            android:name=".ActionEditActivity"
-            android:label="@string/title_activity_action_edit"></activity>
-
-        <activity android:name="org.acra.CrashReportDialog"
-            android:theme="@style/Theme.Dialog"
-            android:process=":error_report"
-            android:launchMode="singleInstance"
+            android:name=".activities.ActionEditActivity"
+            android:label="@string/title_activity_action_edit" />
+        <activity
+            android:name="org.acra.CrashReportDialog"
             android:excludeFromRecents="true"
-            android:finishOnTaskLaunch="true" />
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleInstance"
+            android:process=":error_report"
+            android:theme="@style/Theme.Dialog" />
 
         <service android:name="com.parse.PushService" />
 
@@ -94,6 +94,10 @@
             </intent-filter>
         </receiver>
 
+        <activity
+            android:name=".activities.OldVersionScreenActivity"
+            android:label="@string/title_activity_old_version_screen"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

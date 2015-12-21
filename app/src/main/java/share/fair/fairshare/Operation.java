@@ -32,6 +32,7 @@ public class Operation extends SugarRecord<Operation> implements Serializable {
 
     public Operation(JSONObject jsonOperation) {
         try {
+            this.hasUserAddedShare = jsonOperation.getBoolean("hasUserAddedShare");
             this.username = jsonOperation.getString("username");
             this.userId = jsonOperation.getString("userId");
             this.paid = jsonOperation.getDouble("paid");
@@ -76,6 +77,7 @@ public class Operation extends SugarRecord<Operation> implements Serializable {
     public JSONObject toJSON() {
         JSONObject jsonObject = new JSONObject();
         try {
+            jsonObject.put("hasUserAddedShare", this.hasUserAddedShare);
             jsonObject.put("username", this.username);
             jsonObject.put("userId", this.userId);
             jsonObject.put("paid", this.paid);

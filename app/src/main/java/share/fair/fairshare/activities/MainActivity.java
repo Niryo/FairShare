@@ -1,26 +1,33 @@
-package share.fair.fairshare;
+package share.fair.fairshare.activities;
 
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.TypedValue;
-import android.view.Display;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
 import java.util.List;
+
+import share.fair.fairshare.FairShareGroup;
+import share.fair.fairshare.GroupsAdapter;
+import share.fair.fairshare.R;
+import share.fair.fairshare.dialogs.GroupContextMenuDialog;
+import share.fair.fairshare.dialogs.GroupNameDialog;
+import share.fair.fairshare.dialogs.MainOptionsMenuDialog;
+import share.fair.fairshare.dialogs.SaveNameDialog;
 
 
 public class MainActivity extends FragmentActivity implements GroupNameDialog.GroupCreatedListener {
@@ -37,6 +44,13 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
 
         setContentView(R.layout.activity_main);
         SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
+        boolean isLegalVersion = settings.getBoolean("isLegalVersion", true);
+        if(!isLegalVersion){
+            Intent intent = new Intent(getApplicationContext(), OldVersionScreenActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         String name = settings.getString("name", "");
         if (name.isEmpty()) {
             new SaveNameDialog().show(getSupportFragmentManager(), "save_name_dialog");
@@ -95,8 +109,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
                 Uri uri = intent.getData();
                 String groupName = uri.getQueryParameter("groupName");
                 String groupCloudKey = uri.getQueryParameter("groupCloudKey");
-                String cloudLogKey = uri.getQueryParameter("cloudLogKey");
-                FairShareGroup.joinGroupWithKey(getApplicationContext(), groupName, groupCloudKey, cloudLogKey);
+                FairShareGroup.joinGroupWithKey(getApplicationContext(), groupName, groupCloudKey);
                 notifyGroupListChanged();
             }
         }
@@ -128,4 +141,6 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
         alert.setNegativeButton("Cancel", null);
         alert.create().show();
     }
+
+
 }

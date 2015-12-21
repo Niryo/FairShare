@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fairshare="http://schemas.android.com/apk/res-auto"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:background="#ffffff">
+
+    <share.fair.fairshare.views.RelativeTextView
+        fairshare:landscapeFactor="10"
+        fairshare:portraitFactor="10"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="FareShare"
+        android:textColor="#45da8f" />
+
+
+    <share.fair.fairshare.views.RelativeTextView
+        fairshare:landscapeFactor="25"
+        fairshare:portraitFactor="25"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="You are using an old version of FairShare.\nPlease install the latest version and try again."
+        android:id="@+id/textView2"
+        android:textColor="#45da8f"
+        android:gravity="center" />
+</LinearLayout>

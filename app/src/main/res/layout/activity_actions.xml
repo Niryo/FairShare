@@ -14,7 +14,7 @@
         android:layout_marginTop="-12dp"
         android:padding="20dp">
 
-        <share.fair.fairshare.RelativeButton
+        <share.fair.fairshare.views.RelativeButton
             fairshare:landscapeButtonSizeFactor="15"
             fairshare:portraitButtonSizeFactor="15"
 
@@ -24,7 +24,7 @@
             android:id="@+id/back_to_group_button_actions"
             android:background="@drawable/back_button" />
 
-        <share.fair.fairshare.RelativeTextView
+        <share.fair.fairshare.views.RelativeTextView
             fairshare:landscapeFactor="15"
             fairshare:portraitFactor="15"
 

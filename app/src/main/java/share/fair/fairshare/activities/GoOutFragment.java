@@ -1,24 +1,27 @@
-package share.fair.fairshare;
+package share.fair.fairshare.activities;
 
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.TypedValue;
-import android.view.Display;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import share.fair.fairshare.Action;
+import share.fair.fairshare.R;
 
 
 /**
@@ -164,6 +167,53 @@ public void enableEdit(){
         LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View newView = vi.inflate(R.layout.user_go_out_row, null);
         TextView userNameText= (TextView) newView.findViewById(R.id.tv_go_out_user_name);
+        final EditText paid = (EditText) newView.findViewById(R.id.et_paid);
+        paid.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //check that there is only one dot:
+                String strToValidate = paid.getText().toString();
+                int count = strToValidate.length() - strToValidate.replace(".", "").length();
+                if (count > 1|| (count==1 && strToValidate.length()==1 )) {
+                    String newText = strToValidate.substring(0, strToValidate.length() - 1);
+                    paid.setText(newText);
+                    paid.setSelection(newText.length());
+                }
+            }
+
+        });
+
+        final EditText share = (EditText) newView.findViewById(R.id.et_special_share);
+        share.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //check that there is only one dot:
+                String strToValidate = share.getText().toString();
+                int count = strToValidate.length() - strToValidate.replace(".", "").length();
+                if (count > 1 || (count == 1 && strToValidate.length() == 1)) {
+                    String newText = strToValidate.substring(0, strToValidate.length() - 1);
+                    share.setText(newText);
+                    share.setSelection(newText.length());
+                }
+            }
+
+        });
         userNameText.setText(userName);
         return newView;
     }

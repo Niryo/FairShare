@@ -1,4 +1,4 @@
-package share.fair.fairshare;
+package share.fair.fairshare.dialogs;
 
 
 import android.content.Context;
@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import share.fair.fairshare.R;
+
 /**
  * Created by Nir on 04/11/2015.
  */
@@ -21,11 +23,7 @@ public class GroupKeyDialog extends DialogFragment {
         this.groupKey = groupKey;
     }
 
-    public void setGroupLogKey(String groupLogKey) {
-        this.groupLogKey = groupLogKey;
-    }
 
-    private String groupLogKey;
     private String groupKey;
     private String groupName;
 
@@ -36,7 +34,6 @@ public class GroupKeyDialog extends DialogFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("groupLogKey", groupLogKey);
         outState.putString("groupKey", groupKey);
         outState.putString("groupName", groupName);
     }
@@ -47,7 +44,6 @@ public class GroupKeyDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(savedInstanceState!=null){
-          groupLogKey= savedInstanceState.getString("groupLogKey");
              groupKey= savedInstanceState.getString("groupKey");
              groupName= savedInstanceState.getString("groupName");
 
@@ -57,7 +53,7 @@ public class GroupKeyDialog extends DialogFragment {
         getDialog().setTitle("Group key:");
         final TextView groupKeyText = (TextView) dialogLayout.findViewById(R.id.group_key_dialog_text);
         String stringLength= groupName.length()<9? "0"+groupName.length(): String.valueOf(groupName.length());
-        groupKeyText.setText(stringLength+groupName+groupKey+groupLogKey);
+        groupKeyText.setText(stringLength+groupName+groupKey);
         Button copyButton = (Button) dialogLayout.findViewById(R.id.group_key_dialog_copy);
         copyButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal">
 
-    <share.fair.fairshare.RelativeEditText
+    <share.fair.fairshare.views.RelativeEditText
         fairshare:landscapeFactor="30"
         fairshare:portraitFactor="30"
 
@@ -19,7 +19,7 @@
         android:hint="Group's name" />
 
 
-    <share.fair.fairshare.RelativeEditText
+    <share.fair.fairshare.views.RelativeEditText
         fairshare:landscapeFactor="30"
         fairshare:portraitFactor="30"
 
@@ -32,7 +32,7 @@
         android:maxLength="15"
         android:hint="Your name in this group" />
 
-    <share.fair.fairshare.RelativeTextView
+    <share.fair.fairshare.views.RelativeTextView
         fairshare:landscapeFactor="45"
         fairshare:portraitFactor="45"
         android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
 
 
 
-        <share.fair.fairshare.RelativeButton
+        <share.fair.fairshare.views.RelativeButton
             fairshare:landscapeTextSizeFactor="40"
             fairshare:portraitTextSizeFactor="40"
             android:layout_width="wrap_content"
@@ -59,7 +59,7 @@
             android:id="@+id/create_button"
             android:layout_gravity="center_horizontal" />
 
-        <share.fair.fairshare.RelativeButton
+        <share.fair.fairshare.views.RelativeButton
             fairshare:landscapeTextSizeFactor="40"
             fairshare:portraitTextSizeFactor="40"
             android:layout_width="wrap_content"

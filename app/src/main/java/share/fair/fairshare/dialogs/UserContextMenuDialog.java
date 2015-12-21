@@ -1,4 +1,4 @@
-package share.fair.fairshare;
+package share.fair.fairshare.dialogs;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
@@ -13,6 +13,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.List;
+
+import share.fair.fairshare.Alert;
+import share.fair.fairshare.activities.GroupActivity;
+import share.fair.fairshare.R;
+import share.fair.fairshare.User;
 
 /**
  * Created by Nir on 16/10/2015.

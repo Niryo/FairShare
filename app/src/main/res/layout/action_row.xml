@@ -9,7 +9,7 @@
     android:padding="12dp">
 
 
-    <share.fair.fairshare.RelativeTextView
+    <share.fair.fairshare.views.RelativeTextView
         fairshare:landscapeFactor="30"
         fairshare:portraitFactor="30"
 
@@ -20,7 +20,7 @@
         android:textColor="#000000"
         android:layout_gravity="center" />
 
-    <share.fair.fairshare.RelativeTextView
+    <share.fair.fairshare.views.RelativeTextView
         fairshare:landscapeFactor="30"
         fairshare:portraitFactor="30"
 

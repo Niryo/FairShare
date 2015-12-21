@@ -1,4 +1,4 @@
-package share.fair.fairshare;
+package share.fair.fairshare.dialogs;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+
+import share.fair.fairshare.FairShareGroup;
+import share.fair.fairshare.R;
 
 /**
  * Created by Ori on 10/11/2015.
@@ -48,7 +51,7 @@ public class GroupNameDialog extends DialogFragment {
                 }
 
                 String name = nameEditText.getText().toString();
-                FairShareGroup.groupBuilder(getContext(),name, userNameInGroup);
+                FairShareGroup.groupBuilder(getContext(), name, userNameInGroup);
 //                FairShareGroup.groupBuilder(getContext(),name);
 
                 ((GroupCreatedListener) getActivity()).notifyGroupListChanged();

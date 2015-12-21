@@ -1,37 +1,24 @@
-package share.fair.fairshare;
+package share.fair.fairshare.dialogs;
 
 
-import android.content.Context;
-import android.graphics.Point;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.Button;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
+import share.fair.fairshare.R;
 
 /**
- * Created by Nir on 22/10/2015.
+ * Created by Nir on 07/11/2015.
  */
-public class AlertsDialog extends DialogFragment {
+public class MainOptionsMenuDialog  extends DialogFragment {
     private int x;
     private int y;
-
-
-    public void setAlerts(ArrayList<Alert.AlertObject> alerts) {
-        this.alerts = alerts;
-    }
-
-    private ArrayList<Alert.AlertObject> alerts;
 
     public void setX(int x) {
         this.x = x;
@@ -40,6 +27,7 @@ public class AlertsDialog extends DialogFragment {
     public void setY(int y) {
         this.y = y;
     }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -62,32 +50,23 @@ public class AlertsDialog extends DialogFragment {
         params.y = y;
         window.setAttributes(params);
 
+        getDialog().setContentView(R.layout.main_options_menu_dialog);
+        View dialogLayout = inflater.inflate(R.layout.main_options_menu_dialog, container);
 
-
-        View dialogLayout = inflater.inflate(R.layout.alert_dialog_layout, container);
-        LinearLayout alertsContainer = (LinearLayout) dialogLayout.findViewById(R.id.alert_dialog_container);
-        if(alerts!=null){
-        for (Alert.AlertObject alert : alerts) {
-            View alertRow = inflater.inflate(R.layout.alert_row, null);
-            RelativeTextView description = (RelativeTextView) alertRow.findViewById(R.id.alert_row_description);
-            description.setText(alert.description);
-
-            RelativeTextView userName = (RelativeTextView) alertRow.findViewById(R.id.alert_row_username);
-            userName.setText(alert.useNrame);
-
-            TextView paid = (TextView) alertRow.findViewById(R.id.alert_row_paid);
-            paid.setText(new DecimalFormat("##.##").format(alert.paid+0));
-            alertsContainer.addView(alertRow);
-
-        }
-        getDialog().setContentView(R.layout.alert_dialog_layout);
-    }
-
+//=========================== Join group with key=================================================
+        Button joinGroup = (Button) dialogLayout.findViewById(R.id.main_options_menu_join_group);
+        joinGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new JoinGroupWithKeyDialog().show(getFragmentManager(), "join_group_with_key_dialog");
+            }
+        });
 
 
         return dialogLayout;
-    }
 
+
+    }
 
     @Override
     public void onStart() {
@@ -98,4 +77,5 @@ public class AlertsDialog extends DialogFragment {
         windowParams.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         window.setAttributes(windowParams);
     }
+
 }

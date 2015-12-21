@@ -1,23 +1,23 @@
-package share.fair.fairshare;
+package share.fair.fairshare.activities;
 
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.os.Bundle;
-import android.util.TypedValue;
-import android.view.Display;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import share.fair.fairshare.Action;
+import share.fair.fairshare.FairShareGroup;
+import share.fair.fairshare.Operation;
+import share.fair.fairshare.R;
 
 public class ActionEditActivity extends Activity {
 
@@ -80,7 +80,7 @@ public class ActionEditActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //todo: check if change is needed
-                action.makeUneditable();
+                group.getGroupLog().makeActionUneditable(getApplicationContext(),action);
                 action.save();
                 //1. create opposite action:
                 ArrayList<Operation> oppositeOperationList = new ArrayList<Operation>();
@@ -94,7 +94,7 @@ public class ActionEditActivity extends Activity {
                 }
 
                 Action oppositeAction = new Action(creatorName, creatorId, action.getDescription() + " (CANCELED)");
-                oppositeAction.makeUneditable();
+                group.getGroupLog().makeActionUneditable(getApplicationContext(), oppositeAction);
                 oppositeAction.save();
                 oppositeAction.setGroupLogId(group.getGroupLog().getId());
                 oppositeAction.operations = oppositeOperationList;
@@ -138,7 +138,7 @@ public class ActionEditActivity extends Activity {
         deleteAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                action.makeUneditable();
+                 group.getGroupLog().makeActionUneditable(getApplicationContext(), action);
                 action.save();
                 //1. create opposite action:
                 ArrayList<Operation> oppositeOperationList = new ArrayList<Operation>();
@@ -151,6 +151,7 @@ public class ActionEditActivity extends Activity {
                 }
                 Action oppositeAction = new Action(creatorName, creatorId, action.getDescription() + " (CANCELED)");
                 oppositeAction.makeUneditable();
+                group.getGroupLog().makeActionUneditable(getApplicationContext(), oppositeAction);
                 oppositeAction.setGroupLogId(group.getGroupLog().getId());
                 oppositeAction.operations = oppositeOperationList;
                 oppositeAction.setTimeStamp(action.getTimeStamp());

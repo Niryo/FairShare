@@ -1,4 +1,4 @@
-package share.fair.fairshare;
+package share.fair.fairshare.activities;
 
 import android.app.AlertDialog;
 import android.app.NotificationManager;
@@ -20,16 +20,32 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.Parse;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import share.fair.fairshare.Action;
+import share.fair.fairshare.Alert;
+import share.fair.fairshare.App;
+import share.fair.fairshare.FairShareGroup;
+import share.fair.fairshare.FairShareReceiver;
+import share.fair.fairshare.R;
+import share.fair.fairshare.User;
+import share.fair.fairshare.UserCheckBoxAdapter;
+import share.fair.fairshare.dialogs.AlertsDialog;
+import share.fair.fairshare.dialogs.GroupKeyDialog;
+import share.fair.fairshare.dialogs.GroupOptionsMenuDialog;
+import share.fair.fairshare.dialogs.UserContextMenuDialog;
+import share.fair.fairshare.dialogs.UserNameDialog;
+
 public class GroupActivity extends FragmentActivity {
 
-    static final int NOTIFY_USER_CHANGE = 1;
-    static final int CHECKED_AVAILABLE = 2;
-    static final int CHECKED_UNAVAILABLE = 3;
-    static final int BALANCE_CHANGED = 4;
-    static final int GO_OUT_REQUEST = 1;  // The request code
+    public static final int NOTIFY_USER_CHANGE = 1;
+    public  static final int CHECKED_AVAILABLE = 2;
+    public   static final int CHECKED_UNAVAILABLE = 3;
+    public static final int BALANCE_CHANGED = 4;
+    public static final int GO_OUT_REQUEST = 1;  // The request code
     TextView groupNameTextView;
     Button addUserButton;
     ArrayList<User> users;
@@ -53,6 +69,14 @@ public class GroupActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        final SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
+        boolean isLegalVersion = settings.getBoolean("isLegalVersion", true);
+        if(!isLegalVersion){
+            Intent intent = new Intent(getApplicationContext(), OldVersionScreenActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
         String groupId = getIntent().getStringExtra("groupId");
@@ -186,8 +210,6 @@ public class GroupActivity extends FragmentActivity {
                 finish();
             }
         });
-
-
         group.setParentActivityMessageHandler(messageHandler);
         sync();
         notifyUserListChanged();
@@ -212,7 +234,7 @@ public class GroupActivity extends FragmentActivity {
         uriBuilder.appendPath("");
         uriBuilder.appendQueryParameter("groupName", group.getName());
         uriBuilder.appendQueryParameter("groupCloudKey", group.getCloudGroupKey());
-        uriBuilder.appendQueryParameter("cloudLogKey", group.getGroupLog().getCloudLogKey());
+
 
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
@@ -231,6 +253,7 @@ public class GroupActivity extends FragmentActivity {
         Intent actions = new Intent(getApplicationContext(), ActionsActivity.class);
         actions.putExtra("groupId", group.getCloudGroupKey());
         startActivity(actions);
+        finish();
     }
 
     public void notifyUserAdded(String name) {
@@ -377,41 +400,51 @@ public class GroupActivity extends FragmentActivity {
     }
 
     public void settleUp() {
-        SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
-        String creatorName = settings.getString("name", "");
-        String creatorId = settings.getString("id", "");
-        String description = "Settel up";
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Wait!");
+        alert.setMessage("Are you sure you want to clear all debts?");
+        alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
+                String creatorName = settings.getString("name", "");
+                String creatorId = settings.getString("id", "");
+                String description = "Settle up";
 
-        ArrayList<GoOutFragment.GoOutObject> goOutObjects = new ArrayList<>();
-        for (User user : users) {
-            double balance = user.getBalance();
-            double sumPaid;
-            double sumShare;
-            if (balance >= 0) {
-                sumPaid = 0;
-                sumShare = balance;
-            } else {
-                sumPaid = Math.abs(balance);
-                ;
-                sumShare = 0;
+                ArrayList<GoOutFragment.GoOutObject> goOutObjects = new ArrayList<>();
+                for (User user : users) {
+                    double balance = user.getBalance();
+                    double sumPaid;
+                    double sumShare;
+                    if (balance >= 0) {
+                        sumPaid = 0;
+                        sumShare = balance;
+                    } else {
+                        sumPaid = Math.abs(balance);
+                        ;
+                        sumShare = 0;
+                    }
+                    goOutObjects.add(new GoOutFragment.GoOutObject(user.getUserId(), user.getName(), sumPaid, sumShare));
+                }
+
+                Action action = GoOutFragment.createAction(creatorName, creatorId, description, goOutObjects);
+                if (action == null) {
+                    Toast.makeText(getApplicationContext(), "Error: can't settle up", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                group.getGroupLog().addAction(getApplicationContext(), action);
+                group.consumeAction(action);
+                userCheckBoxAdapter.notifyDataSetChanged();
+
             }
-            goOutObjects.add(new GoOutFragment.GoOutObject(user.getUserId(), user.getName(), sumPaid, sumShare));
-        }
-
-        Action action = GoOutFragment.createAction(creatorName, creatorId, description, goOutObjects);
-        if (action == null) {
-            Toast.makeText(getApplicationContext(), "Error: can't settle up", Toast.LENGTH_LONG).show();
-            return;
-        }
-        this.group.getGroupLog().addAction(getApplicationContext(), action);
-        this.group.consumeAction(action);
-        userCheckBoxAdapter.notifyDataSetChanged();
+        });
+        alert.setNegativeButton("Cancel", null);
+        alert.create().show();
     }
 
     public void showGroupKeyDialog() {
         GroupKeyDialog dialog = new GroupKeyDialog();
         dialog.setGroupKey(group.getCloudGroupKey());
-        dialog.setGroupLogKey(group.getGroupLog().getCloudLogKey());
         dialog.setGroupName(group.getName());
         dialog.show(getSupportFragmentManager(), "group_key");
     }

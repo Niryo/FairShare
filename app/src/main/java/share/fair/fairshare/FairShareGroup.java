@@ -1,10 +1,11 @@
 package share.fair.fairshare;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.orm.SugarRecord;
@@ -27,6 +28,8 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
+import share.fair.fairshare.activities.GroupActivity;
+
 
 /**
  * Created by Nir on 09/10/2015.
@@ -37,8 +40,10 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
     private String name;
     private long groupLogId;
     private String cloudGroupKey = "";
-    private long lastUserSync= Long.valueOf(0);
+    private long lastUserSync;
     private String ownerId="";
+    @Ignore
+    private boolean syncLock = false;
     @Ignore
     private List<User> users = new ArrayList<>();
     @Ignore
@@ -48,20 +53,18 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
     public FairShareGroup() { //must ve empty constructor
     }
     private FairShareGroup(String name) {
+        this.lastUserSync=0;
         this.name = name;
     }
 
 
     public static FairShareGroup groupBuilder(Context context, String groupName, String userNameInGroup) {
         FairShareGroup group = new FairShareGroup(groupName);
-        Date zeroDate = new Date();
-        zeroDate.setTime(0);
-
         String cloudGroupKey = "a" + new BigInteger(130, new SecureRandom()).toString(32);
         String cloudLogKey = "a" + new BigInteger(130, new SecureRandom()).toString(32);
         group.setCloudGroupKey(cloudGroupKey);
         ParsePush.subscribeInBackground(cloudGroupKey);//subscribe to the group chanel
-        GroupLog groupLog = new GroupLog(group, cloudLogKey);
+        GroupLog groupLog = new GroupLog(group, cloudGroupKey);
         groupLog.save();
         group.setGroupLog(groupLog);
         SharedPreferences settings = context.getSharedPreferences("MAIN_PREFERENCES", 0);
@@ -94,7 +97,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         return group;
     }
 
-    public static void joinGroupWithKey(Context context, String name, String cloudGroupKey, String cloudLogKey) {
+    public static void joinGroupWithKey(Context context, String name, String cloudGroupKey) {
         //check that group doesn't already exdist:
         for (GroupNameRecord groupNameRecord : getSavedGroupNames()){
             if(groupNameRecord.getGroupId().equals(cloudGroupKey)){
@@ -104,7 +107,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         }
 
         FairShareGroup group = new FairShareGroup(name);
-        GroupLog groupLog = new GroupLog(group, cloudLogKey);
+        GroupLog groupLog = new GroupLog(group, cloudGroupKey);
         groupLog.save();
         group.setGroupLog(groupLog);
         group.setCloudGroupKey(cloudGroupKey);
@@ -168,6 +171,10 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
     }
 
     public void sync(final Context context, final boolean firstTime) {
+        if(syncLock){
+           return;
+        }
+        syncLock=true;
         ParseQuery<ParseObject> query = ParseQuery.getQuery(this.cloudGroupKey);
         final Date date = new Date(lastUserSync);
         if(!firstTime){
@@ -177,20 +184,46 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, ParseException e) {
-                if (e == null && list != null && lastUserSync == date.getTime()) {//the last check is to avoid dirty date
-                    boolean isNeedToSaveGroup = false;
+                if (e == null && list != null) {
                     ArrayList<String> userIdToIgnore = new ArrayList<String>();
                     List<User> userToSave = new ArrayList<User>();
-                    long lastUserSyncCopy= lastUserSync;
+                    List<Action> actionsToSave = new ArrayList<Action>();
+                    long lastUserSyncCopy = lastUserSync;
 
                     boolean dirty = false;
                     for (ParseObject parseObject : list) {
                         final ArrayList<User> usersCopy = new ArrayList<>(users);
-                        String userId = parseObject.getString("userId");
                         String action = parseObject.getString("action");
                         lastUserSyncCopy = Math.max(parseObject.getCreatedAt().getTime(), lastUserSyncCopy);
-                        isNeedToSaveGroup = true;
+
+                        if (action.equals("UNEDITED_ACTION")) {
+                            Hashtable<String, Action> actionsIdTable = getGroupLog().getActionsIdTable();
+                            String actionId = parseObject.getString("actionId");
+                            if (actionsIdTable.containsKey(actionId)) {
+                                actionsIdTable.get(actionId).makeUneditable();
+                            }
+
+                        }
+
+
+                        if (action.equals("NEW_ACTION")) {
+                            Hashtable<String, Action> actionsIdTable = getGroupLog().getActionsIdTable();
+                            JSONObject jsonObject = parseObject.getJSONObject("jsonAction");
+                            String actionId = parseObject.getString("actionId");
+                            if (jsonObject != null && !actionsIdTable.containsKey(actionId)) { //check if we don't already have this action
+                                Action newAction = new Action(jsonObject);
+                                actionsIdTable.put(actionId, newAction);
+                                newAction.setGroupLogId(getId());
+//                                actionsToSave.add((newAction));
+                                getGroupLog().actions.add(newAction);
+                                consumeAction(newAction);
+                                newAction.save();
+                            }
+                        }
+
+
                         if (action.equals("USER_ADDED")) {
+                            String userId = parseObject.getString("userId");
                             boolean isUserExist = false;
                             for (User user : usersCopy) {
                                 if (user.getUserId().equals(userId)) {
@@ -199,10 +232,10 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
                                 }
                             }
                             if (!isUserExist) {
-                                    if(userIdToIgnore.contains(userId)){
-                                        Toast.makeText(context, "DEBUG: userIdToIgnore was activated!", Toast.LENGTH_LONG).show();
-                                        continue;
-                                    }
+                                if (userIdToIgnore.contains(userId)) {
+                                    Toast.makeText(context, "DEBUG: userIdToIgnore was activated!", Toast.LENGTH_LONG).show();
+                                    continue;
+                                }
 
                                 String userName = parseObject.getString("userName");
                                 User newUser = new User(userName, 0);
@@ -213,48 +246,59 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
                                 dirty = true;
                             }
                         }
+
                         if (action.equals("USER_REMOVED")) {
-                            boolean success=false;
+                            String userId = parseObject.getString("userId");
+                            boolean success = false;
                             for (User user : usersCopy) {
                                 if (user.getUserId().equals(userId)) {
                                     users.remove(user);
-                                    if(userToSave.contains(user)){
-                                        userToSave.remove(user); //no need to delete becuase user hasn't been save yet.
-                                    }
-                                    else{
+                                    if (userToSave.contains(user)) {
+                                        userToSave.remove(user); //no need to delete because user hasn't been save yet.
+                                    } else {
                                         user.delete();
                                     }
 
-                                    success=true;
+                                    if(Math.abs(user.getBalance())!=0 ){
+                                        user = new User(user.getName(),user.getUserId(), user.getBalance());
+                                        addGhostUser(user);
+                                    }
+
+                                    success = true;
                                     dirty = true;
                                     break;
                                 }
                             }
-                            if(!success){
+                            if (!success) {
                                 userIdToIgnore.add(userId);
                             }
                         }
 
+
                     }
 
-                    for(User user : userToSave){
+                    for (User user : userToSave) {
                         user.save();
                     }
-                    lastUserSync= lastUserSyncCopy; //only if after saving the users we update lastSync
-                    if (dirty) {
+
+//                    for (Action action : actionsToSave) {
+//                        getGroupLog().actions.add(action);
+//                        consumeAction(action);
+//                        action.save();
+//                    }
+                    if (dirty && parentActivityMessageHandler != null) {
                         Message msg = Message.obtain();
                         msg.what = GroupActivity.NOTIFY_USER_CHANGE;
-                        if(parentActivityMessageHandler!=null) {
-                            parentActivityMessageHandler.sendMessage(msg);
-                        }
+                        parentActivityMessageHandler.sendMessage(msg);
+
 
                     }
 
-                    if (isNeedToSaveGroup) {
-                        save();
-                    }
+                    lastUserSync = lastUserSyncCopy; //only after saving the users we update lastSync
+                    save();
+
                 }
-                groupLog.syncActions(context,firstTime);
+                syncLock = false;
             }
         });
     }
@@ -297,6 +341,12 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         return this.name;
     }
 
+    public void addGhostUser(User user){
+        user.setBelongingGroupId(getCloudGroupKey());
+        user.save();
+        this.users.add(user);
+    }
+
     public void addUser(Context context, User user) {
         user.setUserId(new BigInteger(130, new SecureRandom()).toString(32).substring(0, 6));
         user.setBelongingGroupId(getCloudGroupKey());
@@ -333,18 +383,24 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
 
         for (Operation operation : action.getOperations()) {
             User user = usersTable.get(operation.userId);
-            if (user != null) {
+
+            if (user == null) {
+                user = new User(operation.username ,operation.getUserId(),0);
+                addGhostUser(user);
+            }
                 user.addToBalance(operation.getPaid() - operation.getShare());//todo: check!!
                 if(!action.getCreatorId().equals(this.ownerId) && notifiedTable.containsKey(user.getUserId())){
                     Alert.AlertObject newAlert = new Alert.AlertObject(action.getDescription(),operation.getPaid()-operation.getShare(),user.getName());
+                    if (parentActivityMessageHandler != null) {
                     Message msg;
                     msg = Message.obtain();
                     msg.obj=newAlert;
                     msg.what = GroupActivity.BALANCE_CHANGED;
-                    parentActivityMessageHandler.sendMessage(msg);
+                        parentActivityMessageHandler.sendMessage(msg);
+                    }
                 }
 
-            }
+
 
         }
         //report user changed to notify the adapter:

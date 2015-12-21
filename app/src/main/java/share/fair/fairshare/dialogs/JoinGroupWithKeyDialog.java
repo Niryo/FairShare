@@ -1,4 +1,4 @@
-package share.fair.fairshare;
+package share.fair.fairshare.dialogs;
 
 
 import android.os.Bundle;
@@ -11,6 +11,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import share.fair.fairshare.FairShareGroup;
+import share.fair.fairshare.activities.MainActivity;
+import share.fair.fairshare.R;
 
 /**
  * Created by Nir on 11/11/2015.
@@ -43,14 +47,13 @@ public class JoinGroupWithKeyDialog extends DialogFragment {
                     return;
                 }
 
-                if(groupNameLength+56!= rawKey.length()){
+                if(groupNameLength+29!= rawKey.length()){
                     Toast.makeText(getContext(), "Key error: cannot join group", Toast.LENGTH_LONG).show();
                     return;
                 }
                 String groupName=rawKey.substring(2, groupNameLength +2);
-                String groupKey= rawKey.substring(groupNameLength+2,groupNameLength+29);
-                String groupLogKey= rawKey.substring(groupNameLength+29);
-                FairShareGroup.joinGroupWithKey(getContext(),groupName,groupKey,groupLogKey);
+                String groupKey= rawKey.substring(groupNameLength+2);
+                FairShareGroup.joinGroupWithKey(getContext(), groupName, groupKey);
                 ((MainActivity)getActivity()).notifyGroupListChanged();
                 getDialog().dismiss();
             }

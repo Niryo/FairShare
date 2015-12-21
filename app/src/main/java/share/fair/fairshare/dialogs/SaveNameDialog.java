@@ -1,4 +1,4 @@
-package share.fair.fairshare;
+package share.fair.fairshare.dialogs;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +13,8 @@ import android.widget.EditText;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+
+import share.fair.fairshare.R;
 
 /**
  * Created by Nir on 18/10/2015.

@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by Nir on 09/10/2015.
@@ -18,15 +19,26 @@ public class User extends SugarRecord<User> implements Serializable {
     private double balance;
     private String email;
     private String userId;
-    private String belongingGroupId;
     private boolean isNotified;
+    private boolean isGhost;
+    private List<Long> ghostActionIdHistory;
+    private String belongingGroupId;
 
-    public User() {
+public User(){}
+
+    public User (String name, String id, double balance){
+        this.name = name+ " (ghost)";
+        this.userId= id;
+        this.isGhost=true;
+        this.balance = balance;
+        this.ghostActionIdHistory = new ArrayList<>();
     }
 
     public User(String name, double balance) {
         this.name = name;
         this.balance = balance;
+        this.isGhost=false;
+        this.ghostActionIdHistory=null;
     }
 
     public static ArrayList<User> parseUsers(JSONObject jsonUsers) {
@@ -48,6 +60,10 @@ public class User extends SugarRecord<User> implements Serializable {
             e.printStackTrace();
         }
         return resultUsers;
+    }
+
+    public boolean isGhost() {
+        return isGhost;
     }
 
     public boolean isNotified() {

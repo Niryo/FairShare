@@ -1,4 +1,4 @@
-package share.fair.fairshare;
+package share.fair.fairshare.views;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -9,6 +9,8 @@ import android.util.TypedValue;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.TextView;
+
+import share.fair.fairshare.R;
 
 /**
  * Created by Nir on 28/11/2015.

@@ -5,7 +5,7 @@
     android:id="@+id/group_row_container"
     >
 
-    <share.fair.fairshare.RelativeTextView
+    <share.fair.fairshare.views.RelativeTextView
         fairshare:landscapeFactor="27"
         fairshare:portraitFactor="23"
 
@@ -18,7 +18,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginBottom="15dp" />
 
-    <share.fair.fairshare.RelativeImageView
+    <share.fair.fairshare.views.RelativeImageView
         fairshare:landscapeFactor="14"
         fairshare:portraitFactor="17"
 

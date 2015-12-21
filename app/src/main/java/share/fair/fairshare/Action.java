@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class Action extends SugarRecord<Action> implements Serializable {
     @Ignore
-    List<Operation> operations = new ArrayList<Operation>();
+    public List<Operation> operations = new ArrayList<Operation>();
     private Long groupLogId;
     private long timeStamp;
     private String description;
@@ -42,6 +42,7 @@ public class Action extends SugarRecord<Action> implements Serializable {
 
     public Action(JSONObject jsonAction) {
         try {
+            this.isEditable = jsonAction.getBoolean("isEditable");
             this.description = jsonAction.getString("description");
             this.timeStamp = jsonAction.getLong("timeStamp");
             this.actionId = jsonAction.getString("actionId");
@@ -78,6 +79,7 @@ public class Action extends SugarRecord<Action> implements Serializable {
 
     public void makeUneditable() {
         this.isEditable = false;
+        save();
     }
 
     public String getCreatorName() {
@@ -126,6 +128,7 @@ public class Action extends SugarRecord<Action> implements Serializable {
     public JSONObject toJSON() {
         JSONObject jsonObject = new JSONObject();
         try {
+            jsonObject.put("isEditable", this.isEditable);
             jsonObject.put("description", this.description);
             jsonObject.put("timeStamp", this.timeStamp);
             jsonObject.put("actionId", this.actionId);

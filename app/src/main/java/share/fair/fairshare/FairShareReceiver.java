@@ -18,6 +18,8 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import share.fair.fairshare.activities.GroupActivity;
+
 /**
  * Created by Nir on 24/10/2015.
  */

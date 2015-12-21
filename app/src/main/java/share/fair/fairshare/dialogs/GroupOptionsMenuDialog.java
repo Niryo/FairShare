@@ -1,4 +1,4 @@
-package share.fair.fairshare;
+package share.fair.fairshare.dialogs;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+
+import share.fair.fairshare.activities.GroupActivity;
+import share.fair.fairshare.R;
 
 /**
  * Created by Nir on 21/10/2015.

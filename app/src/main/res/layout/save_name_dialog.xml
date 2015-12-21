@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal">
 
-    <share.fair.fairshare.RelativeEditText
+    <share.fair.fairshare.views.RelativeEditText
         fairshare:landscapeFactor="30"
         fairshare:portraitFactor="30"
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
         android:maxLength="15"
         android:hint="Full name" />
 
-    <share.fair.fairshare.RelativeTextView
+    <share.fair.fairshare.views.RelativeTextView
         fairshare:landscapeFactor="45"
         fairshare:portraitFactor="45"
         android:layout_width="wrap_content"
@@ -32,7 +32,7 @@
         android:layout_height="match_parent"
         android:gravity="center_horizontal">
 
-        <share.fair.fairshare.RelativeButton
+        <share.fair.fairshare.views.RelativeButton
             fairshare:landscapeTextSizeFactor="40"
             fairshare:portraitTextSizeFactor="40"
             android:layout_width="wrap_content"

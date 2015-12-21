@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_horizontal">
 
-    <share.fair.fairshare.RelativeTextView
+    <share.fair.fairshare.views.RelativeTextView
         fairshare:landscapeFactor="30"
         fairshare:portraitFactor="30"
 
@@ -15,7 +15,7 @@
         android:id="@+id/group_key_dialog_text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <share.fair.fairshare.RelativeButton
+    <share.fair.fairshare.views.RelativeButton
         fairshare:landscapeTextSizeFactor="40"
         fairshare:portraitTextSizeFactor="40"
 

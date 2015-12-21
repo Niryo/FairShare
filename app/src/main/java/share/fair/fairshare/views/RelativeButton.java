@@ -1,4 +1,4 @@
-package share.fair.fairshare;
+package share.fair.fairshare.views;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -13,6 +13,8 @@ import android.view.Display;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+
+import share.fair.fairshare.R;
 
 /**
  * Created by Nir on 28/11/2015.

@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/border_with_bottom">
 
-    <share.fair.fairshare.RelativeTextView
+    <share.fair.fairshare.views.RelativeTextView
         fairshare:landscapeFactor="45"
         fairshare:portraitFactor="45"
 
@@ -17,7 +17,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp" />
 
-    <share.fair.fairshare.RelativeTextView
+    <share.fair.fairshare.views.RelativeTextView
         fairshare:landscapeFactor="45"
         fairshare:portraitFactor="45"
 
@@ -27,7 +27,7 @@
         android:id="@+id/alert_row_username"
         android:layout_marginRight="10dp" />
 
-    <share.fair.fairshare.RelativeTextView
+    <share.fair.fairshare.views.RelativeTextView
         fairshare:landscapeFactor="45"
         fairshare:portraitFactor="45"
 

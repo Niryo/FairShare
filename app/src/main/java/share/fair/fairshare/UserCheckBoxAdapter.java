@@ -16,13 +16,14 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import share.fair.fairshare.activities.GroupActivity;
 
 /**
  * Created by Ori on 5/20/2015.
@@ -78,6 +79,11 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
         if(userList.get(position).isNotified()){
             cbUserRow.setTextColor(Color.parseColor("#38B074"));
         }
+
+        if(userList.get(position).isGhost()){
+            cbUserRow.setTextColor(Color.RED);
+        }
+
         else{
             cbUserRow.setTextColor(Color.BLACK);
         }

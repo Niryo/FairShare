@@ -15,7 +15,7 @@
         android:layout_marginTop="-10dp"
         android:layout_marginRight="-10dp">
 
-        <share.fair.fairshare.RelativeEditText
+        <share.fair.fairshare.views.RelativeEditText
             fairshare:landscapeFactor="15"
             fairshare:portraitFactor="15"
 
@@ -34,26 +34,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <share.fair.fairshare.RelativeTextView
+        <share.fair.fairshare.views.RelativeTextView
             fairshare:landscapeFactor="30"
             fairshare:portraitFactor="30"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="User name"
+            android:text="Name"
             android:id="@+id/go_out_activity_user_title"
             android:layout_alignParentLeft="true"
 
 
-            android:textColor="#3399FF" />
+            android:textColor="#3399FF"
+            android:layout_marginLeft="15dp" />
 
-        <share.fair.fairshare.RelativeTextView
+        <share.fair.fairshare.views.RelativeTextView
             fairshare:landscapeFactor="30"
             fairshare:portraitFactor="30"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="User paid"
+            android:text="Amount paid"
             android:id="@+id/sum_paid_title"
             android:layout_toLeftOf="@+id/user_share_title"
 
@@ -61,18 +62,19 @@
             android:layout_marginRight="20dp"
             android:textColor="#3399FF" />
 
-        <share.fair.fairshare.RelativeTextView
+        <share.fair.fairshare.views.RelativeTextView
             fairshare:landscapeFactor="30"
             fairshare:portraitFactor="30"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="User share"
+            android:text="Share"
             android:id="@+id/user_share_title"
             android:layout_alignParentRight="true"
 
 
-            android:textColor="#3399FF" />
+            android:textColor="#3399FF"
+            android:layout_marginRight="15dp" />
     </RelativeLayout>
 
     <View

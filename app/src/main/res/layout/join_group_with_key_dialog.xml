@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal">
 
-    <share.fair.fairshare.RelativeEditText
+    <share.fair.fairshare.views.RelativeEditText
         fairshare:landscapeFactor="30"
         fairshare:portraitFactor="30"
 
@@ -22,7 +22,7 @@
         android:layout_height="match_parent"
         android:gravity="center_horizontal">
 
-        <share.fair.fairshare.RelativeButton
+        <share.fair.fairshare.views.RelativeButton
             fairshare:landscapeTextSizeFactor="40"
             fairshare:portraitTextSizeFactor="40"
 

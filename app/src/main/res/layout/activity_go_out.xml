@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <share.fair.fairshare.RelativeButton
+            <share.fair.fairshare.views.RelativeButton
                 fairshare:landscapeButtonSizeFactor="15"
                 fairshare:portraitButtonSizeFactor="15"
 
@@ -30,7 +30,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true" />
 
-            <share.fair.fairshare.RelativeButton
+            <share.fair.fairshare.views.RelativeButton
                 fairshare:landscapeTextSizeFactor="40"
                 fairshare:portraitTextSizeFactor="40"
 

@@ -11,7 +11,7 @@
         android:layout_weight="1"
         android:background="@drawable/border_with_bottom">
 
-        <share.fair.fairshare.RelativeButton
+        <share.fair.fairshare.views.RelativeButton
             fairshare:landscapeTextSizeFactor="40"
             fairshare:portraitTextSizeFactor="40"
 

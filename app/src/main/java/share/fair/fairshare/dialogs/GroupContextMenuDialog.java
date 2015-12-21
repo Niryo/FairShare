@@ -1,18 +1,15 @@
-package share.fair.fairshare;
+package share.fair.fairshare.dialogs;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 
-import java.util.List;
+import share.fair.fairshare.FairShareGroup;
+import share.fair.fairshare.activities.MainActivity;
+import share.fair.fairshare.R;
 
 /**
  * Created by Nir on 16/10/2015.
