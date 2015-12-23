@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
@@ -58,7 +56,6 @@ public class GroupActivity extends FragmentActivity {
     Button backToMain;
     Button optionsButton;
     Button alertButton;
-    private Handler messageHandler;
     private ArrayList<Alert.AlertObject> alertObjects = new ArrayList<>();
 
     ShowcaseView showcaseView;
@@ -98,33 +95,9 @@ public class GroupActivity extends FragmentActivity {
         groupNameTextView = (TextView) findViewById(R.id.tv_grp_name);
         groupNameTextView.setText(group.getGroupName());
         this.users = new ArrayList<>(group.getUsers());
-        messageHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                if (msg.what == NOTIFY_USER_CHANGE) {
-                    notifyUserListChanged();
-                }
-                if (msg.what == CHECKED_AVAILABLE) {
-                    goOutCheckedButton.setVisibility(View.VISIBLE);
-                    goOutAllButton.setVisibility(View.GONE);
-                }
-                if (msg.what == CHECKED_UNAVAILABLE) {
-                    goOutCheckedButton.setVisibility(View.GONE);
-                    goOutAllButton.setVisibility(View.VISIBLE);
-                }
-                if (msg.what == BALANCE_CHANGED) {
-                    Alert.AlertObject alert = (Alert.AlertObject) msg.obj;
-                    alertObjects.add(alert);
-                    alertButton.setBackgroundResource(R.drawable.popup_reminder_active);
-                    alertButton.setText(Integer.toString(alertObjects.size()));
-                    notifyUserListChanged();
-
-                }
-            }
-        };
         userListView = (ListView) findViewById(R.id.users_list_view);
-        userCheckBoxAdapter = new UserCheckBoxAdapter(this, R.layout.user_check_row, this.users, messageHandler);
+        userCheckBoxAdapter = new UserCheckBoxAdapter(getApplicationContext(),this, R.layout.user_check_row, this.users);
+
         userListView.setAdapter(userCheckBoxAdapter);
         // registerForContextMenu(userListView);
 
@@ -220,7 +193,7 @@ public class GroupActivity extends FragmentActivity {
                 finish();
             }
         });
-        group.setParentActivityMessageHandler(messageHandler);
+        group.setGroupActivity(this);
         sync();
         notifyUserListChanged();
         this.userListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -235,7 +208,27 @@ public class GroupActivity extends FragmentActivity {
         
     }
 
+   public void messageHandler(int messageNum, Object object){
+       if (messageNum == NOTIFY_USER_CHANGE) {
+           notifyUserListChanged();
+       }
+       if (messageNum == CHECKED_AVAILABLE) {
+           goOutCheckedButton.setVisibility(View.VISIBLE);
+           goOutAllButton.setVisibility(View.GONE);
+       }
+       if (messageNum == CHECKED_UNAVAILABLE) {
+           goOutCheckedButton.setVisibility(View.GONE);
+           goOutAllButton.setVisibility(View.VISIBLE);
+       }
+       if (messageNum == BALANCE_CHANGED) {
+           Alert.AlertObject alert = (Alert.AlertObject) object;
+           alertObjects.add(alert);
+           alertButton.setBackgroundResource(R.drawable.popup_reminder_active);
+           alertButton.setText(Integer.toString(alertObjects.size()));
+           notifyUserListChanged();
 
+       }
+   }
 
     public void inviteByMail(String emailAddress) {
         Uri.Builder uriBuilder = new Uri.Builder();
@@ -284,7 +277,7 @@ public class GroupActivity extends FragmentActivity {
                     Toast.makeText(getApplicationContext(), "Error: sum paid must be greater than sum share.\nPlease try again.", Toast.LENGTH_LONG).show();
                     return;
                 }
-                this.group.getGroupLog().addAction(getApplicationContext(), action);//todo: find a way to remove the context
+                this.group.addAction(getApplicationContext(), action);//todo: find a way to remove the context
                 this.group.consumeAction(action);
                 //users = resultList; //todo: problem if checked list was sent
                 userCheckBoxAdapter.notifyDataSetChanged();
@@ -345,7 +338,7 @@ public class GroupActivity extends FragmentActivity {
             Toast.makeText(getApplicationContext(), "Error: can't settle up user's debts", Toast.LENGTH_LONG).show();
             return false;
         }
-        this.group.getGroupLog().addAction(getApplicationContext(), action);
+        this.group.addAction(getApplicationContext(), action);
         this.group.consumeAction(action);
         userCheckBoxAdapter.notifyDataSetChanged();
         return true;
@@ -371,7 +364,7 @@ public class GroupActivity extends FragmentActivity {
             Toast.makeText(getApplicationContext(), "Error: sum paid must be greater than sum share.\nPlease try again.", Toast.LENGTH_LONG).show();
             return;
         }
-        this.group.getGroupLog().addAction(getApplicationContext(), action);
+        this.group.addAction(getApplicationContext(), action);
         this.group.consumeAction(action);
         userCheckBoxAdapter.notifyDataSetChanged();
 
@@ -442,7 +435,7 @@ public class GroupActivity extends FragmentActivity {
                     Toast.makeText(getApplicationContext(), "Error: can't settle up", Toast.LENGTH_LONG).show();
                     return;
                 }
-                group.getGroupLog().addAction(getApplicationContext(), action);
+                group.addAction(getApplicationContext(), action);
                 group.consumeAction(action);
                 userCheckBoxAdapter.notifyDataSetChanged();
 

@@ -2,7 +2,6 @@ package share.fair.fairshare;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
@@ -34,7 +33,6 @@ import share.fair.fairshare.activities.GroupActivity;
  */
 public class FairShareGroup extends SugarRecord<FairShareGroup>  {
     private String groupName; //group name
-    private String groupLogId; //for loading the group log
     private String cloudGroupKey = ""; //for storing information on the cloud
     private long lastSyncTime; //for tracking when was the last sync wiht the cloud
     private String installationId =""; //unicque id for every installation of the app
@@ -44,30 +42,33 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
     @Ignore
     private List<User> users = new ArrayList<>(); //list of the users of the group
     @Ignore
-    private GroupLog groupLog; //a group log for keep tracking of actions history.
+    public List<Action> actions = new ArrayList<>();
     @Ignore
-    private transient Handler parentActivityMessageHandler; //for sending messages to the activity, for example when need to update the user list.
+    private transient GroupActivity groupActivity; //for sending messages to the activity, for example when need to update the user list.
     public FairShareGroup() { //must ve empty constructor
     }
 
-    private FairShareGroup(String name, String cloudGroupKey, GroupLog groupLog, String installationId) {
+    private FairShareGroup(String name, String cloudGroupKey, String installationId) {
         this.lastSyncTime =0;
         this.groupName = name;
         this.cloudGroupKey =cloudGroupKey;
-        this.groupLogId = groupLog.getGroupLogId();
         this.installationId = installationId;
-        setGroupLog(groupLog);
+        actions = new ArrayList<>();
     }
 
-
+    /**
+     * Build new group
+     * @param context application context. for using the sharedPreferences
+     * @param groupName the group's name
+     * @param userNameInGroup the first user in the group
+     * @return a new Group object
+     */
     public static FairShareGroup groupBuilder(Context context, String groupName, String userNameInGroup) {
-        String cloudGroupKey = "a" + new BigInteger(130, new SecureRandom()).toString(32);
+        String cloudGroupKey = "a" + new BigInteger(130, new SecureRandom()).toString(32); //the key must start with a letter.
         ParsePush.subscribeInBackground(cloudGroupKey);//subscribe to the group chanel
-        GroupLog groupLog = new GroupLog(cloudGroupKey);
-        groupLog.save();
         SharedPreferences settings = context.getSharedPreferences("MAIN_PREFERENCES", 0);
         String installationId = settings.getString("id", "");
-        FairShareGroup group = new FairShareGroup(groupName, cloudGroupKey, groupLog, installationId);
+        FairShareGroup group = new FairShareGroup(groupName, cloudGroupKey, installationId);
         group.addUser(context,new User(userNameInGroup, 0.0));
         group.save();
         GroupNameRecord groupNameRecord = new GroupNameRecord(groupName, cloudGroupKey);
@@ -75,24 +76,123 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         return group;
     }
 
+    /**
+     * Returns a list with all the groups' names
+     * @return a list with all group names
+     */
     public static List<GroupNameRecord> getSavedGroupNames() {
-
         return GroupNameRecord.listAll(GroupNameRecord.class);
-
     }
 
-    public static FairShareGroup loadGroupFromStorage(String groupId) {
-
-        List<FairShareGroup> groups = FairShareGroup.find(FairShareGroup.class, "cloud_group_key = ?", groupId);
+    /**
+     * Loads an existing group from storage
+     * @param cloudGroupKey the group id
+     * @return a Group object
+     */
+    public static FairShareGroup loadGroupFromStorage(String cloudGroupKey) {
+        List<FairShareGroup> groups = FairShareGroup.find(FairShareGroup.class, "cloud_group_key = ?", cloudGroupKey);
         FairShareGroup group = groups.get(0);
         List<User> users = User.find(User.class, "belonging_group_id = ?", group.getCloudGroupKey());
         group.setUsers(users);
-        GroupLog groupLog = GroupLog.find(GroupLog.class, "group_log_id = ?", group.groupLogId).get(0);
-        groupLog.init();
-        group.setGroupLog(groupLog);
+        List<Action> actions = Action.find(Action.class, "group_log_id = ?", group.getCloudGroupKey());
+        for(Action action: actions){
+            action.init();
+        }
+        group.actions = actions;
+
         return group;
     }
 
+    public Hashtable<String, Action> getActionsIdTable() {
+        Hashtable<String, Action> table = new Hashtable<>();
+        for (Action action : actions) {
+            table.put(action.getActionId(), action);
+        }
+        return table;
+    }
+
+    public void addAction(Context context, Action action) {
+        action.setGroupLogId(cloudGroupKey);
+        this.actions.add(action);
+        action.save();
+        save();
+        sendActionToCloud(action);
+
+    }
+
+    private void reportActionViaPush(Action action){
+        ParsePush push = new ParsePush();
+        push.setChannel(cloudGroupKey);
+        JSONObject jsonToPush=new JSONObject();
+        try {
+            jsonToPush.put("alertType", "ACTION_CHANGE");
+            jsonToPush.put("creatorId", installationId);
+            jsonToPush.put("groupName", groupName);
+            jsonToPush.put("groupId", cloudGroupKey);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        for(Operation operation: action.getOperations()){
+            try {
+                jsonToPush.put(operation.getUserId(), true);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        push.setMessage(jsonToPush.toString());
+        push.sendInBackground();
+    }
+
+
+    public void makeActionUneditable(Context context, Action action){
+        action.makeUneditable();
+        sendUnEditableCommandToCloud(context, action);
+    }
+
+    private void sendUnEditableCommandToCloud(Context context, final Action action) {
+        ParseObject parseGroupLog = new ParseObject(cloudGroupKey);
+        parseGroupLog.put("action", "UNEDITED_ACTION");
+        parseGroupLog.put("actionId", action.getActionId());
+
+        SharedPreferences settings = context.getSharedPreferences("MAIN_PREFERENCES", 0);
+        final String creatorId= settings.getString("id", "");
+        parseGroupLog.put("creatorId", creatorId);
+
+        parseGroupLog.saveEventually(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    reportActionViaPush(action);
+                }
+            }
+        });
+
+
+    }
+
+    private void sendActionToCloud(final Action action) {
+        ParseObject parseGroupLog = new ParseObject(cloudGroupKey);
+        parseGroupLog.put("action", "NEW_ACTION");
+        parseGroupLog.put("jsonAction", action.toJSON());
+        parseGroupLog.put("actionId", action.getActionId());
+        parseGroupLog.put("creatorId", action.getCreatorId());
+        parseGroupLog.saveEventually(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    reportActionViaPush(action);
+                }
+            }
+        });
+    }
+
+
+    /**
+     * Join to an existing group with key
+     * @param context application context
+     * @param name group's name
+     * @param cloudGroupKey group's key
+     */
     public static void joinGroupWithKey(Context context, String name, String cloudGroupKey) {
         //check that group doesn't already exdist:
         for (GroupNameRecord groupNameRecord : getSavedGroupNames()){
@@ -102,29 +202,30 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
             }
         }
 
-        GroupLog groupLog = new GroupLog(cloudGroupKey);
-        groupLog.save();
+
         GroupNameRecord groupNameRecord = new GroupNameRecord(name, cloudGroupKey);
         groupNameRecord.save();
         ParsePush.subscribeInBackground(cloudGroupKey);//subscribe to the group chanel
         SharedPreferences settings = context.getSharedPreferences("MAIN_PREFERENCES", 0);
         String installationId = settings.getString("id", "");
-        FairShareGroup group = new FairShareGroup(name,cloudGroupKey,groupLog,installationId);
+        FairShareGroup group = new FairShareGroup(name,cloudGroupKey,installationId);
         group.save();
         group.sync(context, true);
 
     }
 
+    /**
+     * Returns group's installationId
+     * @return group's installationId
+     */
     public String getInstallationId() {
         return installationId;
     }
 
-    public void setInstallationId(String installationId) {
-        this.installationId = installationId;
-    }
 
-    public void setParentActivityMessageHandler(Handler parentActivityMessageHandler) {
-        this.parentActivityMessageHandler = parentActivityMessageHandler;
+
+    public void setGroupActivity(GroupActivity parentActivity) {
+        this.groupActivity = parentActivity;
     }
 
     public void removeUserFromCloud(final Context context, User user){
@@ -190,7 +291,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
                         lastUserSyncCopy = Math.max(parseObject.getCreatedAt().getTime(), lastUserSyncCopy);
 
                         if (action.equals("UNEDITED_ACTION")) {
-                            Hashtable<String, Action> actionsIdTable = getGroupLog().getActionsIdTable();
+                            Hashtable<String, Action> actionsIdTable = getActionsIdTable();
                             String actionId = parseObject.getString("actionId");
                             if (actionsIdTable.containsKey(actionId)) {
                                 actionsIdTable.get(actionId).makeUneditable();
@@ -200,15 +301,15 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
 
 
                         if (action.equals("NEW_ACTION")) {
-                            Hashtable<String, Action> actionsIdTable = getGroupLog().getActionsIdTable();
+                            Hashtable<String, Action> actionsIdTable = getActionsIdTable();
                             JSONObject jsonObject = parseObject.getJSONObject("jsonAction");
                             String actionId = parseObject.getString("actionId");
                             if (jsonObject != null && !actionsIdTable.containsKey(actionId)) { //check if we don't already have this action
                                 Action newAction = new Action(jsonObject);
                                 actionsIdTable.put(actionId, newAction);
-                                newAction.setGroupLogId(groupLogId);
+                                newAction.setGroupLogId(cloudGroupKey);
 //                                actionsToSave.add((newAction));
-                                getGroupLog().actions.add(newAction);
+                                actions.add(newAction);
                                 consumeAction(newAction);
                                 newAction.save();
                             }
@@ -252,8 +353,8 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
                                         user.delete();
                                     }
 
-                                    if(Math.abs(user.getBalance())!=0 ){
-                                        user = new User(user.getName(),user.getUserId(), user.getBalance());
+                                    if (Math.abs(user.getBalance()) != 0) {
+                                        user = new User(user.getName(), user.getUserId(), user.getBalance());
                                         addGhostUser(user);
                                     }
 
@@ -275,10 +376,8 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
                     }
 
 
-                    if (dirty && parentActivityMessageHandler != null) {
-                        Message msg = Message.obtain();
-                        msg.what = GroupActivity.NOTIFY_USER_CHANGE;
-                        parentActivityMessageHandler.sendMessage(msg);
+                    if (dirty && groupActivity != null) {
+                        groupActivity.messageHandler(GroupActivity.NOTIFY_USER_CHANGE,null);
 
 
                     }
@@ -306,16 +405,6 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
     }
 
 
-
-
-    public GroupLog getGroupLog() {
-        return groupLog;
-    }
-
-    public void setGroupLog(GroupLog groupLog) {
-        this.groupLog = groupLog;
-        groupLog.setParentGroup(this);
-    }
 
     public List<User> getUsers() {
         return this.users;
@@ -380,12 +469,8 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
                 user.addToBalance(operation.getPaid() - operation.getShare());//todo: check!!
                 if(!action.getCreatorId().equals(this.installationId) && notifiedTable.containsKey(user.getUserId())){
                     Alert.AlertObject newAlert = new Alert.AlertObject(action.getDescription(),operation.getPaid()-operation.getShare(),user.getName());
-                    if (parentActivityMessageHandler != null) {
-                    Message msg;
-                    msg = Message.obtain();
-                    msg.obj=newAlert;
-                    msg.what = GroupActivity.BALANCE_CHANGED;
-                        parentActivityMessageHandler.sendMessage(msg);
+                    if (groupActivity != null) {
+                        groupActivity.messageHandler(GroupActivity.BALANCE_CHANGED,newAlert);
                     }
                 }
 
@@ -393,10 +478,10 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
 
         }
         //report user changed to notify the adapter:
-        if (parentActivityMessageHandler != null) {
+        if (groupActivity != null) {
             Message msg=Message.obtain();
             msg.what=GroupActivity.NOTIFY_USER_CHANGE;
-            parentActivityMessageHandler.sendMessage(msg);
+            groupActivity.messageHandler(GroupActivity.NOTIFY_USER_CHANGE, null);
         }
 
     }
@@ -408,7 +493,9 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         for(User user: users){
             user.delete();
         }
-        groupLog.delete();
+        for(Action action : actions){
+            action.delete();
+        }
 
     }
 

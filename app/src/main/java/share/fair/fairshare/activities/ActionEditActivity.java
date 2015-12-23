@@ -51,7 +51,7 @@ public class ActionEditActivity extends Activity {
         group  = FairShareGroup.loadGroupFromStorage(groupId);
         //todo: put the contents of the operations in the boxes
 
-        final Action action = group.getGroupLog().actions.get(actionIndex);
+        final Action action = group.actions.get(actionIndex);
         final ArrayList<Operation> operationList = (ArrayList<Operation>) action.getOperations();
         String actionDescription = action.getDescription();
         String actionCreatedBy = action.getCreatorName();
@@ -80,7 +80,7 @@ public class ActionEditActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //todo: check if change is needed
-                group.getGroupLog().makeActionUneditable(getApplicationContext(),action);
+                group.makeActionUneditable(getApplicationContext(),action);
                 action.save();
                 //1. create opposite action:
                 ArrayList<Operation> oppositeOperationList = new ArrayList<Operation>();
@@ -94,15 +94,15 @@ public class ActionEditActivity extends Activity {
                 }
 
                 Action oppositeAction = new Action(creatorName, creatorId, action.getDescription() + " (CANCELED)");
-                group.getGroupLog().makeActionUneditable(getApplicationContext(), oppositeAction);
+                group.makeActionUneditable(getApplicationContext(), oppositeAction);
                 oppositeAction.save();
-                oppositeAction.setGroupLogId(group.getGroupLog().getGroupLogId());
+                oppositeAction.setGroupLogId(group.getCloudGroupKey());
                 oppositeAction.operations = oppositeOperationList;
                 oppositeAction.setTimeStamp(action.getTimeStamp());
 
 
                 group.consumeAction(oppositeAction);
-                group.getGroupLog().addAction(getApplicationContext(), oppositeAction);
+                group.addAction(getApplicationContext(), oppositeAction);
 
                 //2. create the new action
 
@@ -111,7 +111,7 @@ public class ActionEditActivity extends Activity {
                     //todo: problem
                 }
                 group.consumeAction(editAction);
-                group.getGroupLog().addAction(getApplicationContext(), editAction);
+                group.addAction(getApplicationContext(), editAction);
                 openActionActivity();
 
             }
@@ -138,7 +138,7 @@ public class ActionEditActivity extends Activity {
         deleteAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 group.getGroupLog().makeActionUneditable(getApplicationContext(), action);
+                 group.makeActionUneditable(getApplicationContext(), action);
                 action.save();
                 //1. create opposite action:
                 ArrayList<Operation> oppositeOperationList = new ArrayList<Operation>();
@@ -151,12 +151,12 @@ public class ActionEditActivity extends Activity {
                 }
                 Action oppositeAction = new Action(creatorName, creatorId, action.getDescription() + " (CANCELED)");
                 oppositeAction.makeUneditable();
-                group.getGroupLog().makeActionUneditable(getApplicationContext(), oppositeAction);
-                oppositeAction.setGroupLogId(group.getGroupLog().getGroupLogId());
+                group.makeActionUneditable(getApplicationContext(), oppositeAction);
+                oppositeAction.setGroupLogId(group.getCloudGroupKey());
                 oppositeAction.operations = oppositeOperationList;
                 oppositeAction.setTimeStamp(action.getTimeStamp());
                 group.consumeAction(oppositeAction);
-                group.getGroupLog().addAction(getApplicationContext(), oppositeAction);
+                group.addAction(getApplicationContext(), oppositeAction);
                 Toast.makeText(getApplicationContext(), "the action: " + action.getDescription() + "was successfully deleted.", Toast.LENGTH_LONG).show();
                 openActionActivity();
             }

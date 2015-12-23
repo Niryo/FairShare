@@ -58,9 +58,9 @@ public class ActionsActivity extends Activity {
         group= FairShareGroup.loadGroupFromStorage(groupId);
 
 
-        for (int i = group.getGroupLog().actions.size()-1; i >= 0; i--) {
+        for (int i = group.actions.size()-1; i >= 0; i--) {
             View actionRow= vi.inflate(R.layout.action_row, null);
-            Action action =group.getGroupLog().actions.get(i);
+            Action action =group.actions.get(i);
             if(action.isEditable()){
                 boolean isActionLegal= action.isLegal(group.getUsers());
                 if(!isActionLegal){

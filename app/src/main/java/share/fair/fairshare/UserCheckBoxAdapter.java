@@ -1,5 +1,6 @@
 package share.fair.fairshare;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -32,14 +33,14 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
 
     ArrayList<User> checkedUsers;
     private List<User> userList;
-    private Handler parentActivityMessageHandler;
+    private GroupActivity groupActivity;
 
-    public UserCheckBoxAdapter(Context context, int textViewResourceId,
-                               List<User> userList, Handler parentActivityMessageHandler) {
+    public UserCheckBoxAdapter(Context context,GroupActivity activity, int textViewResourceId,
+                               List<User> userList) {
         super(context, textViewResourceId, userList);
         this.userList = userList;
-        this.parentActivityMessageHandler = parentActivityMessageHandler;
         checkedUsers = new ArrayList<User>();
+        this.groupActivity= activity;
     }
 
     @Override
@@ -59,16 +60,12 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
                 if (cb.isChecked()) {
                     checkedUsers.add(userList.get(position));
                     if (checkedUsers.size() > 0) {
-                        Message msg = Message.obtain();
-                        msg.what = GroupActivity.CHECKED_AVAILABLE;
-                        parentActivityMessageHandler.sendMessage(msg);
+                        groupActivity.messageHandler(GroupActivity.CHECKED_AVAILABLE,null);
                     }
                 } else {
                     checkedUsers.remove(userList.get(position));
                     if (checkedUsers.size() == 0) {
-                        Message msg = Message.obtain();
-                        msg.what = GroupActivity.CHECKED_UNAVAILABLE;
-                        parentActivityMessageHandler.sendMessage(msg);
+                        groupActivity.messageHandler(GroupActivity.CHECKED_UNAVAILABLE, null);
                     }
                 }
             }
