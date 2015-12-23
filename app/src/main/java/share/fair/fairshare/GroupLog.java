@@ -5,20 +5,18 @@ import android.content.SharedPreferences;
 
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
-import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -31,25 +29,33 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
     
 
     private String cloudLogKey;
-    private Long lastActionTimestampInMilisec;
+
+    public String getGroupLogId() {
+        return groupLogId;
+    }
+
+    private String groupLogId;
+
+
+    public void setParentGroup(FairShareGroup parentGroup) {
+        this.parentGroup = parentGroup;
+    }
+
     @Ignore
     private FairShareGroup parentGroup;
 
     public GroupLog() {
     }
 
-    public GroupLog(FairShareGroup parentGroup, String cloudLogKey) {
-        this.parentGroup = parentGroup;
+    public GroupLog(String cloudLogKey) {
         this.cloudLogKey = cloudLogKey;
-        this.lastActionTimestampInMilisec = Long.valueOf(0);
+        this.groupLogId = new BigInteger(130, new SecureRandom()).toString(32);
         actions = new ArrayList<>();
     }
 
 
-    public void init(FairShareGroup parentGroup) {
-        if(getId()==null){save();}
-        this.parentGroup = parentGroup;
-        actions = Action.find(Action.class, "group_log_id = ?", Long.toString(getId()));
+    public  void init() {
+        actions = Action.find(Action.class, "group_log_id = ?", groupLogId);
         for(Action action: actions){
             action.init();
         }
@@ -66,53 +72,9 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
         return table;
     }
 
-//    public void syncActions(final Context context, boolean firstTime ) {
-//                ParseQuery<ParseObject> query = ParseQuery.getQuery(cloudLogKey);
-//                SharedPreferences settings = context.getSharedPreferences("MAIN_PREFERENCES", 0);
-//                String creatorId = settings.getString("id", "");
-//        if(!firstTime) {
-//            query.whereNotEqualTo("creatorId", creatorId); //we don't want to fetch our own updates
-//        }
-//                query.whereGreaterThan("createdAt", new Date(lastActionTimestampInMilisec));
-//                query.findInBackground(new FindCallback<ParseObject>() {
-//                    @Override
-//                    public void done(List<ParseObject> list, ParseException e) {
-//                        if (e == null && list != null) {
-//                            boolean isNeedToSaveGroup = false;
-//                            Hashtable<String, Boolean> actionsIdTable = getActionsIdTable();
-//                            for (ParseObject parseObject : list) {
-//                                JSONObject jsonObject = parseObject.getJSONObject("jsonAction");
-//                                String actionId = parseObject.getString("actionId");
-//                                if (jsonObject != null && !actionsIdTable.containsKey(actionId)) { //check if we don't already have this action
-//                                    Action newAction = new Action(jsonObject);
-//                                    actionsIdTable.put(actionId, true);
-//                                    if (getId() == null) {
-//                                        save();
-//                                    }
-//                                    newAction.setGroupLogId(getId());
-//                                    newAction.save();
-//                                    actions.add(newAction);
-//                                    lastActionTimestampInMilisec = Math.max(parseObject.getCreatedAt().getTime(), lastActionTimestampInMilisec);
-//                                    isNeedToSaveGroup = true;
-//                                    parentGroup.consumeAction(newAction);
-//                                }
-//                            }
-//                            if (isNeedToSaveGroup) {
-//                                save();
-//                            }
-//                        }
-//                    }
-//                });
-//
-//
-//
-//
-//    }
+
     public void addAction(Context context, Action action) {
-        if(getId()==null) {
-        save();
-        }
-        action.setGroupLogId(getId());
+        action.setGroupLogId(groupLogId);
         this.actions.add(action);
         action.save();
         save();
@@ -126,8 +88,8 @@ public class GroupLog extends SugarRecord<GroupLog> implements Serializable {
             JSONObject jsonToPush=new JSONObject();
         try {
             jsonToPush.put("alertType", "ACTION_CHANGE");
-            jsonToPush.put("creatorId", parentGroup.getOwnerId());
-            jsonToPush.put("groupName", parentGroup.getName());
+            jsonToPush.put("creatorId", parentGroup.getInstallationId());
+            jsonToPush.put("groupName", parentGroup.getGroupName());
             jsonToPush.put("groupId", parentGroup.getCloudGroupKey());
         } catch (JSONException e) {
             e.printStackTrace();

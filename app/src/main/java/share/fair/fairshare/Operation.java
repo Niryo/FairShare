@@ -16,7 +16,7 @@ public class Operation extends SugarRecord<Operation> implements Serializable {
     public double paid;
     public double share;
     boolean hasUserAddedShare;
-    Long belongingActionId;
+    String belongingActionId;
     public Operation() {
     }
 
@@ -37,7 +37,7 @@ public class Operation extends SugarRecord<Operation> implements Serializable {
             this.userId = jsonOperation.getString("userId");
             this.paid = jsonOperation.getDouble("paid");
             this.share = jsonOperation.getDouble("share");
-            this.belongingActionId = jsonOperation.getLong("belongingActionId");
+            this.belongingActionId = jsonOperation.getString("belongingActionId");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -47,7 +47,7 @@ public class Operation extends SugarRecord<Operation> implements Serializable {
         return userId;
     }
 
-    public void setBelongingActionId(Long belongingActionId) {
+    public void setBelongingActionId(String belongingActionId) {
         this.belongingActionId = belongingActionId;
     }
 

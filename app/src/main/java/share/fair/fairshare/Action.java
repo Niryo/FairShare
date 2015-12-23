@@ -19,7 +19,7 @@ import java.util.List;
 public class Action extends SugarRecord<Action> implements Serializable {
     @Ignore
     public List<Operation> operations = new ArrayList<Operation>();
-    private Long groupLogId;
+    private String groupLogId;
     private long timeStamp;
     private String description;
     private String creatorName;
@@ -86,13 +86,12 @@ public class Action extends SugarRecord<Action> implements Serializable {
         return creatorName;
     }
 
-    public void setGroupLogId(Long groupLogId) {
+    public void setGroupLogId(String groupLogId) {
         this.groupLogId = groupLogId;
     }
 
     public void init() {
-        if(getId()==null){save();};
-        operations = Operation.find(Operation.class, "belonging_action_id = ?", Long.toString(getId()));
+        operations = Operation.find(Operation.class, "belonging_action_id = ?", actionId);
 
 
     }
@@ -150,7 +149,7 @@ public class Action extends SugarRecord<Action> implements Serializable {
         super.save();
 
         for (Operation operation : operations) {
-            operation.setBelongingActionId(getId());
+            operation.setBelongingActionId(actionId);
             operation.save();
         }
     }

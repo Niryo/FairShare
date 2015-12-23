@@ -96,7 +96,7 @@ public class GroupActivity extends FragmentActivity {
         this.group = FairShareGroup.loadGroupFromStorage(groupId);
 
         groupNameTextView = (TextView) findViewById(R.id.tv_grp_name);
-        groupNameTextView.setText(group.getName());
+        groupNameTextView.setText(group.getGroupName());
         this.users = new ArrayList<>(group.getUsers());
         messageHandler = new Handler() {
             @Override
@@ -242,7 +242,7 @@ public class GroupActivity extends FragmentActivity {
         uriBuilder.scheme("http");
         uriBuilder.authority("fair.share.fairshare");
         uriBuilder.appendPath("");
-        uriBuilder.appendQueryParameter("groupName", group.getName());
+        uriBuilder.appendQueryParameter("groupName", group.getGroupName());
         uriBuilder.appendQueryParameter("groupCloudKey", group.getCloudGroupKey());
 
 
@@ -455,7 +455,7 @@ public class GroupActivity extends FragmentActivity {
     public void showGroupKeyDialog() {
         GroupKeyDialog dialog = new GroupKeyDialog();
         dialog.setGroupKey(group.getCloudGroupKey());
-        dialog.setGroupName(group.getName());
+        dialog.setGroupName(group.getGroupName());
         dialog.show(getSupportFragmentManager(), "group_key");
     }
 
@@ -522,7 +522,7 @@ public class GroupActivity extends FragmentActivity {
                             showcaseView.setTarget(Target.NONE);
                             showcaseView.setContentTitle("Few more things..");
                             showcaseView.setContentText("User options menu: click and hold a persons name to show the user menu.\n" +
-                                    "Ghosts: in rare occasions there can be out-of-sync conflicts. For example, if someone remove a person from the list and at the same time you include this user in a bill. " +
+                                    "Ghosts: in rare occasions there can be an out-of-sync conflicts. For example, if someone remove a person from the list and at the same time you include this user in a bill. " +
                                     "In that case, the user will reappear as a ghost, indicating for you that there has been a conflict, and you will need to cancel that bill and re-delete the user.");
                         }
 

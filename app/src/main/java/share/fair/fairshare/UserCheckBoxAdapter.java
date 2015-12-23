@@ -78,16 +78,16 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
 
         if(userList.get(position).isNotified()){
             cbUserRow.setTextColor(Color.parseColor("#38B074"));
+        }  else{
+            cbUserRow.setTextColor(Color.BLACK);
         }
 
         if(userList.get(position).isGhost()){
             cbUserRow.setTextColor(Color.RED);
         }
 
-        else{
-            cbUserRow.setTextColor(Color.BLACK);
-        }
-//            String userN = (userListView.get(position)).getName();
+
+//            String userN = (userListView.get(position)).getGroupName();
 //            holder.hUserName = userN;
 
 //            userBalMap.get(userN).toString();

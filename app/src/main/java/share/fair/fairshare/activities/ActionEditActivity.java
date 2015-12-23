@@ -96,7 +96,7 @@ public class ActionEditActivity extends Activity {
                 Action oppositeAction = new Action(creatorName, creatorId, action.getDescription() + " (CANCELED)");
                 group.getGroupLog().makeActionUneditable(getApplicationContext(), oppositeAction);
                 oppositeAction.save();
-                oppositeAction.setGroupLogId(group.getGroupLog().getId());
+                oppositeAction.setGroupLogId(group.getGroupLog().getGroupLogId());
                 oppositeAction.operations = oppositeOperationList;
                 oppositeAction.setTimeStamp(action.getTimeStamp());
 
@@ -152,7 +152,7 @@ public class ActionEditActivity extends Activity {
                 Action oppositeAction = new Action(creatorName, creatorId, action.getDescription() + " (CANCELED)");
                 oppositeAction.makeUneditable();
                 group.getGroupLog().makeActionUneditable(getApplicationContext(), oppositeAction);
-                oppositeAction.setGroupLogId(group.getGroupLog().getId());
+                oppositeAction.setGroupLogId(group.getGroupLog().getGroupLogId());
                 oppositeAction.operations = oppositeOperationList;
                 oppositeAction.setTimeStamp(action.getTimeStamp());
                 group.consumeAction(oppositeAction);
