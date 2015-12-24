@@ -157,7 +157,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         String installationId =  new BigInteger(130, new SecureRandom()).toString(32);
         FairShareGroup group = new FairShareGroup(name,cloudGroupKey,installationId);
         group.save();
-        group.sync(context, true);
+        group.sync(context);
 
     }
 
@@ -219,9 +219,9 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
     /**
      * Sync new actions and command from the cloud
      * @param context application context
-     * @param firstTime if this is the first sync, put true in this value.
+
      */
-    public void sync(final Context context, final boolean firstTime) {
+    public void sync(final Context context) {
         //make the sync thread safe:
         if(syncLock){
            return;
@@ -229,62 +229,61 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         syncLock=true;
         ParseQuery<ParseObject> query = ParseQuery.getQuery(this.cloudGroupKey);
         final Date date = new Date(lastSyncTime);
-        //if this is the first time we want to fetch even old actions that we made in the past.
-        //this is the case when we remove a group and re join to it.
-        if(!firstTime){
-        query.whereNotEqualTo("creatorId", installationId);
-        }
+        query.whereNotEqualTo("creatorId", installationId); //do not fetch your own changes
         query.whereGreaterThan("createdAt", date);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, ParseException e) {
                 if (e == null && list != null && list.size()>0) {
+                    //Ignore list: if we get the actions out of order and we see a remove command of a user
+                    //that hasn't been added yet, we put him in the ignore list;
                     ArrayList<String> userIdToIgnore = new ArrayList<>();
-                    List<User> userToSave = new ArrayList<>();
-                    long lastUserSyncCopy = lastSyncTime;
 
-                    boolean dirty = false;
+                    List<User> userToSave = new ArrayList<>();
+                    long lastUserSyncCopy = lastSyncTime; //we will save the changes to the real value only at the end.
+                    boolean dirty = false; //will tell us if we need to save the group.
+
                     for (ParseObject parseObject : list) {
                         final ArrayList<User> usersCopy = new ArrayList<>(users);
                         String action = parseObject.getString("action");
                         lastUserSyncCopy = Math.max(parseObject.getCreatedAt().getTime(), lastUserSyncCopy);
-
+                        //case we need to make an action unediatable:
                         if (action.equals("UNEDITED_ACTION")) {
                             Hashtable<String, Action> actionsIdTable = getActionsIdTable();
                             String actionId = parseObject.getString("actionId");
                             if (actionsIdTable.containsKey(actionId)) {
                                 actionsIdTable.get(actionId).makeUneditable(context, false);
                             }
-
                         }
 
-
+                        //case we need to add new action:
                         if (action.equals("NEW_ACTION")) {
-                            Hashtable<String, Action> actionsIdTable = getActionsIdTable();
+                            Hashtable<String, Action> actionsIdTable = getActionsIdTable(); //we will use this table to find specific actionIds
                             JSONObject jsonObject = parseObject.getJSONObject("jsonAction");
                             String actionId = parseObject.getString("actionId");
                             if (jsonObject != null && !actionsIdTable.containsKey(actionId)) { //check if we don't already have this action
                                 Action newAction = new Action(jsonObject);
                                 actionsIdTable.put(actionId, newAction);
                                 newAction.setGroup(cloudGroupKey,groupName,installationId);
-//                                actionsToSave.add((newAction));
                                 actions.add(newAction);
                                 consumeAction(newAction);
                                 newAction.save();
                             }
                         }
 
-
+                       //case we need to add user:
                         if (action.equals("USER_ADDED")) {
                             String userId = parseObject.getString("userId");
+                            //check that user is not already exist:
                             boolean isUserExist = false;
                             for (User user : usersCopy) {
                                 if (user.getUserId().equals(userId)) {
                                     isUserExist = true;
-                                    break; //id user already exist, skip it.
+                                    break;
                                 }
                             }
                             if (!isUserExist) {
+                                //check if we need to ignore this user because of previous remove-command:
                                 if (userIdToIgnore.contains(userId)) {
                                     Toast.makeText(context, "DEBUG: userIdToIgnore was activated!", Toast.LENGTH_LONG).show();
                                     continue;
@@ -294,15 +293,17 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
                                 User newUser = new User(userName, 0);
                                 newUser.setUserId(userId);
                                 newUser.setBelongingGroupId(getCloudGroupKey());
+                                //we add the user to the save list:
                                 userToSave.add(newUser);
                                 users.add(newUser);
                                 dirty = true;
                             }
                         }
-
+                        //case we need to remove user:
                         if (action.equals("USER_REMOVED")) {
                             String userId = parseObject.getString("userId");
                             boolean success = false;
+                            //we search for the user in the user list:
                             for (User user : usersCopy) {
                                 if (user.getUserId().equals(userId)) {
                                     users.remove(user);
@@ -311,7 +312,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
                                     } else {
                                         user.delete();
                                     }
-
+                                    //if we try to remove a user with non-zero balance, he will come back as a ghost:
                                     if (Math.abs(user.getBalance()) != 0) {
                                         user = new User(user.getName(), user.getUserId(), user.getBalance());
                                         addGhostUser(user);
@@ -322,25 +323,23 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
                                     break;
                                 }
                             }
+                            //if we weren't able to remove the user, we add him to the ignore list.
+                            //(we probably got the remove command before the add command).
                             if (!success) {
                                 userIdToIgnore.add(userId);
                             }
                         }
-
-
                     }
-
+                    //save the users:
                     for (User user : userToSave) {
                         user.save();
                     }
 
-
+                    //notify groupActivity to update the user list:
                     if (dirty && groupActivity != null) {
                         groupActivity.messageHandler(GroupActivity.NOTIFY_USER_CHANGE, null);
-
-
                     }
-
+                    //save lasySyncTime:
                     lastSyncTime = lastUserSyncCopy; //only after saving the users we update lastSync
                     save();
 
@@ -350,6 +349,9 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         });
     }
 
+    /**
+     * Report changes in the user list via push notification
+     */
     private void reportUserChangeViaPush(){
         ParsePush push = new ParsePush();
         push.setChannel(getCloudGroupKey());
@@ -364,27 +366,47 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
     }
 
 
-
+    /**
+     * Get list of all the users in the group
+     * @return a list with all the users in the group
+     */
     public List<User> getUsers() {
         return this.users;
     }
 
+    /**
+     * Set users
+     * @param users a list of users
+     */
     public void setUsers(List<User> users) {
         this.users = users;
     }
 
-
+    /**
+     * Get group's name
+     * @return group's name
+     */
     public String getGroupName() {
         return this.groupName;
     }
 
+    /**
+     * Add a ghost user to the group
+     * @param user user to add
+     */
     public void addGhostUser(User user){
         user.setBelongingGroupId(getCloudGroupKey());
         user.save();
         this.users.add(user);
     }
 
+    /**
+     * Add new user to the group
+     * @param context context
+     * @param user user user to add
+     */
     public void addUser(Context context, User user) {
+        //generate unique id:
         user.setUserId(new BigInteger(130, new SecureRandom()).toString(32).substring(0, 6));
         user.setBelongingGroupId(getCloudGroupKey());
         user.save();
@@ -393,23 +415,41 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
 
     }
 
+    /**
+     * Remove user from the group
+     * @param context context
+     * @param user user to remove
+     */
     public void removeUser(Context context, User user){
         this.users.remove(user);
         sendRemoveUserCommand(user);
         user.delete();
     }
 
+    /**
+     * Return the group's cloud key
+     * @return group's cloud key
+     */
     public String getCloudGroupKey() {
         return this.cloudGroupKey;
     }
 
-
+    /**
+     * Consumes an action.
+     * This method is used for aplying all the operations of the action on the user's balance.
+     *
+     * @param action the action to consume
+     */
     public void consumeAction(Action action) {
+        //We start by getting a list of notified id's, so if we make a change to a notified id we
+        //send a notice to the activityGroup to activate the alert icon:
         List<Alert.NotifiedId> notifiedIds =  Alert.NotifiedId.listAll(Alert.NotifiedId.class);
         Hashtable<String, Boolean> notifiedTable = new Hashtable<>();
         for(Alert.NotifiedId notifiedId: notifiedIds){
             notifiedTable.put(notifiedId.userId,true);
         }
+
+        //we build a map between userId string and a User object
         Hashtable<String, User> usersTable = new Hashtable<>();
         for (User user : users) {
             usersTable.put(user.getUserId(), user);
@@ -418,11 +458,12 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         for (Operation operation : action.getOperations()) {
             User user = usersTable.get(operation.userId);
 
-            if (user == null) {
+            if (user == null) { //if user not exist, he will come back as a ghost:
                 user = new User(operation.username ,operation.getUserId(),0);
                 addGhostUser(user);
             }
-                user.addToBalance(operation.getPaid() - operation.getShare());//todo: check!!
+                user.addToBalance(operation.getPaid() - operation.getShare());
+            //if we didn't create this action (we don't want to be notified on ouw own actions) and the ID was registered to be notified, we create an alert object:
                 if(!action.getCreatorId().equals(this.installationId) && notifiedTable.containsKey(user.getUserId())){
                     Alert.AlertObject newAlert = new Alert.AlertObject(action.getDescription(),operation.getPaid()-operation.getShare(),user.getName());
                     if (groupActivity != null) {
@@ -435,14 +476,15 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
         }
         //report user changed to notify the adapter:
         if (groupActivity != null) {
-            Message msg=Message.obtain();
-            msg.what=GroupActivity.NOTIFY_USER_CHANGE;
             groupActivity.messageHandler(GroupActivity.NOTIFY_USER_CHANGE, null);
         }
 
     }
 
 
+    /**
+     * Deletes the group
+     */
     @Override
     public void delete() {
         super.delete();
@@ -455,6 +497,9 @@ public class FairShareGroup extends SugarRecord<FairShareGroup>  {
 
     }
 
+    /**
+     * A class that represents a mapping between group name and a group ID
+     */
     public static class GroupNameRecord extends SugarRecord<GroupNameRecord>  implements Serializable{
         private String groupName;
         private String groupId;

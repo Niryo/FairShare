@@ -533,7 +533,7 @@ public class GroupActivity extends FragmentActivity {
         showcaseView.setButtonText("Next");
     }
     public void sync() {
-        this.group.sync(getApplicationContext(), false);
+        this.group.sync(getApplicationContext());
     }
 
 
