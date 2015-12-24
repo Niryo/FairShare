@@ -15,7 +15,7 @@
         android:focusableInTouchMode="false"
         android:longClickable="true"
         android:textColor="#000000"
-        style="@android:style/Widget.DeviceDefault.Light.CompoundButton.CheckBox"
+        style="@android:style/Widget.Holo.CompoundButton.CheckBox"
         android:buttonTint="#000000" />
 
 

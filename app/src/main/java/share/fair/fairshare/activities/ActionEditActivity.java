@@ -37,7 +37,6 @@ public class ActionEditActivity extends Activity {
         setContentView(R.layout.activity_action_edit);
         SharedPreferences settings = getApplicationContext().getSharedPreferences("MAIN_PREFERENCES", 0);
         final String creatorName = settings.getString("name", "");
-        final String creatorId= settings.getString("id", "");
 
         actionIndex = (int) getIntent().getIntExtra("actionIndex", -1);
         if (actionIndex < 0) {
@@ -80,7 +79,7 @@ public class ActionEditActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //todo: check if change is needed
-                group.makeActionUneditable(getApplicationContext(),action);
+                action.makeUneditable(getApplicationContext() ,true);
                 action.save();
                 //1. create opposite action:
                 ArrayList<Operation> oppositeOperationList = new ArrayList<Operation>();
@@ -93,25 +92,27 @@ public class ActionEditActivity extends Activity {
                     oppositeOperationList.add(new Operation(oppositeId, oppositeUsername, oppositePaid, oppositeShare, oper.getHasShare()));
                 }
 
-                Action oppositeAction = new Action(creatorName, creatorId, action.getDescription() + " (CANCELED)");
-                group.makeActionUneditable(getApplicationContext(), oppositeAction);
+                Action oppositeAction = new Action(creatorName, group.getInstallationId(), action.getDescription() + " (CANCELED)");
+                oppositeAction.setGroup(group.getCloudGroupKey(),group.getGroupName(), group.getInstallationId());
+                oppositeAction.makeUneditable(getApplicationContext() ,false);
                 oppositeAction.save();
-                oppositeAction.setGroupLogId(group.getCloudGroupKey());
+                oppositeAction.setGroup(group.getCloudGroupKey(),group.getGroupName(), group.getInstallationId());
                 oppositeAction.operations = oppositeOperationList;
                 oppositeAction.setTimeStamp(action.getTimeStamp());
 
 
                 group.consumeAction(oppositeAction);
-                group.addAction(getApplicationContext(), oppositeAction);
+                group.addAction(oppositeAction);
 
                 //2. create the new action
 
-                Action editAction = goOutFragment.calculate();
+                Action editAction = goOutFragment.calculate(group.getInstallationId());
                 if (editAction == null) {
                     //todo: problem
                 }
+
                 group.consumeAction(editAction);
-                group.addAction(getApplicationContext(), editAction);
+                group.addAction(editAction);
                 openActionActivity();
 
             }
@@ -138,10 +139,10 @@ public class ActionEditActivity extends Activity {
         deleteAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 group.makeActionUneditable(getApplicationContext(), action);
+                action.makeUneditable(getApplicationContext() , true);
                 action.save();
                 //1. create opposite action:
-                ArrayList<Operation> oppositeOperationList = new ArrayList<Operation>();
+                ArrayList<Operation> oppositeOperationList = new ArrayList<>();
                 for (Operation oper : operationList) {
                     String oppositeId = oper.userId;
                     String oppositeUsername = oper.username;
@@ -149,14 +150,13 @@ public class ActionEditActivity extends Activity {
                     double oppositeShare = -1 * oper.share;
                     oppositeOperationList.add(new Operation(oppositeId, oppositeUsername, oppositePaid, oppositeShare, oper.getHasShare()));
                 }
-                Action oppositeAction = new Action(creatorName, creatorId, action.getDescription() + " (CANCELED)");
-                oppositeAction.makeUneditable();
-                group.makeActionUneditable(getApplicationContext(), oppositeAction);
-                oppositeAction.setGroupLogId(group.getCloudGroupKey());
+                Action oppositeAction = new Action(creatorName, group.getInstallationId(), action.getDescription() + " (CANCELED)");
+                oppositeAction.setGroup(group.getCloudGroupKey(),group.getGroupName(), group.getInstallationId());
+                oppositeAction.makeUneditable(getApplicationContext() , false);
                 oppositeAction.operations = oppositeOperationList;
                 oppositeAction.setTimeStamp(action.getTimeStamp());
                 group.consumeAction(oppositeAction);
-                group.addAction(getApplicationContext(), oppositeAction);
+                group.addAction(oppositeAction);
                 Toast.makeText(getApplicationContext(), "the action: " + action.getDescription() + "was successfully deleted.", Toast.LENGTH_LONG).show();
                 openActionActivity();
             }

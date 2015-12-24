@@ -1,7 +1,14 @@
 package share.fair.fairshare;
 
+import android.content.Context;
+
+
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParsePush;
+import com.parse.SaveCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,8 +26,11 @@ import java.util.List;
 public class Action extends SugarRecord<Action> implements Serializable {
     @Ignore
     public List<Operation> operations = new ArrayList<Operation>();
-    private String groupLogId;
+
     private long timeStamp;
+    private String groupId;
+    private String groupName;
+    private String installationId;
     private String description;
     private String creatorName;
     private String creatorId;
@@ -77,17 +87,81 @@ public class Action extends SugarRecord<Action> implements Serializable {
         return isEditable;
     }
 
-    public void makeUneditable() {
+    public void makeUneditable(Context context, boolean sendToCloud) {
         this.isEditable = false;
+        if(sendToCloud){
+        sendUnEditableCommandToCloud(context);}
         save();
     }
+
+    private void sendUnEditableCommandToCloud(Context context) {
+        ParseObject parseGroupLog = new ParseObject(groupId);
+        parseGroupLog.put("action", "UNEDITED_ACTION");
+        parseGroupLog.put("actionId", getActionId());
+        parseGroupLog.put("creatorId", installationId);
+
+        parseGroupLog.saveEventually(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    reportActionViaPush();
+                }
+            }
+        });
+    }
+
+    /**
+     * Report the other users that an action has been done
+     */
+    private void reportActionViaPush(){
+        ParsePush push = new ParsePush();
+        push.setChannel(groupId);
+        JSONObject jsonToPush=new JSONObject();
+        try {
+            jsonToPush.put("alertType", "ACTION_CHANGE");
+            jsonToPush.put("creatorId", creatorId);
+            jsonToPush.put("groupName", groupName);
+            jsonToPush.put("groupId", groupId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        for(Operation operation: getOperations()){
+            try {
+                jsonToPush.put(operation.getUserId(), true);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        push.setMessage(jsonToPush.toString());
+        push.sendInBackground();
+    }
+
+    public void sendActionToCloud() {
+        ParseObject parseGroupLog = new ParseObject(groupId);
+        parseGroupLog.put("action", "NEW_ACTION");
+        parseGroupLog.put("jsonAction", toJSON());
+        parseGroupLog.put("actionId", getActionId());
+        parseGroupLog.put("creatorId", getCreatorId());
+        parseGroupLog.saveEventually(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    reportActionViaPush();
+                }
+            }
+        });
+    }
+
+
 
     public String getCreatorName() {
         return creatorName;
     }
 
-    public void setGroupLogId(String groupLogId) {
-        this.groupLogId = groupLogId;
+    public void setGroup(String groupId, String groupName, String installationId) {
+        this.groupId = groupId;
+        this.groupName = groupName;
+        this.installationId = installationId;
     }
 
     public void init() {

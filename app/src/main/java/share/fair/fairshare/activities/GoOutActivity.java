@@ -45,7 +45,7 @@ public class GoOutActivity extends Activity {
         });
 
         goOutObjectList = (ArrayList<GoOutFragment.GoOutObject>) getIntent().getSerializableExtra("goOutList");
-
+        final String installationId =   getIntent().getStringExtra("installationId");
         final GoOutFragment goOutFragment= new GoOutFragment();
         goOutFragment.goOutObjectList = goOutObjectList;
         final FragmentManager fm = getFragmentManager();
@@ -58,7 +58,7 @@ public class GoOutActivity extends Activity {
         calculateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Action action =  goOutFragment.calculate();
+                Action action =  goOutFragment.calculate(installationId);
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("action", action);
                 setResult(RESULT_OK, returnIntent);

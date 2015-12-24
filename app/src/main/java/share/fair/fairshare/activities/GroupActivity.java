@@ -156,6 +156,7 @@ public class GroupActivity extends FragmentActivity {
                 }
                 Intent goOut = new Intent(getApplicationContext(), GoOutActivity.class);
                 goOut.putExtra("goOutList", goOutObjectsList);
+                goOut.putExtra("installationId",group.getInstallationId());
                 startActivityForResult(goOut, GO_OUT_REQUEST);
 
             }
@@ -181,6 +182,7 @@ public class GroupActivity extends FragmentActivity {
 
                     Intent goOut = new Intent(getApplicationContext(), GoOutActivity.class);
                     goOut.putExtra("goOutList", checkedUsers);
+                    goOut.putExtra("installationId", group.getInstallationId());
                     startActivityForResult(goOut, GO_OUT_REQUEST);
                 }
 
@@ -277,7 +279,7 @@ public class GroupActivity extends FragmentActivity {
                     Toast.makeText(getApplicationContext(), "Error: sum paid must be greater than sum share.\nPlease try again.", Toast.LENGTH_LONG).show();
                     return;
                 }
-                this.group.addAction(getApplicationContext(), action);//todo: find a way to remove the context
+                this.group.addAction(action);//todo: find a way to remove the context
                 this.group.consumeAction(action);
                 //users = resultList; //todo: problem if checked list was sent
                 userCheckBoxAdapter.notifyDataSetChanged();
@@ -338,7 +340,7 @@ public class GroupActivity extends FragmentActivity {
             Toast.makeText(getApplicationContext(), "Error: can't settle up user's debts", Toast.LENGTH_LONG).show();
             return false;
         }
-        this.group.addAction(getApplicationContext(), action);
+        this.group.addAction(action);
         this.group.consumeAction(action);
         userCheckBoxAdapter.notifyDataSetChanged();
         return true;
@@ -364,7 +366,7 @@ public class GroupActivity extends FragmentActivity {
             Toast.makeText(getApplicationContext(), "Error: sum paid must be greater than sum share.\nPlease try again.", Toast.LENGTH_LONG).show();
             return;
         }
-        this.group.addAction(getApplicationContext(), action);
+        this.group.addAction( action);
         this.group.consumeAction(action);
         userCheckBoxAdapter.notifyDataSetChanged();
 
@@ -435,7 +437,7 @@ public class GroupActivity extends FragmentActivity {
                     Toast.makeText(getApplicationContext(), "Error: can't settle up", Toast.LENGTH_LONG).show();
                     return;
                 }
-                group.addAction(getApplicationContext(), action);
+                group.addAction(action);
                 group.consumeAction(action);
                 userCheckBoxAdapter.notifyDataSetChanged();
 

@@ -92,10 +92,9 @@ public void enableEdit(){
     }
     description.requestFocus();
 }
-    public Action calculate(){
+    public Action calculate(String creatorId){
         SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences("MAIN_PREFERENCES", 0);
         String name = settings.getString("name", "");
-        String id = settings.getString("id", "");
         String descriptionStr = description.getText().toString();
         if(descriptionStr.isEmpty()){
             descriptionStr="...";
@@ -118,11 +117,11 @@ public void enableEdit(){
 
         }
 
-        Action action = createAction(name, id, descriptionStr, goOutObjectList);
+        Action action = createAction(name,creatorId, descriptionStr, goOutObjectList);
         return action;
     }
 
-    public static Action createAction(String creatorName, String creatorId, String description, ArrayList<GoOutObject> goOutObjectList){
+    public static Action createAction(String creatorName,String creatorId, String description, ArrayList<GoOutObject> goOutObjectList){
         double totalPaid = 0.0;
         double totalShare = 0.0;
         String descriptionStr = description;

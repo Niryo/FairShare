@@ -38,7 +38,6 @@ public class SaveNameDialog extends DialogFragment {
                 SharedPreferences.Editor editor = settings.edit();
                 String nameToSave = nameEditText.getText().toString();
                 editor.putString("name", nameToSave);
-                editor.putString("id", new BigInteger(130, new SecureRandom()).toString(32));
                 editor.commit();
                 getDialog().dismiss();
             }

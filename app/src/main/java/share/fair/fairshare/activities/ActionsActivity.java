@@ -64,7 +64,7 @@ public class ActionsActivity extends Activity {
             if(action.isEditable()){
                 boolean isActionLegal= action.isLegal(group.getUsers());
                 if(!isActionLegal){
-                    action.makeUneditable();
+                    action.makeUneditable(getApplicationContext() ,true);
                 }
             }
             TextView time = (TextView) actionRow.findViewById(R.id.action_row_time);
