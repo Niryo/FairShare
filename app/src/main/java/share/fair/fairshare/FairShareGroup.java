@@ -65,7 +65,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> {
         ParsePush.subscribeInBackground(cloudGroupKey);//subscribe to the group chanel
         String installationId = new BigInteger(130, new SecureRandom()).toString(32);
         FairShareGroup group = new FairShareGroup(groupName, cloudGroupKey, installationId);
-        group.addUser(context, new User(userNameInGroup, 0.0));
+        group.addUser(context, new User(userNameInGroup,null, 0.0,false));
         group.save();
         GroupNameRecord groupNameRecord = new GroupNameRecord(groupName, cloudGroupKey);
         groupNameRecord.save();
@@ -175,7 +175,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> {
     private void sendRemoveUserCommand(User user) {
         ParseObject parseGroup = new ParseObject(this.cloudGroupKey);
         parseGroup.put("userId", user.getUserId());
-        parseGroup.put("userName", user.getName());
+        parseGroup.put("userName", user.getUserName());
         parseGroup.put("action", "USER_REMOVED");
         parseGroup.put("creatorId", installationId);
         parseGroup.saveEventually(new SaveCallback() {
@@ -197,7 +197,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> {
     private void sendUserAddedCommand(final Context context, User user) {
         ParseObject parseGroup = new ParseObject(this.cloudGroupKey);
         parseGroup.put("userId", user.getUserId());
-        parseGroup.put("userName", user.getName());
+        parseGroup.put("userName", user.getUserName());
         parseGroup.put("userBalance", user.getBalance());
         parseGroup.put("action", "USER_ADDED");
         parseGroup.put("creatorId", installationId);
@@ -289,8 +289,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> {
                                 }
 
                                 String userName = parseObject.getString("userName");
-                                User newUser = new User(userName, 0);
-                                newUser.setUserId(userId);
+                                User newUser = new User(userName, userId,0,false);
                                 newUser.setBelongingGroupId(getCloudGroupKey());
                                 //we add the user to the save list:
                                 userToSave.add(newUser);
@@ -313,7 +312,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> {
                                     }
                                     //if we try to remove a user with non-zero balance, he will come back as a ghost:
                                     if (Math.abs(user.getBalance()) != 0) {
-                                        user = new User(user.getName(), user.getUserId(), user.getBalance());
+                                        user = new User(user.getUserName(), user.getUserId(), user.getBalance(),true);
                                         addGhostUser(user);
                                     }
 
@@ -410,8 +409,6 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> {
      * @param user    user user to add
      */
     public void addUser(Context context, User user) {
-        //generate unique id:
-        user.setUserId(new BigInteger(130, new SecureRandom()).toString(32).substring(0, 6));
         user.setBelongingGroupId(getCloudGroupKey());
         user.save();
         this.users.add(user);
@@ -465,13 +462,13 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> {
             User user = usersTable.get(operation.userId);
 
             if (user == null) { //if user not exist, he will come back as a ghost:
-                user = new User(operation.username, operation.getUserId(), 0);
+                user = new User(operation.username, operation.getUserId(), 0,true);
                 addGhostUser(user);
             }
             user.addToBalance(operation.getPaid() - operation.getShare());
             //if we didn't create this action (we don't want to be notified on ouw own actions) and the ID was registered to be notified, we create an alert object:
             if (!action.getCreatorId().equals(this.installationId) && notifiedTable.containsKey(user.getUserId())) {
-                Alert.AlertObject newAlert = new Alert.AlertObject(action.getDescription(), operation.getPaid() - operation.getShare(), user.getName());
+                Alert.AlertObject newAlert = new Alert.AlertObject(action.getDescription(), operation.getPaid() - operation.getShare(), user.getUserName());
                 if (groupActivity != null) {
                     groupActivity.messageHandler(GroupActivity.BALANCE_CHANGED, newAlert);
                 }

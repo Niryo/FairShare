@@ -1,12 +1,9 @@
 package share.fair.fairshare;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
@@ -71,7 +68,7 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
             }
         });
 
-        cbUserRow.setText(userList.get(position).getName());
+        cbUserRow.setText(userList.get(position).getUserName());
 
         if(userList.get(position).isNotified()){
             cbUserRow.setTextColor(Color.parseColor("#38B074"));

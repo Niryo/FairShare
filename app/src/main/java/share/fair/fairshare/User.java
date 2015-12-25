@@ -2,123 +2,121 @@ package share.fair.fairshare;
 
 import com.orm.SugarRecord;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 
 /**
- * Created by Nir on 09/10/2015.
+ * This class represents a user
  */
 
 public class User extends SugarRecord<User> implements Serializable {
-    private String name;
-    private double balance;
-    private String email;
-    private String userId;
-    private boolean isNotified;
-    private boolean isGhost;
-   // private List<Long> ghostActionIdHistory;
-    private String belongingGroupId;
+    private String userName; //user's name
+    private double balance; //user's balance
+    private String userId; //user's Id
+    private boolean isNotified; //indicates if we need to be notified on changes to this user's balance
+    private boolean isGhost; //indicates if the user is ghost
+    // private List<Long> ghostActionIdHistory;
+    private String belongingGroupId; //the group this user belongs to
 
-public User(){}
 
-    public User (String name, String id, double balance){
-        this.name = name+ " (ghost)";
-        this.userId= id;
-        this.isGhost=true;
-        this.balance = balance;
-    //    this.ghostActionIdHistory = new ArrayList<>();
+    public User() {
     }
 
-    public User(String name, double balance) {
-        this.name = name;
-        this.balance = balance;
-        this.isGhost=false;
-    //    this.ghostActionIdHistory=null;
-    }
-
-    public static ArrayList<User> parseUsers(JSONObject jsonUsers) {
-        ArrayList<User> resultUsers = new ArrayList<>();
-        try {
-            Iterator<?> userNames = jsonUsers.keys();
-            while (userNames.hasNext()) {
-                JSONObject user = jsonUsers.getJSONObject((String) userNames.next());
-                String name = user.getString("name");
-                int balance = user.getInt("balance");
-                String id = user.getString("userId");
-                String email = user.has("email") ? user.getString("email") : "";
-                User newUser = new User(name, balance);
-                newUser.setEmail(email);
-                newUser.setUserId(id);
-                resultUsers.add(newUser);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+    /**
+     * Constructor
+     *
+     * @param userName
+     * @param userId
+     * @param balance
+     */
+    public User(String userName, String userId, double balance, boolean isGhost) {
+        if (userId == null) {
+            this.userId = new BigInteger(130, new SecureRandom()).toString(32).substring(0, 6);
+        } else {
+            this.userId = userId;
         }
-        return resultUsers;
+        if (isGhost) {
+            this.userName = userName + " (ghost)";
+        } else {
+            this.userName = userName;
+        }
+        this.isGhost = isGhost;
+        this.balance = balance;
+        //    this.ghostActionIdHistory=null;
     }
 
+
+    /**
+     * Get isGhost
+     *
+     * @return isGhost
+     */
     public boolean isGhost() {
         return isGhost;
     }
 
+    /**
+     * Returns true if the user is marked as notified user
+     *
+     * @return true if the user is marked as notified user
+     */
     public boolean isNotified() {
         return isNotified;
     }
 
+    /**
+     * Set isNotified
+     *
+     * @param isNotified
+     */
     public void setIsNotified(boolean isNotified) {
         this.isNotified = isNotified;
     }
 
+    /**
+     * Set belonging group ID
+     *
+     * @param belongingGroupId
+     */
     public void setBelongingGroupId(String belongingGroupId) {
         this.belongingGroupId = belongingGroupId;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
+    /**
+     * Get user's ID
+     *
+     * @return user's ID
+     */
     public String getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    /**
+     * Get user's name
+     *
+     * @return user's name
+     */
+    public String getUserName() {
+        return this.userName;
     }
 
-    public JSONObject toJSON() {
-        JSONObject result = new JSONObject();
-        try {
-            result.put("name", this.name);
-            result.put("balance", this.balance);
-            result.put("email", this.email);
-            result.put("userId", this.userId);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
+    /**
+     * Get user's balance
+     *
+     * @return user's balance
+     */
     public double getBalance() {
         return this.balance;
     }
 
-    public void addToBalance(double val) {
-        this.balance += val;
+    /**
+     * Add value to the user balance
+     *
+     * @param value the value to add
+     */
+    public void addToBalance(double value) {
+        this.balance += value;
         save();
     }
-
 }

@@ -152,7 +152,7 @@ public class GroupActivity extends FragmentActivity {
             public void onClick(View v) {
                 ArrayList<GoOutFragment.GoOutObject> goOutObjectsList = new ArrayList<GoOutFragment.GoOutObject>();
                 for (User user : users) {
-                    goOutObjectsList.add(new GoOutFragment.GoOutObject(user.getUserId(), user.getName(), 0, 0));
+                    goOutObjectsList.add(new GoOutFragment.GoOutObject(user.getUserId(), user.getUserName(), 0, 0));
                 }
                 Intent goOut = new Intent(getApplicationContext(), GoOutActivity.class);
                 goOut.putExtra("goOutList", goOutObjectsList);
@@ -167,7 +167,7 @@ public class GroupActivity extends FragmentActivity {
             public void onClick(View v) {
                 ArrayList<GoOutFragment.GoOutObject> checkedUsers = new ArrayList<GoOutFragment.GoOutObject>();
                 for (User user : userCheckBoxAdapter.getCheckedArray()) {
-                    checkedUsers.add(new GoOutFragment.GoOutObject(user.getUserId(), user.getName(), 0, 0));
+                    checkedUsers.add(new GoOutFragment.GoOutObject(user.getUserId(), user.getUserName(), 0, 0));
                 }
 
                 if (checkedUsers.isEmpty()) {
@@ -262,7 +262,7 @@ public class GroupActivity extends FragmentActivity {
     }
 
     public void notifyUserAdded(String name) {
-        User newUser = new User(name, 0);
+        User newUser = new User(name,null, 0,false);
         this.group.addUser(getApplicationContext(), newUser);
         notifyUserListChanged();
 
@@ -313,24 +313,24 @@ public class GroupActivity extends FragmentActivity {
         SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
         String creatorName = settings.getString("name", "");
         String creatorId = settings.getString("id", "");
-        String description = user.getName() + "'s debts has been settled up";
+        String description = user.getUserName() + "'s debts has been settled up";
         ArrayList<GoOutFragment.GoOutObject> goOutObjectsList = new ArrayList<>();
         double balance = user.getBalance();
         if (balance >= 0) {
             for (User currentUser : users) {
                 double othersPaid = balance / (users.size() - 1); //user's positive balance is evenly split between all the other users.
                 if (currentUser.getUserId().equals(user.getUserId())) {
-                    goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getName(), 0, balance));
+                    goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getUserName(), 0, balance));
                 } else {
-                    goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getName(), othersPaid, 0));
+                    goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getUserName(), othersPaid, 0));
                 }
             }
         } else {
             for (User currentUser : users) {
                 if (currentUser.getUserId().equals(user.getUserId())) {
-                    goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getName(), Math.abs(balance), 0));
+                    goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getUserName(), Math.abs(balance), 0));
                 } else {
-                    goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getName(), 0, Double.NaN));
+                    goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getUserName(), 0, Double.NaN));
                 }
             }
         }
@@ -351,13 +351,13 @@ public class GroupActivity extends FragmentActivity {
         SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
         String creatorName = settings.getString("name", "");
         String creatorId = settings.getString("id", "");
-        String description = user.getName() + " paid for all";
+        String description = user.getUserName() + " paid for all";
         ArrayList<GoOutFragment.GoOutObject> goOutObjectsList = new ArrayList<>();
         for (User currentUser : users) {
             if (currentUser.getUserId().equals(user.getUserId())) {
-                goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getName(), paid, share));
+                goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getUserName(), paid, share));
             } else {
-                goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getName(), 0, Double.NaN));
+                goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getUserName(), 0, Double.NaN));
             }
         }
 
@@ -382,7 +382,7 @@ public class GroupActivity extends FragmentActivity {
         //todo: what to do when user removed from one group but not from other group and action has been made
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Wait!");
-        alert.setMessage("Are you sure you want to remove " + user.getName() + " from the group?\n (user's debts within the group would automatically be settled up )");
+        alert.setMessage("Are you sure you want to remove " + user.getUserName() + " from the group?\n (user's debts within the group would automatically be settled up )");
         alert.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
@@ -429,7 +429,7 @@ public class GroupActivity extends FragmentActivity {
                         ;
                         sumShare = 0;
                     }
-                    goOutObjects.add(new GoOutFragment.GoOutObject(user.getUserId(), user.getName(), sumPaid, sumShare));
+                    goOutObjects.add(new GoOutFragment.GoOutObject(user.getUserId(), user.getUserName(), sumPaid, sumShare));
                 }
 
                 Action action = GoOutFragment.createAction(creatorName, creatorId, description, goOutObjects);

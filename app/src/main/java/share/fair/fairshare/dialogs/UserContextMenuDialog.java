@@ -50,7 +50,7 @@ public class UserContextMenuDialog extends DialogFragment {
 
         View dialogLayout = inflater.inflate(R.layout.user_context_menu_dialog_layout, container);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-       getDialog().setTitle(user.getName());
+       getDialog().setTitle(user.getUserName());
 
         //==================================== First Item ==========================================
         final EditText inputEditText = (EditText) dialogLayout.findViewById(R.id.edit_text_user_context_menu);
