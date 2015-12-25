@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,16 +18,19 @@ import share.fair.fairshare.FairShareGroup;
 import share.fair.fairshare.Operation;
 import share.fair.fairshare.R;
 
+/**
+ * The edit action page
+ */
 public class ActionEditActivity extends Activity {
 
 
-    Button saveButton;
-    Button backToActionsButton;
-    Button deleteAction;
-    Button editButton;
-    TextView createdBy;
+    Button btnSave; //save the action
+    Button btnBackToActionsActivity;
+    Button btnDeleteAction; //delete the action
+    Button btnEdit; //make the action editable
+    TextView tvCreatedBy; //shows who created the action
     FairShareGroup group;
-    int actionIndex;
+    int actionIndex; //an inded to the action the is now being edited
 
 
     @Override
@@ -44,104 +46,104 @@ public class ActionEditActivity extends Activity {
         }
 
         String groupId = getIntent().getStringExtra("groupId");
-        if(groupId.isEmpty()){
+        if (groupId.isEmpty()) {
             //todo: problem
         }
-        group  = FairShareGroup.loadGroupFromStorage(groupId);
-        //todo: put the contents of the operations in the boxes
 
-        final Action action = group.actions.get(actionIndex);
-        final ArrayList<Operation> operationList = (ArrayList<Operation>) action.getOperations();
-        String actionDescription = action.getDescription();
-        String actionCreatedBy = action.getCreatorName();
-        ArrayList<GoOutFragment.GoOutObject> goOutObjectsList= new ArrayList<>();
+        group = FairShareGroup.loadGroupFromStorage(groupId);
 
+        final Action currentAction = group.actions.get(actionIndex);
+        String actionDescription = currentAction.getDescription();
+        String actionCreatedBy = currentAction.getCreatorName();
+        ArrayList<GoOutFragment.GoOutObject> goOutObjectsList = new ArrayList<>();
+
+        //Create the goOutObject from the current action, to fill the fragment with the correct operations:
+        final ArrayList<Operation> operationList = (ArrayList<Operation>) currentAction.getOperations();
         for (Operation oper : operationList) {
-            double share= oper.getHasShare()? oper.share: Double.NaN;
-            goOutObjectsList.add(new GoOutFragment.GoOutObject(oper.getUserId(),oper.username,oper.paid, share));
+            double share = oper.getHasShare() ? oper.share : Double.NaN;
+            goOutObjectsList.add(new GoOutFragment.GoOutObject(oper.getUserId(), oper.username, oper.paid, share));
         }
-
-        final GoOutFragment goOutFragment= new GoOutFragment();
+        //prepare the fragment:
+        final GoOutFragment goOutFragment = new GoOutFragment();
         goOutFragment.goOutObjectList = goOutObjectsList;
-        goOutFragment.editMode=true;
+        goOutFragment.editMode = true;
         goOutFragment.billTitle = actionDescription;
         final FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft= fm.beginTransaction();
+        FragmentTransaction ft = fm.beginTransaction();
         ft.add(R.id.action_edit_fragment_container, goOutFragment, "goOutFragment");
         ft.commit();
 
-         createdBy= (TextView) findViewById(R.id.action_edit_created_by);
-        createdBy.setText("Created by: " + actionCreatedBy);
-        createdBy.setTextColor(Color.BLACK);
+        tvCreatedBy = (TextView) findViewById(R.id.action_edit_created_by);
+        tvCreatedBy.setText("Created by: " + actionCreatedBy);
+        tvCreatedBy.setTextColor(Color.BLACK);
 
-        saveButton = (Button) findViewById(R.id.save_changes_action_button);
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        btnSave = (Button) findViewById(R.id.save_changes_action_button);
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //todo: check if change is needed
-                action.makeUneditable(true);
-                action.save();
-                //1. create opposite action:
-                ArrayList<Operation> oppositeOperationList = new ArrayList<Operation>();
-                for (Operation oper : operationList) {
-                    String oppositeId = oper.userId;
-                    String oppositeUsername = oper.username;
+                //1.first make the original action uneditable:
+                currentAction.makeUneditable(true);
+                currentAction.save();
+                //2. construct an opposite action that will cancel the current action:
+                ArrayList<Operation> oppositeOperationList = new ArrayList<>();
+                for (Operation operation : operationList) {
+                    String oppositeId = operation.userId;
+                    String oppositeUsername = operation.username;
 
-                    double oppositePaid = -1 * oper.paid;
-                    double oppositeShare = -1 * oper.share;
-                    oppositeOperationList.add(new Operation(oppositeId, oppositeUsername, oppositePaid, oppositeShare, oper.getHasShare()));
+                    double oppositePaid = -1 * operation.paid;
+                    double oppositeShare = -1 * operation.share;
+                    oppositeOperationList.add(new Operation(oppositeId, oppositeUsername, oppositePaid, oppositeShare, operation.getHasShare()));
                 }
 
-                Action oppositeAction = new Action(creatorName, group.getInstallationId(), action.getDescription() + " (CANCELED)");
-                oppositeAction.setGroup(group.getCloudGroupKey(),group.getGroupName(), group.getInstallationId());
+                Action oppositeAction = new Action(creatorName, group.getInstallationId(), currentAction.getDescription() + " (CANCELED)");
+                oppositeAction.setGroup(group.getCloudGroupKey(), group.getGroupName(), group.getInstallationId());
                 oppositeAction.makeUneditable(false);
-                oppositeAction.save();
-                oppositeAction.setGroup(group.getCloudGroupKey(),group.getGroupName(), group.getInstallationId());
                 oppositeAction.operations = oppositeOperationList;
-
+                oppositeAction.save();
 
 
                 group.consumeAction(oppositeAction);
                 group.addAction(oppositeAction);
 
-                //2. create the new action
-
-                Action editAction = goOutFragment.calculate(group.getInstallationId());
-                if (editAction == null) {
+                //3. create the new action
+                Action newAction = goOutFragment.calculate(group.getInstallationId());
+                if (newAction == null) {
                     //todo: problem
                 }
 
-                group.consumeAction(editAction);
-                group.addAction(editAction);
+                group.consumeAction(newAction);
+                group.addAction(newAction);
                 openActionActivity();
 
             }
         });
 
-        editButton = (Button) findViewById(R.id.edit_action_activity_edit_button);
-        editButton.setOnClickListener(new View.OnClickListener() {
+        btnEdit = (Button) findViewById(R.id.edit_action_activity_edit_button);
+        btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goOutFragment.enableEdit();
-                saveButton.setVisibility(View.VISIBLE);
-                editButton.setVisibility(View.GONE);
+                btnSave.setVisibility(View.VISIBLE);
+                btnEdit.setVisibility(View.GONE);
             }
         });
 
-        backToActionsButton = (Button) findViewById(R.id.back_to_actions);
-        backToActionsButton.setOnClickListener(new View.OnClickListener() {
+        btnBackToActionsActivity = (Button) findViewById(R.id.back_to_actions);
+        btnBackToActionsActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openActionActivity();
             }
         });
-        deleteAction = (Button) findViewById(R.id.delete_action_button);
-        deleteAction.setOnClickListener(new View.OnClickListener() {
+
+        btnDeleteAction = (Button) findViewById(R.id.delete_action_button);
+        btnDeleteAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                action.makeUneditable(true);
-                action.save();
-                //1. create opposite action:
+                //1.first make the original action uneditable:
+                currentAction.makeUneditable(true);
+                currentAction.save();
+                //2. construct an opposite action that will cancel the current action:
                 ArrayList<Operation> oppositeOperationList = new ArrayList<>();
                 for (Operation oper : operationList) {
                     String oppositeId = oper.userId;
@@ -150,27 +152,27 @@ public class ActionEditActivity extends Activity {
                     double oppositeShare = -1 * oper.share;
                     oppositeOperationList.add(new Operation(oppositeId, oppositeUsername, oppositePaid, oppositeShare, oper.getHasShare()));
                 }
-                Action oppositeAction = new Action(creatorName, group.getInstallationId(), action.getDescription() + " (CANCELED)");
-                oppositeAction.setGroup(group.getCloudGroupKey(),group.getGroupName(), group.getInstallationId());
+                Action oppositeAction = new Action(creatorName, group.getInstallationId(), currentAction.getDescription() + " (CANCELED)");
+                oppositeAction.setGroup(group.getCloudGroupKey(), group.getGroupName(), group.getInstallationId());
                 oppositeAction.makeUneditable(false);
                 oppositeAction.operations = oppositeOperationList;
                 group.consumeAction(oppositeAction);
                 group.addAction(oppositeAction);
-                Toast.makeText(getApplicationContext(), "the action: " + action.getDescription() + "was successfully deleted.", Toast.LENGTH_LONG).show();
                 openActionActivity();
             }
         });
 
-        if(!action.isEditable()){
-            editButton.setVisibility(View.INVISIBLE);
-            deleteAction.setVisibility(View.INVISIBLE);
+        //if the current action cannot be edited, we will make all the buttons invisible:
+        if (!currentAction.isEditable()) {
+            btnEdit.setVisibility(View.INVISIBLE);
+            btnDeleteAction.setVisibility(View.INVISIBLE);
         }
     }
 
-
-
-
-    private void openActionActivity(){
+    /**
+     * Opens the action activity and finish this activity
+     */
+    private void openActionActivity() {
         Intent actions = new Intent(getApplicationContext(), ActionsActivity.class);
         actions.putExtra("groupId", group.getCloudGroupKey());
         startActivity(actions);

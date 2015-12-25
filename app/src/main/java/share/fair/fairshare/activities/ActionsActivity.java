@@ -11,20 +11,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.Target;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import share.fair.fairshare.Action;
 import share.fair.fairshare.FairShareGroup;
 import share.fair.fairshare.R;
-import share.fair.fairshare.activities.ActionEditActivity;
 
+/**
+ * The actions history page
+ */
 public class ActionsActivity extends Activity {
 
     Button backToGroup;
@@ -51,19 +49,19 @@ public class ActionsActivity extends Activity {
 
         actionList = (LinearLayout) findViewById(R.id.list_of_actions);
         LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-      String groupId = getIntent().getStringExtra("groupId");
-        if(groupId.isEmpty()){
+        String groupId = getIntent().getStringExtra("groupId");
+        if (groupId.isEmpty()) {
             //todo: problem
         }
-        group= FairShareGroup.loadGroupFromStorage(groupId);
+        group = FairShareGroup.loadGroupFromStorage(groupId);
 
 
-        for (int i = group.actions.size()-1; i >= 0; i--) {
-            View actionRow= vi.inflate(R.layout.action_row, null);
-            Action action =group.actions.get(i);
-            if(action.isEditable()){
-                boolean isActionLegal= action.isLegal(group.getUsers());
-                if(!isActionLegal){
+        for (int i = group.actions.size() - 1; i >= 0; i--) {
+            View actionRow = vi.inflate(R.layout.action_row, null);
+            Action action = group.actions.get(i);
+            if (action.isEditable()) {
+                boolean isActionLegal = action.isLegal(group.getUsers());
+                if (!isActionLegal) {
                     action.makeUneditable(true);
                 }
             }
@@ -83,21 +81,20 @@ public class ActionsActivity extends Activity {
                     finish();
                 }
             });
-            if(!action.isEditable()){
+            if (!action.isEditable()) {
                 time.setTextColor(Color.GRAY);
                 description.setTextColor(Color.GRAY);
             }
 
 
-                 actionList.addView(actionRow);
+            actionList.addView(actionRow);
         }
-
     }
 
-    private void isFirstRun(){
+    private void isFirstRun() {
         final SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
         boolean isFirstRun = settings.getBoolean("isFirstRunActionActivity", true);
-        if(isFirstRun){
+        if (isFirstRun) {
             showTutorial();
             SharedPreferences.Editor editor = settings.edit();
             editor.putBoolean("isFirstRunActionActivity", false);
@@ -105,9 +102,7 @@ public class ActionsActivity extends Activity {
         }
     }
 
-    private void showTutorial(){
-
-
+    private void showTutorial() {
         showcaseView = new ShowcaseView.Builder(this)
                 .setTarget(Target.NONE).setContentTitle("Payment's history page").setContentText("Here you can see all previews payments.\n Clicking on a payment will open a new page where you can edit or delete the payment.\n" +
                         "Payments that are grayed-out can't be edited or deleted. those are payment that already been edited/deleted or they contains a person that isn't in the group anymore.").build();
@@ -126,8 +121,6 @@ public class ActionsActivity extends Activity {
             return "date failed";
         }
     }
-
-
 
 
 }
