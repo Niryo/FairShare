@@ -11,11 +11,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.Target;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import share.fair.fairshare.Action;
 import share.fair.fairshare.FairShareGroup;
 import share.fair.fairshare.R;
@@ -25,10 +28,10 @@ import share.fair.fairshare.R;
  */
 public class ActionsActivity extends Activity {
 
-    Button backToGroup;
-    LinearLayout actionList;
-    FairShareGroup group;
-    ShowcaseView showcaseView;
+    Button btnBackToGroup; //back to group button
+    LinearLayout actionList; //list of all actions
+    FairShareGroup group; //the current group
+    ShowcaseView showcaseView; //for the tutorial
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +39,8 @@ public class ActionsActivity extends Activity {
         setContentView(R.layout.activity_actions);
         isFirstRun();
 
-        backToGroup = (Button) findViewById(R.id.back_to_group_button_actions);
-        backToGroup.setOnClickListener(new View.OnClickListener() {
+        btnBackToGroup = (Button) findViewById(R.id.back_to_group_button_actions);
+        btnBackToGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent openGroup = new Intent(getApplicationContext(), GroupActivity.class);
@@ -55,20 +58,23 @@ public class ActionsActivity extends Activity {
         }
         group = FairShareGroup.loadGroupFromStorage(groupId);
 
-
+        //Iterate over the actions list in a reverse order (newer actions on top):
         for (int i = group.actions.size() - 1; i >= 0; i--) {
             View actionRow = vi.inflate(R.layout.action_row, null);
             Action action = group.actions.get(i);
+
+            //check if the action is legal (we will check only the actions that are marked as editable:
             if (action.isEditable()) {
                 boolean isActionLegal = action.isLegal(group.getUsers());
                 if (!isActionLegal) {
                     action.makeUneditable(true);
                 }
             }
-            TextView time = (TextView) actionRow.findViewById(R.id.action_row_time);
-            time.setText(getDate(action.getTimeStamp()));
-            TextView description = (TextView) actionRow.findViewById(R.id.action_row_description);
-            description.setText(action.getDescription());
+
+            TextView tvTime = (TextView) actionRow.findViewById(R.id.action_row_time);
+            tvTime.setText(getDate(action.getTimeStamp()));
+            TextView tvDescription = (TextView) actionRow.findViewById(R.id.action_row_description);
+            tvDescription.setText(action.getDescription());
             final int index = i;
 
             actionRow.setOnClickListener(new View.OnClickListener() {
@@ -81,16 +87,19 @@ public class ActionsActivity extends Activity {
                     finish();
                 }
             });
+            //gray out the uneditable actions:
             if (!action.isEditable()) {
-                time.setTextColor(Color.GRAY);
-                description.setTextColor(Color.GRAY);
+                tvTime.setTextColor(Color.GRAY);
+                tvDescription.setTextColor(Color.GRAY);
             }
-
 
             actionList.addView(actionRow);
         }
     }
 
+    /**
+     * Check if this is the first run of the activity, and if so, show the tutorial
+     */
     private void isFirstRun() {
         final SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
         boolean isFirstRun = settings.getBoolean("isFirstRunActionActivity", true);
@@ -102,6 +111,9 @@ public class ActionsActivity extends Activity {
         }
     }
 
+    /**
+     * Show tutorial
+     */
     private void showTutorial() {
         showcaseView = new ShowcaseView.Builder(this)
                 .setTarget(Target.NONE).setContentTitle("Payment's history page").setContentText("Here you can see all previews payments.\n Clicking on a payment will open a new page where you can edit or delete the payment.\n" +
@@ -111,6 +123,12 @@ public class ActionsActivity extends Activity {
         showcaseView.setButtonText("Next");
     }
 
+    /**
+     * Convert a timeStamp into a date in readable format
+     *
+     * @param timeStamp time stamp to covert
+     * @return a string that represents the date
+     */
     private String getDate(long timeStamp) {
 
         try {
@@ -121,6 +139,4 @@ public class ActionsActivity extends Activity {
             return "date failed";
         }
     }
-
-
 }
