@@ -16,6 +16,8 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
@@ -91,6 +93,12 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> {
         List<FairShareGroup> groups = FairShareGroup.find(FairShareGroup.class, "cloud_group_key = ?", cloudGroupKey);
         FairShareGroup group = groups.get(0);
         List<User> users = User.find(User.class, "belonging_group_id = ?", group.getCloudGroupKey());
+        Collections.sort(users, new Comparator<User>() {
+            @Override
+            public int compare(User first, User second) {
+                return first.getUserName().compareTo(second.getUserName());
+            }
+        });
         group.setUsers(users);
         List<Action> actions = Action.find(Action.class, "group_id = ?", group.getCloudGroupKey());
         for (Action action : actions) {
@@ -412,6 +420,12 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> {
         user.setBelongingGroupId(getCloudGroupKey());
         user.save();
         this.users.add(user);
+        Collections.sort(users, new Comparator<User>() {
+            @Override
+            public int compare(User first, User second) {
+                return first.getUserName().compareTo(second.getUserName());
+            }
+        });
         sendUserAddedCommand(context, user);
 
     }
