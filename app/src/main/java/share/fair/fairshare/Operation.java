@@ -8,28 +8,41 @@ import org.json.JSONObject;
 import java.io.Serializable;
 
 /**
- * Created by Ori on 10/15/2015.
+ * A class that represents a single operation on user balance
  */
 public class Operation extends SugarRecord<Operation> implements Serializable {
-    public String username;
-    public String userId;
-    public double paid;
-    public double share;
-    boolean hasUserAddedShare;
-    String belongingActionId;
+    public String username; //the user's name this operation will act on
+    public String userId; // the user's Id
+    public double paid; //how much the user paid
+    public double share; //user's share
+    boolean hasUserAddedShare; //is the user added share manually or is the share calculated automatically
+    String belongingActionId; //the action this operation belongs to
+
     public Operation() {
     }
 
-
-
+    /**
+     * Constructs new operations
+     *
+     * @param userId            the user's Id
+     * @param username          the user's name
+     * @param paid              amount paid
+     * @param share             user's share
+     * @param hasUserAddedShare should be true if the share entered manually
+     */
     public Operation(String userId, String username, double paid, double share, boolean hasUserAddedShare) {
         this.userId = userId;
         this.username = username;
         this.paid = paid;
         this.share = share;
-        this.hasUserAddedShare =hasUserAddedShare;
+        this.hasUserAddedShare = hasUserAddedShare;
     }
 
+    /**
+     * Constructs new operation from JSON objects
+     *
+     * @param jsonOperation An operation in JSON format
+     */
     public Operation(JSONObject jsonOperation) {
         try {
             this.hasUserAddedShare = jsonOperation.getBoolean("hasUserAddedShare");
@@ -43,37 +56,75 @@ public class Operation extends SugarRecord<Operation> implements Serializable {
         }
     }
 
+    /**
+     * Get user's Id
+     *
+     * @return user's Id
+     */
     public String getUserId() {
         return userId;
     }
 
+    /**
+     * Sets belonging action Id
+     *
+     * @param belongingActionId
+     */
     public void setBelongingActionId(String belongingActionId) {
         this.belongingActionId = belongingActionId;
     }
 
+    /**
+     * Get amount paid
+     *
+     * @return amount paid
+     */
     public double getPaid() {
         return paid;
     }
 
+    /**
+     * Sets amount paid
+     *
+     * @param paid amount paid
+     */
     public void setPaid(double paid) {
         this.paid = paid;
     }
 
+    /**
+     * Get share
+     *
+     * @return share
+     */
     public double getShare() {
         return share;
     }
 
+    /**
+     * Set share
+     *
+     * @param share share
+     */
     public void setShare(double share) {
         this.share = share;
     }
 
-    public boolean getHasShare(){
+
+    /**
+     * Get hasShare
+     *
+     * @return true if the user entered the share manually
+     */
+    public boolean getHasShare() {
         return this.hasUserAddedShare;
     }
-    public void setHasShare(boolean hasUserAddedShare){
-        this.hasUserAddedShare = hasUserAddedShare;
-    }
 
+    /**
+     * Convert this opertaion to JSON format
+     *
+     * @return
+     */
     public JSONObject toJSON() {
         JSONObject jsonObject = new JSONObject();
         try {
