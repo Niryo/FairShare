@@ -1,8 +1,5 @@
 package share.fair.fairshare;
 
-import android.content.Context;
-
-
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 import com.parse.ParseException;
@@ -27,29 +24,41 @@ public class Action extends SugarRecord<Action> implements Serializable {
     @Ignore
     public List<Operation> operations = new ArrayList<Operation>();
 
-    private long timeStamp;
-    private String groupId;
-    private String groupName;
-    private String installationId;
-    private String description;
-    private String creatorName;
-    private String creatorId;
-    private String actionId;
-    private boolean isEditable;
+    private long timeStamp; //a time stamp for the log
+    private String groupId; //the group's ID this action belongs to
+    private String groupName; //the group's name this action belongs to
+    private String installationId; //the group's installation ID this action belongs to
+    private String description; //short description of the action
+    private String creatorName; //who created the action
+    private String creatorId; //the ID of the creator
+    private String actionId; //Unique ction ID
+    private boolean isEditable; //is the action editable or not
 
+    /**
+     * Constructor
+     *
+     * @param creatorName the name of the creator of this action
+     * @param creatorId   the ID of the creator of this action
+     * @param description short description of this action
+     */
     public Action(String creatorName, String creatorId, String description) {
         this.timeStamp = System.currentTimeMillis();
         this.description = description;
         this.actionId = new BigInteger(130, new SecureRandom()).toString(32).substring(0, 10);
         this.creatorName = creatorName;
         this.creatorId = creatorId;
-        this.isEditable=true;
+        this.isEditable = true;
         operations = new ArrayList<>();
     }
 
     public Action() {
     }
 
+    /**
+     * Constructs an action from a JSON format
+     *
+     * @param jsonAction the action
+     */
     public Action(JSONObject jsonAction) {
         try {
             this.isEditable = jsonAction.getBoolean("isEditable");
@@ -67,34 +76,56 @@ public class Action extends SugarRecord<Action> implements Serializable {
             e.printStackTrace();
         }
     }
-    public boolean isLegal(List<User> users){
-            for(Operation operation: operations){
-                boolean operationIsLegal=false;
-                for (User user : users){
-                    if(user.getUserId().equals(operation.getUserId())){
-                        operationIsLegal=true;
-                        break;
-                    }
-                }
-                if(!operationIsLegal){
-                    return false;
+
+    /**
+     * Check if the action is safe for consume.
+     * An action is legal if it effects only users that are currently in the group
+     *
+     * @param users list of user in the group
+     * @return true if the action is safe for being consumed
+     */
+    public boolean isLegal(List<User> users) {
+        for (Operation operation : operations) {
+            boolean operationIsLegal = false;
+            for (User user : users) {
+                if (user.getUserId().equals(operation.getUserId())) {
+                    operationIsLegal = true;
+                    break;
                 }
             }
+            if (!operationIsLegal) {
+                return false;
+            }
+        }
         return true;
     }
 
+    /**
+     * This method tell us if an action is editable or not
+     *
+     * @return true if the action is editable
+     */
     public boolean isEditable() {
         return isEditable;
     }
 
-    public void makeUneditable(Context context, boolean sendToCloud) {
+    /**
+     * Makes the action uneditable
+     *
+     * @param sendToCloud a flag that indicates if we need to report the action to the cloud
+     */
+    public void makeUneditable(boolean sendToCloud) {
         this.isEditable = false;
-        if(sendToCloud){
-        sendUnEditableCommandToCloud(context);}
+        if (sendToCloud) {
+            sendUnEditableCommandToCloud();
+        }
         save();
     }
 
-    private void sendUnEditableCommandToCloud(Context context) {
+    /**
+     * Sends to the cloud an UNEDITABLE command
+     */
+    private void sendUnEditableCommandToCloud() {
         ParseObject parseGroupLog = new ParseObject(groupId);
         parseGroupLog.put("action", "UNEDITED_ACTION");
         parseGroupLog.put("actionId", getActionId());
@@ -113,10 +144,10 @@ public class Action extends SugarRecord<Action> implements Serializable {
     /**
      * Report the other users that an action has been done
      */
-    private void reportActionViaPush(){
+    private void reportActionViaPush() {
         ParsePush push = new ParsePush();
         push.setChannel(groupId);
-        JSONObject jsonToPush=new JSONObject();
+        JSONObject jsonToPush = new JSONObject();
         try {
             jsonToPush.put("alertType", "ACTION_CHANGE");
             jsonToPush.put("creatorId", creatorId);
@@ -125,7 +156,7 @@ public class Action extends SugarRecord<Action> implements Serializable {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        for(Operation operation: getOperations()){
+        for (Operation operation : getOperations()) {
             try {
                 jsonToPush.put(operation.getUserId(), true);
             } catch (JSONException e) {
@@ -136,6 +167,9 @@ public class Action extends SugarRecord<Action> implements Serializable {
         push.sendInBackground();
     }
 
+    /**
+     * Sends a NEW-ACTION command to the cloud
+     */
     public void sendActionToCloud() {
         ParseObject parseGroupLog = new ParseObject(groupId);
         parseGroupLog.put("action", "NEW_ACTION");
@@ -152,52 +186,107 @@ public class Action extends SugarRecord<Action> implements Serializable {
         });
     }
 
-
-
+    /**
+     * Get creator's name
+     *
+     * @return creator's name
+     */
     public String getCreatorName() {
         return creatorName;
     }
 
+    /**
+     * Sets the group this action belongs to
+     *
+     * @param groupId        group's ID
+     * @param groupName      group's name
+     * @param installationId group's installation ID
+     */
     public void setGroup(String groupId, String groupName, String installationId) {
         this.groupId = groupId;
         this.groupName = groupName;
         this.installationId = installationId;
     }
 
+    /**
+     * Init the action, fetch all the operations from memory.
+     */
     public void init() {
         operations = Operation.find(Operation.class, "belonging_action_id = ?", actionId);
-
-
     }
 
+    /**
+     * Get creator's ID
+     *
+     * @return
+     */
     public String getCreatorId() {
         return creatorId;
     }
 
+    /**
+     * Get action's ID
+     *
+     * @return
+     */
     public String getActionId() {
         return actionId;
     }
 
+    /**
+     * Get action's description
+     *
+     * @return action's description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Set description
+     *
+     * @param description description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Get operations
+     *
+     * @return list of operations
+     */
     public List<Operation> getOperations() {
         return operations;
     }
 
+    /**
+     * Set operations
+     *
+     * @param operations list of operations
+     */
     public void setOperations(ArrayList<Operation> operations) {
         this.operations = operations;
     }
 
-    public void addOperation(String id, String username, double paid, double share , boolean hasUserAddedShare) {
-        this.operations.add(new Operation(id, username, paid, share, hasUserAddedShare));
+    /**
+     * Add new operation
+     *
+     * @param userId            user Id
+     * @param username          user name
+     * @param amountPaid        how much the user paid
+     * @param userShare         the user's share
+     * @param hasUserAddedShare is the user enter share or is the share has been calculated automaticly
+     */
+    public void addOperation(String userId, String username, double amountPaid, double userShare, boolean hasUserAddedShare) {
+        this.operations.add(new Operation(userId, username, amountPaid, userShare, hasUserAddedShare));
     }
 
+    /**
+     * Converts the action to JSON format
+     *
+     * @return a json object representing the action
+     */
     public JSONObject toJSON() {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -218,6 +307,9 @@ public class Action extends SugarRecord<Action> implements Serializable {
         return jsonObject;
     }
 
+    /**
+     * Save the action and the operation inside it
+     */
     @Override
     public void save() {
         super.save();
@@ -228,18 +320,23 @@ public class Action extends SugarRecord<Action> implements Serializable {
         }
     }
 
+    /**
+     * Get time stamp
+     *
+     * @return time stamp
+     */
     public long getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(long timeStamp) {
-        this.timeStamp = timeStamp;
-    }
 
+    /**
+     * Delete the action and all it's operations
+     */
     @Override
     public void delete() {
         super.delete();
-        for(Operation operation : operations){
+        for (Operation operation : operations) {
             operation.delete();
         }
     }

@@ -4,7 +4,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.TaskStackBuilder;
@@ -22,45 +21,37 @@ import share.fair.fairshare.activities.App;
 import share.fair.fairshare.activities.GroupActivity;
 
 /**
- * Created by Nir on 24/10/2015.
+ * A receiver that handle Parse push notification
  */
 public class FairShareReceiver extends ParsePushBroadcastReceiver {
-    public static int NOTIFICATION_ID = 0;
+    public static int NOTIFICATION_ID = 0; //the id of the notification in the notification center
 
     @Override
     protected void onPushReceive(Context context, Intent intent) {
         try {
-            SharedPreferences settings = context.getSharedPreferences("MAIN_PREFERENCES", 0);
-            String ownerId = settings.getString("id", "");
             ParseAnalytics.trackAppOpenedInBackground(intent);
+            String rawData = intent.getExtras().getString("com.parse.Data");
+            JSONObject data = new JSONObject(rawData);
+            data = new JSONObject(data.getString("alert"));
+            //check if there is a running instance of GroupActivity:
             GroupActivity activity = ((App) context.getApplicationContext()).activity;
-                String rawData = intent.getExtras().getString("com.parse.Data");
-                JSONObject data = new JSONObject(rawData);
-                data = new JSONObject(data.getString("alert"));
-
-            if (activity == null) {//we need to create notification
+            if (activity == null) {//FareShare is closed so we need to create a notification
                 if (data.getString("alertType").equals("ACTION_CHANGE")) {
-                    if (data.getString("creatorId").equals(ownerId)) {
-                        return;
-                    } else {
-                        List<Alert.NotifiedId> notifiedIds = (List<Alert.NotifiedId>) Alert.NotifiedId.listAll(Alert.NotifiedId.class);
-                        for (Alert.NotifiedId notifiedId : notifiedIds) {
-                            if (data.has(notifiedId.userId)) {
-                                String groupName = data.getString("groupName");
-                                String groupId = data.getString("groupId");
-                                sendNotification(context, intent, groupName, groupId);
-                                break;
-                            }
+                    List<Alert.NotifiedId> notifiedIds = (List<Alert.NotifiedId>) Alert.NotifiedId.listAll(Alert.NotifiedId.class);
+                    //we now iterate through the notified ID's and check if the data contains a change on one or more of the notified users:
+                    for (Alert.NotifiedId notifiedId : notifiedIds) {
+                        if (data.has(notifiedId.userId)) {
+                            String groupName = data.getString("groupName");
+                            String groupId = data.getString("groupId");
+                            addNotificationToNotificationCenter(context, intent, groupName, groupId);
+                            break;
                         }
-
-                        // Toast.makeText(context, "got new message", Toast.LENGTH_SHORT).show();
                     }
                 }
 
 
-
-            } else { //we dont need to create notification
-                    activity.sync();
+            } else { //we don't need to create notification because the app is open
+                activity.sync();
             }
 
         } catch (JSONException e) {
@@ -69,10 +60,18 @@ public class FairShareReceiver extends ParsePushBroadcastReceiver {
 
     }
 
-    private void sendNotification(Context context, Intent recivedIntent, String groupName, String groupId) {
+    /**
+     * Add notification to notification center
+     *
+     * @param context        context
+     * @param receivedIntent
+     * @param groupName
+     * @param groupId
+     */
+    private void addNotificationToNotificationCenter(Context context, Intent receivedIntent, String groupName, String groupId) {
         Uri defaultNotificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
-        mBuilder.setSmallIcon(getSmallIconId(context, recivedIntent))
+        mBuilder.setSmallIcon(getSmallIconId(context, receivedIntent))
                 .setContentTitle("Balance changed")
                 .setContentText("Your balance in group " + groupName + " has changed.")
                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
