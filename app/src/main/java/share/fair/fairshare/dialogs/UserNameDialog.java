@@ -48,7 +48,7 @@ public class UserNameDialog extends DialogFragment {
             public void onClick(View v) {
                 String name = nameEditText.getText().toString();
                 String email = emailEditText.getText().toString();
-                ((GroupActivity) getActivity()).notifyUserAdded(name);
+                ((GroupActivity) getActivity()).addNewUser(name);
                 if (!email.isEmpty()) {
                     ((GroupActivity) getActivity()).inviteByMail(email);
                 }
