@@ -10,6 +10,9 @@ import android.view.View;
 
 import share.fair.fairshare.R;
 
+/**
+ * Shows a page that tell the user to update to the last compatible version of FairShare
+ */
 public class OldVersionScreenActivity extends Activity {
 
     @Override
