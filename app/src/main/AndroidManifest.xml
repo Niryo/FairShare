@@ -56,7 +56,7 @@
             android:name=".activities.GroupActivity"
             android:label="@string/title_activity_group" />
         <activity
-            android:name=".activities.GoOutActivity"
+            android:name=".activities.NewBillActivity"
             android:label="@string/title_activity_go_out" />
         <activity
             android:name=".activities.ActionsActivity"

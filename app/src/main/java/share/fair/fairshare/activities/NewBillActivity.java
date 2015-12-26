@@ -9,32 +9,32 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.Target;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import java.util.ArrayList;
 
 import share.fair.fairshare.Action;
 import share.fair.fairshare.R;
 
-public class GoOutActivity extends Activity {
+/**
+ * The new bill activity
+ */
+public class NewBillActivity extends Activity {
 
-    Button backToGroup;
-    Button calculateButton;
-    ArrayList<GoOutFragment.GoOutObject> goOutObjectList;
-    EditText description;
-    ShowcaseView showcaseView;
+    Button btnBackToGroup; //back to group button
+    Button btnCalculate; //calculate new bill
+    ArrayList<BillFragment.BillLine> billLineInfoList; //lines info for the calculate fragment
+    ShowcaseView showcaseView; //for the tutorial
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_go_out);
         isFirstRun();
-        backToGroup = (Button) findViewById(R.id.back_to_group_button);
-        backToGroup.setOnClickListener(new View.OnClickListener() {
+        btnBackToGroup = (Button) findViewById(R.id.back_to_group_button);
+        btnBackToGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent returnIntent = new Intent();
@@ -44,21 +44,23 @@ public class GoOutActivity extends Activity {
             }
         });
 
-        goOutObjectList = (ArrayList<GoOutFragment.GoOutObject>) getIntent().getSerializableExtra("goOutList");
+        billLineInfoList = (ArrayList<BillFragment.BillLine>) getIntent().getSerializableExtra("goOutList");
         final String installationId =   getIntent().getStringExtra("installationId");
-        final GoOutFragment goOutFragment= new GoOutFragment();
-        goOutFragment.goOutObjectList = goOutObjectList;
+
+        //sets the calculation fragment:
+        final BillFragment goOutFragment = new BillFragment();
+        goOutFragment.billLineInfoList = billLineInfoList;
         final FragmentManager fm = getFragmentManager();
         FragmentTransaction ft= fm.beginTransaction();
         ft.add(R.id.go_out_activity_fragment_container, goOutFragment, "goOutFragment");
         ft.commit();
 
 
-        calculateButton = (Button) findViewById(R.id.calculate_button);
-        calculateButton.setOnClickListener(new View.OnClickListener() {
+        btnCalculate = (Button) findViewById(R.id.calculate_button);
+        btnCalculate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Action action =  goOutFragment.calculate(installationId);
+                Action action = goOutFragment.createNewBill(installationId);
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("action", action);
                 setResult(RESULT_OK, returnIntent);
@@ -69,7 +71,9 @@ public class GoOutActivity extends Activity {
 
     }
 
-
+    /**
+     * Cehck if this is the first run of the activity and if so run launch tutorial
+     */
     private void isFirstRun(){
         final SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
         boolean isFirstRun = settings.getBoolean("isFirstRunGoOutActivity", true);
@@ -81,7 +85,9 @@ public class GoOutActivity extends Activity {
         }
     }
 
-
+    /**
+     * Tutorial for this activity
+     */
     private void showTutorial(){
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         showcaseView = new ShowcaseView.Builder(this)

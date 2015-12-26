@@ -150,11 +150,11 @@ public class GroupActivity extends FragmentActivity {
         goOutAllButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<GoOutFragment.GoOutObject> goOutObjectsList = new ArrayList<GoOutFragment.GoOutObject>();
+                ArrayList<BillFragment.BillLine> goOutObjectsList = new ArrayList<BillFragment.BillLine>();
                 for (User user : users) {
-                    goOutObjectsList.add(new GoOutFragment.GoOutObject(user.getUserId(), user.getUserName(), 0, 0));
+                    goOutObjectsList.add(new BillFragment.BillLine(user.getUserId(), user.getUserName(), 0, 0));
                 }
-                Intent goOut = new Intent(getApplicationContext(), GoOutActivity.class);
+                Intent goOut = new Intent(getApplicationContext(), NewBillActivity.class);
                 goOut.putExtra("goOutList", goOutObjectsList);
                 goOut.putExtra("installationId",group.getInstallationId());
                 startActivityForResult(goOut, GO_OUT_REQUEST);
@@ -165,9 +165,9 @@ public class GroupActivity extends FragmentActivity {
         goOutCheckedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<GoOutFragment.GoOutObject> checkedUsers = new ArrayList<GoOutFragment.GoOutObject>();
+                ArrayList<BillFragment.BillLine> checkedUsers = new ArrayList<BillFragment.BillLine>();
                 for (User user : userCheckBoxAdapter.getCheckedArray()) {
-                    checkedUsers.add(new GoOutFragment.GoOutObject(user.getUserId(), user.getUserName(), 0, 0));
+                    checkedUsers.add(new BillFragment.BillLine(user.getUserId(), user.getUserName(), 0, 0));
                 }
 
                 if (checkedUsers.isEmpty()) {
@@ -180,7 +180,7 @@ public class GroupActivity extends FragmentActivity {
                         return;
                     }
 
-                    Intent goOut = new Intent(getApplicationContext(), GoOutActivity.class);
+                    Intent goOut = new Intent(getApplicationContext(), NewBillActivity.class);
                     goOut.putExtra("goOutList", checkedUsers);
                     goOut.putExtra("installationId", group.getInstallationId());
                     startActivityForResult(goOut, GO_OUT_REQUEST);
@@ -314,28 +314,28 @@ public class GroupActivity extends FragmentActivity {
         String creatorName = settings.getString("name", "");
         String creatorId = settings.getString("id", "");
         String description = user.getUserName() + "'s debts has been settled up";
-        ArrayList<GoOutFragment.GoOutObject> goOutObjectsList = new ArrayList<>();
+        ArrayList<BillFragment.BillLine> goOutObjectsList = new ArrayList<>();
         double balance = user.getBalance();
         if (balance >= 0) {
             for (User currentUser : users) {
                 double othersPaid = balance / (users.size() - 1); //user's positive balance is evenly split between all the other users.
                 if (currentUser.getUserId().equals(user.getUserId())) {
-                    goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getUserName(), 0, balance));
+                    goOutObjectsList.add(new BillFragment.BillLine(currentUser.getUserId(), currentUser.getUserName(), 0, balance));
                 } else {
-                    goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getUserName(), othersPaid, 0));
+                    goOutObjectsList.add(new BillFragment.BillLine(currentUser.getUserId(), currentUser.getUserName(), othersPaid, 0));
                 }
             }
         } else {
             for (User currentUser : users) {
                 if (currentUser.getUserId().equals(user.getUserId())) {
-                    goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getUserName(), Math.abs(balance), 0));
+                    goOutObjectsList.add(new BillFragment.BillLine(currentUser.getUserId(), currentUser.getUserName(), Math.abs(balance), 0));
                 } else {
-                    goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getUserName(), 0, Double.NaN));
+                    goOutObjectsList.add(new BillFragment.BillLine(currentUser.getUserId(), currentUser.getUserName(), 0, Double.NaN));
                 }
             }
         }
 
-        Action action = GoOutFragment.createAction(creatorName, creatorId, description, goOutObjectsList);
+        Action action = BillFragment.calculateAndCreateAction(creatorName, creatorId, description, goOutObjectsList);
         if (action == null) {
             Toast.makeText(getApplicationContext(), "Error: can't settle up user's debts", Toast.LENGTH_LONG).show();
             return false;
@@ -352,16 +352,16 @@ public class GroupActivity extends FragmentActivity {
         String creatorName = settings.getString("name", "");
         String creatorId = settings.getString("id", "");
         String description = user.getUserName() + " paid for all";
-        ArrayList<GoOutFragment.GoOutObject> goOutObjectsList = new ArrayList<>();
+        ArrayList<BillFragment.BillLine> goOutObjectsList = new ArrayList<>();
         for (User currentUser : users) {
             if (currentUser.getUserId().equals(user.getUserId())) {
-                goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getUserName(), paid, share));
+                goOutObjectsList.add(new BillFragment.BillLine(currentUser.getUserId(), currentUser.getUserName(), paid, share));
             } else {
-                goOutObjectsList.add(new GoOutFragment.GoOutObject(currentUser.getUserId(), currentUser.getUserName(), 0, Double.NaN));
+                goOutObjectsList.add(new BillFragment.BillLine(currentUser.getUserId(), currentUser.getUserName(), 0, Double.NaN));
             }
         }
 
-        Action action = GoOutFragment.createAction(creatorName, creatorId, description, goOutObjectsList);
+        Action action = BillFragment.calculateAndCreateAction(creatorName, creatorId, description, goOutObjectsList);
         if (action == null) {
             Toast.makeText(getApplicationContext(), "Error: sum paid must be greater than sum share.\nPlease try again.", Toast.LENGTH_LONG).show();
             return;
@@ -416,7 +416,7 @@ public class GroupActivity extends FragmentActivity {
                 String creatorId = settings.getString("id", "");
                 String description = "Settle up";
 
-                ArrayList<GoOutFragment.GoOutObject> goOutObjects = new ArrayList<>();
+                ArrayList<BillFragment.BillLine> billFragmentOperationses = new ArrayList<>();
                 for (User user : users) {
                     double balance = user.getBalance();
                     double sumPaid;
@@ -429,10 +429,10 @@ public class GroupActivity extends FragmentActivity {
                         ;
                         sumShare = 0;
                     }
-                    goOutObjects.add(new GoOutFragment.GoOutObject(user.getUserId(), user.getUserName(), sumPaid, sumShare));
+                    billFragmentOperationses.add(new BillFragment.BillLine(user.getUserId(), user.getUserName(), sumPaid, sumShare));
                 }
 
-                Action action = GoOutFragment.createAction(creatorName, creatorId, description, goOutObjects);
+                Action action = BillFragment.calculateAndCreateAction(creatorName, creatorId, description, billFragmentOperationses);
                 if (action == null) {
                     Toast.makeText(getApplicationContext(), "Error: can't settle up", Toast.LENGTH_LONG).show();
                     return;

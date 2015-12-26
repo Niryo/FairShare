@@ -55,17 +55,17 @@ public class ActionEditActivity extends Activity {
         final Action currentAction = group.actions.get(actionIndex);
         String actionDescription = currentAction.getDescription();
         String actionCreatedBy = currentAction.getCreatorName();
-        ArrayList<GoOutFragment.GoOutObject> goOutObjectsList = new ArrayList<>();
+        ArrayList<BillFragment.BillLine> goOutObjectsList = new ArrayList<>();
 
         //Create the goOutObject from the current action, to fill the fragment with the correct operations:
         final ArrayList<Operation> operationList = (ArrayList<Operation>) currentAction.getOperations();
         for (Operation oper : operationList) {
             double share = oper.getHasShare() ? oper.share : Double.NaN;
-            goOutObjectsList.add(new GoOutFragment.GoOutObject(oper.getUserId(), oper.username, oper.paid, share));
+            goOutObjectsList.add(new BillFragment.BillLine(oper.getUserId(), oper.username, oper.paid, share));
         }
         //prepare the fragment:
-        final GoOutFragment goOutFragment = new GoOutFragment();
-        goOutFragment.goOutObjectList = goOutObjectsList;
+        final BillFragment goOutFragment = new BillFragment();
+        goOutFragment.billLineInfoList = goOutObjectsList;
         goOutFragment.editMode = true;
         goOutFragment.billTitle = actionDescription;
         final FragmentManager fm = getFragmentManager();
@@ -106,7 +106,7 @@ public class ActionEditActivity extends Activity {
                 group.addAction(oppositeAction);
 
                 //3. create the new action
-                Action newAction = goOutFragment.calculate(group.getInstallationId());
+                Action newAction = goOutFragment.createNewBill(group.getInstallationId());
                 if (newAction == null) {
                     //todo: problem
                 }
