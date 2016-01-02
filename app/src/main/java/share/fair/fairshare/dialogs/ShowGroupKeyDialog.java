@@ -15,18 +15,25 @@ import android.widget.Toast;
 import share.fair.fairshare.R;
 
 /**
- * Created by Nir on 04/11/2015.
+ * Shows the group's key
  */
-public class GroupKeyDialog extends DialogFragment {
-
-    public void setGroupKey(String groupKey) {
-        this.groupKey = groupKey;
-    }
-
+public class ShowGroupKeyDialog extends DialogFragment {
 
     private String groupKey;
     private String groupName;
 
+    /**
+     * Set group key
+     * @param groupKey
+     */
+    public void setGroupKey(String groupKey) {
+        this.groupKey = groupKey;
+    }
+
+    /**
+     * Set group name
+     * @param groupName
+     */
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
@@ -39,32 +46,33 @@ public class GroupKeyDialog extends DialogFragment {
     }
 
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if(savedInstanceState!=null){
-             groupKey= savedInstanceState.getString("groupKey");
-             groupName= savedInstanceState.getString("groupName");
+        if (savedInstanceState != null) {
+            groupKey = savedInstanceState.getString("groupKey");
+            groupName = savedInstanceState.getString("groupName");
 
         }
         View dialogLayout = inflater.inflate(R.layout.group_key_dialog, container);
         getDialog().setContentView(R.layout.group_key_dialog);
         getDialog().setTitle("Group key:");
-        final TextView groupKeyText = (TextView) dialogLayout.findViewById(R.id.group_key_dialog_text);
-        String stringLength= groupName.length()<9? "0"+groupName.length(): String.valueOf(groupName.length());
-        groupKeyText.setText(stringLength+groupName+groupKey);
-        Button copyButton = (Button) dialogLayout.findViewById(R.id.group_key_dialog_copy);
-        copyButton.setOnClickListener(new View.OnClickListener() {
+        final TextView tvGroupKey = (TextView) dialogLayout.findViewById(R.id.group_key_dialog_text);
+        //concert the length to string, with leading zero if needed:
+        String stringLength = groupName.length() < 9 ? "0" + groupName.length() : String.valueOf(groupName.length());
+        tvGroupKey.setText(stringLength + groupName + groupKey);
+        //set copy to clipboard button:
+        Button btnCopy = (Button) dialogLayout.findViewById(R.id.group_key_dialog_copy);
+        btnCopy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int sdk = android.os.Build.VERSION.SDK_INT;
-                if(sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
+                if (sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
                     android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                    clipboard.setText(groupKeyText.getText().toString());
+                    clipboard.setText(tvGroupKey.getText().toString());
                 } else {
                     android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                    android.content.ClipData clip = android.content.ClipData.newPlainText("text label",groupKeyText.getText().toString());
+                    android.content.ClipData clip = android.content.ClipData.newPlainText("text label", tvGroupKey.getText().toString());
                     clipboard.setPrimaryClip(clip);
                 }
                 dismiss();

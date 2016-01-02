@@ -13,16 +13,17 @@ import android.widget.EditText;
 
 import share.fair.fairshare.FairShareGroup;
 import share.fair.fairshare.R;
+import share.fair.fairshare.activities.MainActivity;
 
 /**
  * Created by Ori on 10/11/2015.
  */
 
 
-public class GroupNameDialog extends DialogFragment {
+public class CreateNewGroupDialog extends DialogFragment {
 
 
-    public GroupNameDialog() {
+    public CreateNewGroupDialog() {
         // Empty constructor required for DialogFragment
     }
 
@@ -33,41 +34,41 @@ public class GroupNameDialog extends DialogFragment {
         getDialog().setContentView(R.layout.new_group_dialog_layout);
         getDialog().setTitle("Choose group name:");
 
-        final EditText nameEditText = (EditText) dialogLayout.findViewById(R.id.group_name_edit_text);
+        final EditText etName = (EditText) dialogLayout.findViewById(R.id.group_name_edit_text);
         final EditText specialUserNameText = (EditText) dialogLayout.findViewById(R.id.special_name_edit_text);
-        nameEditText.setHint("Group's name");
-        final Button createButton = (Button) dialogLayout.findViewById(R.id.create_button);
-        final Button cancelButton = (Button) dialogLayout.findViewById(R.id.cancel_button);
+        etName.setHint("Group's name");
+        final Button btnCreate = (Button) dialogLayout.findViewById(R.id.create_button);
+        final Button btnCancel = (Button) dialogLayout.findViewById(R.id.cancel_button);
+        //sugest the default name:
         SharedPreferences settings = getActivity().getSharedPreferences("MAIN_PREFERENCES", 0);
-        final String ownerName= settings.getString("name", "");
-        specialUserNameText.setHint("Your name in the group: "+ ownerName);
-        createButton.setOnClickListener(new View.OnClickListener() {
+        final String ownerName = settings.getString("name", "");
+        specialUserNameText.setHint("Your name in the group: " + ownerName);
+        btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userNameInGroup= specialUserNameText.getText().toString();
-                if(userNameInGroup.isEmpty()){
-                    userNameInGroup =  ownerName;
+                String userNameInGroup = specialUserNameText.getText().toString();
+                if (userNameInGroup.isEmpty()) {
+                    userNameInGroup = ownerName;
 
                 }
 
-                String name = nameEditText.getText().toString();
+                String name = etName.getText().toString();
                 FairShareGroup.groupBuilder(getContext(), name, userNameInGroup);
-//                FairShareGroup.groupBuilder(getContext(),name);
-
-                ((GroupCreatedListener) getActivity()).notifyGroupListChanged();
-
+                //notify mainActivity:
+                ((MainActivity) getActivity()).notifyGroupListChanged();
                 getDialog().dismiss();
             }
         });
-        cancelButton.setOnClickListener(new View.OnClickListener() {
+        btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getDialog().dismiss();
 
             }
         });
-        createButton.setEnabled(false);
-        nameEditText.addTextChangedListener(new TextWatcher() {
+        btnCreate.setEnabled(false);
+        //make the create button visible only if editText contains text:
+        etName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -78,10 +79,10 @@ public class GroupNameDialog extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (nameEditText.getText().toString().length() > 0) {
-                    createButton.setEnabled(true);
+                if (etName.getText().toString().length() > 0) {
+                    btnCreate.setEnabled(true);
                 } else {
-                    createButton.setEnabled(false);
+                    btnCreate.setEnabled(false);
                 }
             }
 
@@ -89,9 +90,7 @@ public class GroupNameDialog extends DialogFragment {
         return dialogLayout;
     }
 
-    public interface GroupCreatedListener {
-        public void notifyGroupListChanged();
-    }
+
 }
 
 

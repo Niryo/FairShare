@@ -7,8 +7,8 @@
     android:background="@drawable/border_with_bottom">
 
     <share.fair.fairshare.views.RelativeTextView
-        fairshare:landscapeFactor="45"
-        fairshare:portraitFactor="45"
+        fairshare:landscapeFactor="40"
+        fairshare:portraitFactor="40"
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,8 +28,8 @@
         android:layout_marginRight="10dp" />
 
     <share.fair.fairshare.views.RelativeTextView
-        fairshare:landscapeFactor="45"
-        fairshare:portraitFactor="45"
+        fairshare:landscapeFactor="40"
+        fairshare:portraitFactor="40"
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
