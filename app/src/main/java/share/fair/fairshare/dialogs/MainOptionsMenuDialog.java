@@ -50,15 +50,15 @@ public class MainOptionsMenuDialog  extends DialogFragment {
         params.y = y;
         window.setAttributes(params);
 
-        getDialog().setContentView(R.layout.main_options_menu_dialog);
-        View dialogLayout = inflater.inflate(R.layout.main_options_menu_dialog, container);
+        getDialog().setContentView(R.layout.options_menu_main);
+        View dialogLayout = inflater.inflate(R.layout.options_menu_main, container);
 
 //=========================== Join group with key=================================================
         Button joinGroup = (Button) dialogLayout.findViewById(R.id.main_options_menu_join_group);
         joinGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new JoinGroupWithKeyDialog().show(getFragmentManager(), "join_group_with_key_dialog");
+                new JoinGroupWithKeyDialog().show(getFragmentManager(), "dialog_join_group_with_key");
             }
         });
 

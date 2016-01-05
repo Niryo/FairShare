@@ -26,7 +26,6 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="You are using an old version of FairShare.\nPlease install the latest version and try again."
-        android:id="@+id/textView2"
         android:textColor="#45da8f"
         android:gravity="center" />
 </LinearLayout>

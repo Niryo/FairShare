@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@drawable/picture_frame"
+        android:background="@drawable/img_green_floating_effect"
         android:layout_marginLeft="-12dp"
         android:layout_marginRight="-12dp"
         android:layout_marginTop="-12dp"
@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/back_to_group_button_actions"
-            android:background="@drawable/back_button" />
+            android:background="@drawable/xml_back_button" />
 
         <share.fair.fairshare.views.RelativeTextView
             fairshare:landscapeFactor="15"

@@ -92,7 +92,7 @@ public class BillFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.go_out_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_new_bill, container, false);
     }
 
     @Override
@@ -191,7 +191,7 @@ public class BillFragment extends Fragment {
      */
     private View getNewGoOutRow(String userName) {
         LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View newView = vi.inflate(R.layout.user_go_out_row, null);
+        View newView = vi.inflate(R.layout.row_new_bill, null);
         TextView tvUserNameText = (TextView) newView.findViewById(R.id.tv_go_out_user_name);
         tvUserNameText.setText(userName);
         final EditText etPaid = (EditText) newView.findViewById(R.id.et_paid);

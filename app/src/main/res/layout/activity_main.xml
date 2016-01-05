@@ -10,9 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/picture_frame"
+        android:background="@drawable/img_green_floating_effect"
         android:orientation="vertical"
-        android:id="@+id/main_activity_header_container"
         android:gravity="center_horizontal|top"
         android:layout_marginLeft="-10dp"
         android:layout_marginTop="-10dp"
@@ -29,8 +28,8 @@
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/activity_main_options_menu"
-                android:layout_toLeftOf="@+id/main_activity_title"
+                android:id="@+id/main_btn_options_menu"
+                android:layout_toLeftOf="@+id/main_tv_title"
                 android:background="@drawable/options_menu_button"
                 android:layout_centerVertical="true"
                 />
@@ -41,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="FairShare"
-                android:id="@+id/main_activity_title"
+                android:id="@+id/main_tv_title"
                 android:textColor="#ffffffff"
                 android:layout_centerHorizontal="true" />
         </RelativeLayout>
@@ -49,7 +48,7 @@
         <share.fair.fairshare.views.RelativeButton
             fairshare:landscapeTextSizeFactor="30"
             fairshare:portraitTextSizeFactor="40"
-            android:id="@+id/create_new_group_button"
+            android:id="@+id/main_btn_create_new_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"

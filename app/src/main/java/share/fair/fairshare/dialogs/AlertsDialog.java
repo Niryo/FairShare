@@ -64,11 +64,11 @@ public class AlertsDialog extends DialogFragment {
 
 
 
-        View dialogLayout = inflater.inflate(R.layout.alert_dialog_layout, container);
+        View dialogLayout = inflater.inflate(R.layout.dialog_alert, container);
         LinearLayout alertsContainer = (LinearLayout) dialogLayout.findViewById(R.id.alert_dialog_container);
         if(alerts!=null){
         for (Alert.AlertObject alert : alerts) {
-            View alertRow = inflater.inflate(R.layout.alert_row, null);
+            View alertRow = inflater.inflate(R.layout.row_alert_dialog, null);
             RelativeTextView description = (RelativeTextView) alertRow.findViewById(R.id.alert_row_description);
             description.setText(alert.description);
 
@@ -80,7 +80,7 @@ public class AlertsDialog extends DialogFragment {
             alertsContainer.addView(alertRow);
 
         }
-        getDialog().setContentView(R.layout.alert_dialog_layout);
+        getDialog().setContentView(R.layout.dialog_alert);
     }
 
 

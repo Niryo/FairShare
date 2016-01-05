@@ -29,8 +29,8 @@ public class GroupNameDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View dialogLayout = inflater.inflate(R.layout.new_group_dialog_layout, container);
-        getDialog().setContentView(R.layout.new_group_dialog_layout);
+        View dialogLayout = inflater.inflate(R.layout.dialog_new_group, container);
+        getDialog().setContentView(R.layout.dialog_new_group);
         getDialog().setTitle("Choose group name:");
 
         final EditText nameEditText = (EditText) dialogLayout.findViewById(R.id.group_name_edit_text);

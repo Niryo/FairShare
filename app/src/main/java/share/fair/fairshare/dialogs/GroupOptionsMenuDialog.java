@@ -51,8 +51,8 @@ public GroupOptionsMenuDialog(){}
         params.y = y;
         window.setAttributes(params);
 
-        getDialog().setContentView(R.layout.group_options_menu_dialog);
-        View dialogLayout = inflater.inflate(R.layout.group_options_menu_dialog, container);
+        getDialog().setContentView(R.layout.options_menu_group);
+        View dialogLayout = inflater.inflate(R.layout.options_menu_group, container);
 //=========================== payment history=================================================
         Button paymentHistory= (Button) dialogLayout.findViewById(R.id.options_menu_payment_history);
         paymentHistory.setOnClickListener(new View.OnClickListener() {

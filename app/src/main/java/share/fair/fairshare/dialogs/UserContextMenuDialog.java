@@ -48,7 +48,7 @@ public class UserContextMenuDialog extends DialogFragment {
             this.user= (User) savedInstanceState.getSerializable("user");
         }
 
-        View dialogLayout = inflater.inflate(R.layout.user_context_menu_dialog_layout, container);
+        View dialogLayout = inflater.inflate(R.layout.context_menu_user, container);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
        getDialog().setTitle(user.getUserName());
 

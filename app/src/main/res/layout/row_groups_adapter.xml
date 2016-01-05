@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/group_row_arrow"
-        android:background="@drawable/blue_arrow"
+        android:background="@drawable/img_blue_arrow"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="12dp" />

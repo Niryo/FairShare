@@ -23,8 +23,8 @@ public class JoinGroupWithKeyDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View dialogLayout = inflater.inflate(R.layout.join_group_with_key_dialog, container);
-        getDialog().setContentView(R.layout.join_group_with_key_dialog);
+        View dialogLayout = inflater.inflate(R.layout.dialog_join_group_with_key, container);
+        getDialog().setContentView(R.layout.dialog_join_group_with_key);
         getDialog().setTitle("Enter Group key:");
 
         final EditText groupKeyEditText = (EditText) dialogLayout.findViewById(R.id.join_group_edit_text);

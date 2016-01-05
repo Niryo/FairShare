@@ -73,11 +73,11 @@ public class ActionEditActivity extends Activity {
         ft.add(R.id.action_edit_fragment_container, goOutFragment, "goOutFragment");
         ft.commit();
 
-        tvCreatedBy = (TextView) findViewById(R.id.action_edit_created_by);
+        tvCreatedBy = (TextView) findViewById(R.id.action_edit_tv_created_by);
         tvCreatedBy.setText("Created by: " + actionCreatedBy);
         tvCreatedBy.setTextColor(Color.BLACK);
 
-        btnSave = (Button) findViewById(R.id.save_changes_action_button);
+        btnSave = (Button) findViewById(R.id.action_edit_btn_save);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,7 +118,7 @@ public class ActionEditActivity extends Activity {
             }
         });
 
-        btnEdit = (Button) findViewById(R.id.edit_action_activity_edit_button);
+        btnEdit = (Button) findViewById(R.id.action_edit_btn_edit);
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,7 +128,7 @@ public class ActionEditActivity extends Activity {
             }
         });
 
-        btnBackToActionsActivity = (Button) findViewById(R.id.back_to_actions);
+        btnBackToActionsActivity = (Button) findViewById(R.id.action_edit_btn_back);
         btnBackToActionsActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,7 +136,7 @@ public class ActionEditActivity extends Activity {
             }
         });
 
-        btnDeleteAction = (Button) findViewById(R.id.delete_action_button);
+        btnDeleteAction = (Button) findViewById(R.id.action_edit_btn_delete);
         btnDeleteAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

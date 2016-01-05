@@ -11,9 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-
 import share.fair.fairshare.R;
 
 /**
@@ -24,8 +21,8 @@ public class SaveNameDialog extends DialogFragment {
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View dialogLayout = inflater.inflate(R.layout.save_name_dialog, container);
-        getDialog().setContentView(R.layout.save_name_dialog);
+        View dialogLayout = inflater.inflate(R.layout.dialog_save_name, container);
+        getDialog().setContentView(R.layout.dialog_save_name);
         getDialog().setTitle("Enter your name:");
         setCancelable(false);
         final EditText nameEditText = (EditText) dialogLayout.findViewById(R.id.name_edit_text);

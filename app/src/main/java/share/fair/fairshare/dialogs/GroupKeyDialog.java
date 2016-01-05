@@ -48,8 +48,8 @@ public class GroupKeyDialog extends DialogFragment {
              groupName= savedInstanceState.getString("groupName");
 
         }
-        View dialogLayout = inflater.inflate(R.layout.group_key_dialog, container);
-        getDialog().setContentView(R.layout.group_key_dialog);
+        View dialogLayout = inflater.inflate(R.layout.dialog_show_group_key, container);
+        getDialog().setContentView(R.layout.dialog_show_group_key);
         getDialog().setTitle("Group key:");
         final TextView groupKeyText = (TextView) dialogLayout.findViewById(R.id.group_key_dialog_text);
         String stringLength= groupName.length()<9? "0"+groupName.length(): String.valueOf(groupName.length());

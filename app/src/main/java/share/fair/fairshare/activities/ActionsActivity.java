@@ -36,7 +36,7 @@ public class ActionsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_actions);
+        setContentView(R.layout.activity_payment_history);
         isFirstRun();
 
         btnBackToGroup = (Button) findViewById(R.id.back_to_group_button_actions);
@@ -60,7 +60,7 @@ public class ActionsActivity extends Activity {
 
         //Iterate over the actions list in a reverse order (newer actions on top):
         for (int i = group.actions.size() - 1; i >= 0; i--) {
-            View actionRow = vi.inflate(R.layout.action_row, null);
+            View actionRow = vi.inflate(R.layout.payment_history_row, null);
             Action action = group.actions.get(i);
 
             //check if the action is legal (we will check only the actions that are marked as editable:

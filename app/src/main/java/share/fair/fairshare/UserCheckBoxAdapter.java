@@ -46,7 +46,7 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
 
         if (convertView == null) {
             LayoutInflater vi = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.user_check_row, null);
+            convertView = vi.inflate(R.layout.row_user_checkbox_adapter, null);
         }
         initLayoutPreferences(convertView);
         TextView tvUserBalance = (TextView) convertView.findViewById(R.id.tv_user_balance);

@@ -33,8 +33,8 @@ public class UserNameDialog extends DialogFragment {
                              Bundle savedInstanceState) {
 
 
-        View dialogLayout = inflater.inflate(R.layout.new_user_dialog_layout, container);
-        getDialog().setContentView(R.layout.new_user_dialog_layout);
+        View dialogLayout = inflater.inflate(R.layout.dialog_new_user, container);
+        getDialog().setContentView(R.layout.dialog_new_user);
         getDialog().setTitle("Choose user name:");
 
         final EditText nameEditText = (EditText) dialogLayout.findViewById(R.id.user_name_edit_text);

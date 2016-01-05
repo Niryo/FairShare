@@ -37,7 +37,7 @@ public class GroupContextMenuDialog extends DialogFragment {
         if(savedInstanceState!=null){
             this.groupNameRecord = (FairShareGroup.GroupNameRecord) savedInstanceState.getSerializable("groupNameRecord");
         }
-        View dialogLayout = inflater.inflate(R.layout.group_context_menu_dialog, container);
+        View dialogLayout = inflater.inflate(R.layout.context_menu_group, container);
         getDialog().setTitle(groupNameRecord.getGroupName());
 
         //======================================Delete group =================================================

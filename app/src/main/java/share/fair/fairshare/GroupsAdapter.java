@@ -30,7 +30,7 @@ public class GroupsAdapter extends ArrayAdapter {
 
         if (convertView == null) {
             LayoutInflater vi = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.group_row, null);
+            convertView = vi.inflate(R.layout.row_groups_adapter, null);
         }
 
         TextView tvGroupName = (TextView) convertView.findViewById(R.id.tv_row_grp_name);

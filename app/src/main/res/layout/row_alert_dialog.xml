@@ -4,7 +4,7 @@
 
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/border_with_bottom">
+    android:background="@drawable/xml_borders">
 
     <share.fair.fairshare.views.RelativeTextView
         fairshare:landscapeFactor="45"

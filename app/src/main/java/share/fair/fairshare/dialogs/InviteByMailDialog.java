@@ -19,8 +19,8 @@ public class InviteByMailDialog extends DialogFragment {
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View dialogLayout = inflater.inflate(R.layout.invite_by_mail_dialog, container);
-        getDialog().setContentView(R.layout.invite_by_mail_dialog);
+        View dialogLayout = inflater.inflate(R.layout.dialog_invite_by_mail, container);
+        getDialog().setContentView(R.layout.dialog_invite_by_mail);
         getDialog().setTitle("Enter email address:");
 
         final EditText inputEditText = (EditText) dialogLayout.findViewById(R.id.invite_by_mail_dialog_input);

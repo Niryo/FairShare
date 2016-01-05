@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fairshare = "http://schemas.android.com/apk/res/share.fair.fairshare"
 
-     android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:weightSum="1"
     android:background="@drawable/menu_item_button"
