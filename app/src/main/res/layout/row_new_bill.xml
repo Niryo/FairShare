@@ -1,79 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fairshare = "http://schemas.android.com/apk/res/share.fair.fairshare"
-
+    xmlns:fairshare="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="wrap_content">
 
     <share.fair.fairshare.views.RelativeTextView
-        fairshare:landscapeFactor="30"
-        fairshare:portraitFactor="30"
-
-        android:id="@+id/tv_go_out_user_name"
+        android:id="@+id/new_bill_row_tv_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="15dp"
         android:gravity="center"
+        android:text="UserName"
         android:textColor="#d0151515"
         android:textSize="14sp"
-        android:layout_alignParentLeft="true"
-        android:text="UserName"
-        android:layout_marginLeft="15dp" />
+        fairshare:landscapeFactor="30"
+        fairshare:portraitFactor="30" />
 
 
-    <FrameLayout
-        android:layout_width="wrap_content"
+    <share.fair.fairshare.views.RelativeEditText
+        android:id="@+id/new_bill_row_et_paid"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/sum_share_frame"
-        android:layout_marginRight="20dp">
+        android:background="@android:color/transparent"
+        android:digits="0123456789."
+        android:gravity="center"
+        android:hint="_"
+        android:imeOptions="actionDone"
+        android:inputType="numberDecimal"
+        android:textColor="#000000"
+        android:textColorHint="#b33b3b3b"
+        android:textSize="14sp"
+        android:visibility="visible"
+        fairshare:landscapeFactor="30"
+        fairshare:placeHolderText="Amount paid"
+        fairshare:portraitFactor="30" />
 
 
-        <share.fair.fairshare.views.RelativeEditText
-            fairshare:landscapeFactor="30"
-            fairshare:portraitFactor="30"
-            fairshare:placeHolderText="Amount paid"
-            android:id="@+id/et_paid"
-            android:inputType="numberDecimal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionDone"
-            android:textColorHint="#b33b3b3b"
-            android:textColor="#000000"
-            android:digits="0123456789."
-            android:textSize="14sp"
-            android:gravity="center"
-            android:visibility="visible"
-            android:hint="_"
-
-            android:background="@android:color/transparent" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="wrap_content"
+    <share.fair.fairshare.views.RelativeEditText
+        android:id="@+id/new_bill_row_et_share"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:id="@+id/sum_share_frame"
-        android:layout_marginRight="15dp">
+        android:background="@android:color/transparent"
+        android:digits="0123456789."
+        android:focusable="true"
+        android:gravity="center"
+        android:hint="_"
+        android:imeOptions="actionDone"
+        android:inputType="numberDecimal"
+        android:textColor="#000000"
+        android:textColorHint="#b33b3b3b"
+        android:textSize="14sp"
+        fairshare:landscapeFactor="30"
+        fairshare:placeHolderText="Share"
+        fairshare:portraitFactor="30" />
 
-        <share.fair.fairshare.views.RelativeEditText
-            fairshare:landscapeFactor="30"
-            fairshare:portraitFactor="30"
-            fairshare:placeHolderText="Share"
-
-            android:id="@+id/et_special_share"
-            android:inputType="numberDecimal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionDone"
-            android:focusable="true"
-            android:textColorHint="#b33b3b3b"
-            android:textColor="#000000"
-            android:digits="0123456789."
-            android:textSize="14sp"
-            android:gravity="center"
-            android:hint="_"
-            android:background="@android:color/transparent" />
-
-    </FrameLayout>
 
 </RelativeLayout>

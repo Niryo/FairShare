@@ -37,11 +37,11 @@ public class UserNameDialog extends DialogFragment {
         getDialog().setContentView(R.layout.dialog_new_user);
         getDialog().setTitle("Choose user name:");
 
-        final EditText nameEditText = (EditText) dialogLayout.findViewById(R.id.user_name_edit_text);
+        final EditText nameEditText = (EditText) dialogLayout.findViewById(R.id.new_user_et_user_name);
         nameEditText.setHint("User's name");
-        final Button createButton = (Button) dialogLayout.findViewById(R.id.create_button_user);
-        final Button cancelButton = (Button) dialogLayout.findViewById(R.id.cancel_button_user);
-        final EditText emailEditText = (EditText) dialogLayout.findViewById(R.id.user_mail_edit_text);
+        final Button createButton = (Button) dialogLayout.findViewById(R.id.new_user_btn_create);
+        final Button cancelButton = (Button) dialogLayout.findViewById(R.id.new_user_btn_cancel);
+        final EditText emailEditText = (EditText) dialogLayout.findViewById(R.id.new_user_et_email);
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override

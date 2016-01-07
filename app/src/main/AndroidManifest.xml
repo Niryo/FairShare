@@ -59,7 +59,7 @@
             android:name=".activities.NewBillActivity"
             android:label="@string/title_activity_go_out" />
         <activity
-            android:name=".activities.ActionsActivity"
+            android:name=".activities.PaymentsHistoryActivity"
             android:label="@string/title_activity_actions" />
         <activity
             android:name=".activities.ActionEditActivity"

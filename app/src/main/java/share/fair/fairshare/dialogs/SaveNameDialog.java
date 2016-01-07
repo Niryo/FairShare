@@ -25,8 +25,8 @@ public class SaveNameDialog extends DialogFragment {
         getDialog().setContentView(R.layout.dialog_save_name);
         getDialog().setTitle("Enter your name:");
         setCancelable(false);
-        final EditText nameEditText = (EditText) dialogLayout.findViewById(R.id.name_edit_text);
-        final Button saveButton = (Button) dialogLayout.findViewById(R.id.name_save_button);
+        final EditText nameEditText = (EditText) dialogLayout.findViewById(R.id.save_name_et_name);
+        final Button saveButton = (Button) dialogLayout.findViewById(R.id.save_name_btn_save);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override

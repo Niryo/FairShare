@@ -27,8 +27,8 @@ public class JoinGroupWithKeyDialog extends DialogFragment {
         getDialog().setContentView(R.layout.dialog_join_group_with_key);
         getDialog().setTitle("Enter Group key:");
 
-        final EditText groupKeyEditText = (EditText) dialogLayout.findViewById(R.id.join_group_edit_text);
-        final Button joinButton = (Button) dialogLayout.findViewById(R.id.join_group_with_key_join_button);
+        final EditText groupKeyEditText = (EditText) dialogLayout.findViewById(R.id.join_group_with_key_et_input);
+        final Button joinButton = (Button) dialogLayout.findViewById(R.id.join_group_with_key_btn_join);
 
         joinButton.setOnClickListener(new View.OnClickListener() {
             @Override

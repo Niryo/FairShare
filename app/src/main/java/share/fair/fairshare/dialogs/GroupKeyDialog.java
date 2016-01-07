@@ -51,10 +51,10 @@ public class GroupKeyDialog extends DialogFragment {
         View dialogLayout = inflater.inflate(R.layout.dialog_show_group_key, container);
         getDialog().setContentView(R.layout.dialog_show_group_key);
         getDialog().setTitle("Group key:");
-        final TextView groupKeyText = (TextView) dialogLayout.findViewById(R.id.group_key_dialog_text);
+        final TextView groupKeyText = (TextView) dialogLayout.findViewById(R.id.show_group_key_tv_key);
         String stringLength= groupName.length()<9? "0"+groupName.length(): String.valueOf(groupName.length());
         groupKeyText.setText(stringLength+groupName+groupKey);
-        Button copyButton = (Button) dialogLayout.findViewById(R.id.group_key_dialog_copy);
+        Button copyButton = (Button) dialogLayout.findViewById(R.id.show_group_key_btn_copy);
         copyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

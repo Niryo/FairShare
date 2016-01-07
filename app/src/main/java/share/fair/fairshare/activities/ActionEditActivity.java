@@ -173,7 +173,7 @@ public class ActionEditActivity extends Activity {
      * Opens the action activity and finish this activity
      */
     private void openActionActivity() {
-        Intent actions = new Intent(getApplicationContext(), ActionsActivity.class);
+        Intent actions = new Intent(getApplicationContext(), PaymentsHistoryActivity.class);
         actions.putExtra("groupId", group.getCloudGroupKey());
         startActivity(actions);
         finish();

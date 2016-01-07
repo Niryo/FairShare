@@ -54,7 +54,7 @@ public GroupOptionsMenuDialog(){}
         getDialog().setContentView(R.layout.options_menu_group);
         View dialogLayout = inflater.inflate(R.layout.options_menu_group, container);
 //=========================== payment history=================================================
-        Button paymentHistory= (Button) dialogLayout.findViewById(R.id.options_menu_payment_history);
+        Button paymentHistory= (Button) dialogLayout.findViewById(R.id.group_options_menu_btn_payment_history);
         paymentHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,7 +64,7 @@ public GroupOptionsMenuDialog(){}
         });
 
         //=========================== settle up =================================================
-        Button settleUpButton = (Button) dialogLayout.findViewById(R.id.options_menu_settle_up);
+        Button settleUpButton = (Button) dialogLayout.findViewById(R.id.group_options_menu_btn_settle_up);
         settleUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +74,7 @@ public GroupOptionsMenuDialog(){}
         });
         //=========================== show group key =================================================
 
-        Button showGroupKey = (Button) dialogLayout.findViewById(R.id.options_menu_group_key);
+        Button showGroupKey = (Button) dialogLayout.findViewById(R.id.group_options_menu_btn_group_key);
         showGroupKey.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +85,7 @@ public GroupOptionsMenuDialog(){}
 
         //=========================== Invite by mail =================================================
 
-        Button inviteByMail = (Button) dialogLayout.findViewById(R.id.options_menu_invite_by_mail);
+        Button inviteByMail = (Button) dialogLayout.findViewById(R.id.group_options_menu_btn_invite_by_mail);
         inviteByMail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

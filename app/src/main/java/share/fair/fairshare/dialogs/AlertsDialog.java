@@ -65,17 +65,17 @@ public class AlertsDialog extends DialogFragment {
 
 
         View dialogLayout = inflater.inflate(R.layout.dialog_alert, container);
-        LinearLayout alertsContainer = (LinearLayout) dialogLayout.findViewById(R.id.alert_dialog_container);
+        LinearLayout alertsContainer = (LinearLayout) dialogLayout.findViewById(R.id.alert_container);
         if(alerts!=null){
         for (Alert.AlertObject alert : alerts) {
             View alertRow = inflater.inflate(R.layout.row_alert_dialog, null);
-            RelativeTextView description = (RelativeTextView) alertRow.findViewById(R.id.alert_row_description);
+            RelativeTextView description = (RelativeTextView) alertRow.findViewById(R.id.alert_row_tv_description);
             description.setText(alert.description);
 
-            RelativeTextView userName = (RelativeTextView) alertRow.findViewById(R.id.alert_row_username);
+            RelativeTextView userName = (RelativeTextView) alertRow.findViewById(R.id.alert_row_tv_username);
             userName.setText(alert.useNrame);
 
-            TextView paid = (TextView) alertRow.findViewById(R.id.alert_row_paid);
+            TextView paid = (TextView) alertRow.findViewById(R.id.alert_row_tv_paid);
             paid.setText(new DecimalFormat("##.##").format(alert.paid+0));
             alertsContainer.addView(alertRow);
 

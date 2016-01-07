@@ -1,6 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fairshare = "http://schemas.android.com/apk/res/share.fair.fairshare"
-
+    xmlns:fairshare="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
@@ -10,51 +9,50 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/img_green_floating_effect"
-        android:orientation="vertical"
-        android:gravity="center_horizontal|top"
         android:layout_marginLeft="-10dp"
+        android:layout_marginRight="-10dp"
         android:layout_marginTop="-10dp"
-        android:layout_marginRight="-10dp">
+        android:background="@drawable/img_green_floating_effect"
+        android:gravity="center_horizontal|top"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <share.fair.fairshare.views.RelativeButton
-            fairshare:landscapeButtonSizeFactor="10"
-            fairshare:portraitButtonSizeFactor="10"
-
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/main_btn_options_menu"
+                android:layout_width="wrap_content"
+
+
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/main_tv_title"
                 android:background="@drawable/options_menu_button"
-                android:layout_centerVertical="true"
-                />
+                fairshare:landscapeButtonSizeFactor="10"
+                fairshare:portraitButtonSizeFactor="10" />
 
             <share.fair.fairshare.views.RelativeTextView
-                fairshare:landscapeFactor="10"
-                fairshare:portraitFactor="10"
+                android:id="@+id/main_tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:text="FairShare"
-                android:id="@+id/main_tv_title"
                 android:textColor="#ffffffff"
-                android:layout_centerHorizontal="true" />
+                fairshare:landscapeFactor="10"
+                fairshare:portraitFactor="10" />
         </RelativeLayout>
 
         <share.fair.fairshare.views.RelativeButton
-            fairshare:landscapeTextSizeFactor="30"
-            fairshare:portraitTextSizeFactor="40"
             android:id="@+id/main_btn_create_new_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/round_button"
             android:gravity="center"
             android:text="Create New Group"
-            android:background="@drawable/round_button"
-            android:textAllCaps="false"/>
+            android:textAllCaps="false"
+            fairshare:landscapeTextSizeFactor="30"
+            fairshare:portraitTextSizeFactor="40" />
 
     </LinearLayout>
 

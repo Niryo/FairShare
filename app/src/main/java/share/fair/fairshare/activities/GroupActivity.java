@@ -266,7 +266,7 @@ public class GroupActivity extends FragmentActivity {
      * Go to action activity
      */
     public void goToActionActivity() {
-        Intent actions = new Intent(getApplicationContext(), ActionsActivity.class);
+        Intent actions = new Intent(getApplicationContext(), PaymentsHistoryActivity.class);
         actions.putExtra("groupId", group.getCloudGroupKey());
         startActivity(actions);
         finish();
@@ -321,7 +321,7 @@ public class GroupActivity extends FragmentActivity {
      */
     private void clearChecked() {
         for (int i = 0; i < this.userListView.getChildCount(); i++) {
-            CheckBox checkBox = (CheckBox) this.userListView.getChildAt(i).findViewById(R.id.cb_user_row);
+            CheckBox checkBox = (CheckBox) this.userListView.getChildAt(i).findViewById(R.id.user_checkbox_adapter_cb_user_name);
             checkBox.setChecked(false);
         }
         this.userCheckBoxAdapter.clearChecked();

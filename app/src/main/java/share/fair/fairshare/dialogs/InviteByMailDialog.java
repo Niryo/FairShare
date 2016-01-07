@@ -23,8 +23,8 @@ public class InviteByMailDialog extends DialogFragment {
         getDialog().setContentView(R.layout.dialog_invite_by_mail);
         getDialog().setTitle("Enter email address:");
 
-        final EditText inputEditText = (EditText) dialogLayout.findViewById(R.id.invite_by_mail_dialog_input);
-        final Button sendButton = (Button) dialogLayout.findViewById(R.id.invite_by_mail_send);
+        final EditText inputEditText = (EditText) dialogLayout.findViewById(R.id.invite_by_mail_dialog_et_input);
+        final Button sendButton = (Button) dialogLayout.findViewById(R.id.invite_by_mail_btn_send);
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -53,10 +53,10 @@ public class UserContextMenuDialog extends DialogFragment {
        getDialog().setTitle(user.getUserName());
 
         //==================================== First Item ==========================================
-        final EditText inputEditText = (EditText) dialogLayout.findViewById(R.id.edit_text_user_context_menu);
+        final EditText inputEditText = (EditText) dialogLayout.findViewById(R.id.user_context_menu_et_input);
         inputEditText.setHint("Amount paid");
-        final Button doneButton = (Button) dialogLayout.findViewById(R.id.done_button_user_context_menu);
-        final Button nextButton = (Button) dialogLayout.findViewById(R.id.next_button_user_context_menu);
+        final Button doneButton = (Button) dialogLayout.findViewById(R.id.user_context_menu_btn_done);
+        final Button nextButton = (Button) dialogLayout.findViewById(R.id.user_context_menu_btn_next);
         nextButton.setEnabled(false);
         inputEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -98,7 +98,7 @@ public class UserContextMenuDialog extends DialogFragment {
             }
         });
         //==================================== Second Item ==========================================
-        Button notifyMe = (Button) dialogLayout.findViewById(R.id.user_context_menu_notify_me);
+        Button notifyMe = (Button) dialogLayout.findViewById(R.id.user_context_menu_btn_notify_me);
         if(user.isNotified()){
             notifyMe.setText("Remove notifications");
             notifyMe.setOnClickListener(new View.OnClickListener() {
@@ -133,7 +133,7 @@ public class UserContextMenuDialog extends DialogFragment {
         }
 
         //======================================Delete user =================================================
-        Button deleteButton = (Button) dialogLayout.findViewById(R.id.user_context_menu_delete);
+        Button deleteButton = (Button) dialogLayout.findViewById(R.id.user_context_menu_btn_delete);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

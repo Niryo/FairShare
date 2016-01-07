@@ -33,7 +33,7 @@ public class GroupsAdapter extends ArrayAdapter {
             convertView = vi.inflate(R.layout.row_groups_adapter, null);
         }
 
-        TextView tvGroupName = (TextView) convertView.findViewById(R.id.tv_row_grp_name);
+        TextView tvGroupName = (TextView) convertView.findViewById(R.id.groups_adapter_row_tv_group_name);
         tvGroupName.setText(groupNameList.get(position).getGroupName());
         return convertView;
     }

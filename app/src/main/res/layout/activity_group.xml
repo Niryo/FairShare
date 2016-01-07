@@ -1,6 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fairshare = "http://schemas.android.com/apk/res/share.fair.fairshare"
-
+    xmlns:fairshare="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -8,143 +7,140 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/img_green_floating_effect"
-        android:orientation="vertical"
         android:layout_marginLeft="-10dp"
+        android:layout_marginRight="-10dp"
         android:layout_marginTop="-10dp"
-        android:layout_marginRight="-10dp">
+        android:background="@drawable/img_green_floating_effect"
+        android:orientation="vertical">
 
         <RelativeLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
+            android:layout_marginBottom="10dp"
             android:gravity="center_vertical"
-            android:layout_marginBottom="10dp">
+            android:orientation="horizontal">
 
             <share.fair.fairshare.views.RelativeButton
-                fairshare:landscapeButtonSizeFactor="15"
-                fairshare:portraitButtonSizeFactor="15"
-
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/group_btn_back"
-                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+
+
+                android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4dp"
                 android:background="@drawable/xml_back_button"
-                android:layout_marginLeft="4dp" />
+                fairshare:landscapeButtonSizeFactor="15"
+                fairshare:portraitButtonSizeFactor="15" />
 
             <share.fair.fairshare.views.RelativeButton
-                fairshare:landscapeButtonSizeFactor="10"
-                fairshare:portraitButtonSizeFactor="10"
-
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/group_btn_options_menu"
-                android:background="@drawable/options_menu_button"
+                android:layout_width="wrap_content"
+
+
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/group_btn_back"
                 android:layout_toRightOf="@+id/group_btn_back"
-                android:layout_toEndOf="@+id/group_btn_back" />
+                android:background="@drawable/options_menu_button"
+                fairshare:landscapeButtonSizeFactor="10"
+                fairshare:portraitButtonSizeFactor="10" />
 
             <share.fair.fairshare.views.RelativeTextView
-                fairshare:landscapeFactor="10"
-                fairshare:portraitFactor="10"
+                android:id="@+id/tv_group_group_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/tv_group_group_name"
-                android:text="Group Name"
-                android:gravity="center"
-                android:textColor="#ffffff"
                 android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/group_btn_options_menu"
                 android:layout_toRightOf="@+id/group_btn_options_menu"
-                android:layout_toEndOf="@+id/group_btn_options_menu" />
+                android:gravity="center"
+                android:text="Group Name"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#ffffff"
+                fairshare:landscapeFactor="10"
+                fairshare:portraitFactor="10" />
 
         </RelativeLayout>
 
         <RelativeLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="clip_vertical">
+            android:gravity="clip_vertical"
+            android:orientation="horizontal">
 
             <share.fair.fairshare.views.RelativeButton
-                fairshare:landscapeTextSizeFactor="40"
-                fairshare:portraitTextSizeFactor="40"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add Person"
                 android:id="@+id/group_btn_add_user"
-                android:background="@drawable/round_button"
-                android:padding="2dp"
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:textAllCaps="false"
-                />
-
-            <share.fair.fairshare.views.RelativeButton
-                fairshare:landscapeTextSizeFactor="40"
-                fairshare:portraitTextSizeFactor="40"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Bill"
-                android:id="@+id/group_btn_new_bill_checked"
-                android:visibility="gone"
-                android:background="@drawable/round_button_unpressed"
-                android:textStyle="bold"
-                android:padding="2dp"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/group_btn_add_user"
-                android:layout_toEndOf="@+id/group_btn_add_user"
-                android:textAllCaps="false"
-                />
-
-            <share.fair.fairshare.views.RelativeButton
-                fairshare:landscapeTextSizeFactor="40"
-                fairshare:portraitTextSizeFactor="40"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Bill"
-                android:id="@+id/group_btn_new_bill_all"
-                android:textAllCaps="false"
                 android:background="@drawable/round_button"
                 android:padding="2dp"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/group_btn_add_user"
-                android:layout_toEndOf="@+id/group_btn_add_user" />
+                android:text="Add Person"
+                android:textAllCaps="false"
+                fairshare:landscapeTextSizeFactor="40"
+                fairshare:portraitTextSizeFactor="40" />
 
             <share.fair.fairshare.views.RelativeButton
-                fairshare:landscapeButtonSizeFactor="12"
-                fairshare:portraitButtonSizeFactor="12"
-                fairshare:landscapeTextSizeFactor="50"
-                fairshare:portraitTextSizeFactor="50"
+                android:id="@+id/group_btn_new_bill_checked"
+                android:layout_width="wrap_content"
 
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/group_btn_add_user"
+                android:layout_toRightOf="@+id/group_btn_add_user"
+                android:background="@drawable/round_button_unpressed"
+                android:padding="2dp"
+                android:text="New Bill"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:visibility="gone"
+                fairshare:landscapeTextSizeFactor="40"
+                fairshare:portraitTextSizeFactor="40" />
+
+            <share.fair.fairshare.views.RelativeButton
+                android:id="@+id/group_btn_new_bill_all"
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/group_btn_add_user"
+                android:layout_toRightOf="@+id/group_btn_add_user"
+                android:background="@drawable/round_button"
+                android:padding="2dp"
+                android:text="New Bill"
+                android:textAllCaps="false"
+                fairshare:landscapeTextSizeFactor="40"
+                fairshare:portraitTextSizeFactor="40" />
+
+            <share.fair.fairshare.views.RelativeButton
+                android:id="@+id/group_btn_alert"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/group_btn_alert"
+                android:layout_alignParentRight="true"
+
                 android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
                 android:background="@drawable/img_alert_button_off"
                 android:gravity="center"
-                android:layout_marginRight="10dp"
-                android:layout_alignParentRight="true"
-                android:textAllCaps="false"/>
+                android:textAllCaps="false"
+                fairshare:landscapeButtonSizeFactor="12"
+                fairshare:landscapeTextSizeFactor="50"
+                fairshare:portraitButtonSizeFactor="12"
+                fairshare:portraitTextSizeFactor="50" />
 
         </RelativeLayout>
     </LinearLayout>
 
     <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/users_list_view"
-        />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 
 </LinearLayout>

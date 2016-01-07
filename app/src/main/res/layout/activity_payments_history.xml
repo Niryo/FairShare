@@ -1,5 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fairshare = "http://schemas.android.com/apk/res/share.fair.fairshare"
+    xmlns:fairshare="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -7,40 +7,37 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/img_green_floating_effect"
         android:layout_marginLeft="-12dp"
         android:layout_marginRight="-12dp"
         android:layout_marginTop="-12dp"
+        android:background="@drawable/img_green_floating_effect"
+        android:orientation="horizontal"
         android:padding="20dp">
 
         <share.fair.fairshare.views.RelativeButton
-            fairshare:landscapeButtonSizeFactor="15"
-            fairshare:portraitButtonSizeFactor="15"
-
-
+            android:id="@+id/payments_history_btn_back"
             android:layout_width="wrap_content"
+
+
             android:layout_height="wrap_content"
-            android:id="@+id/back_to_group_button_actions"
-            android:background="@drawable/xml_back_button" />
+            android:background="@drawable/xml_back_button"
+            fairshare:landscapeButtonSizeFactor="15"
+            fairshare:portraitButtonSizeFactor="15" />
 
         <share.fair.fairshare.views.RelativeTextView
-            fairshare:landscapeFactor="15"
-            fairshare:portraitFactor="15"
-
+            android:id="@+id/payments_history_title"
             android:layout_width="wrap_content"
+
             android:layout_height="wrap_content"
-            android:text="Payment History"
-            android:id="@+id/action_activity_title"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/back_to_group_button_actions"
-            android:layout_toEndOf="@+id/back_to_group_button_actions"
-            android:textColor="#ffffff" />
+            android:layout_toEndOf="@+id/payments_history_btn_back"
+            android:layout_toRightOf="@+id/payments_history_btn_back"
+            android:text="Payment History"
+            android:textColor="#ffffff"
+            fairshare:landscapeFactor="15"
+            fairshare:portraitFactor="15" />
 
     </RelativeLayout>
-
-
-
 
 
     <ScrollView
@@ -50,13 +47,10 @@
         >
 
         <LinearLayout
-            android:orientation="vertical"
+            android:id="@+id/payments_history_list_of_actions"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/list_of_actions"
-
-
-            >
+            android:orientation="vertical">
 
         </LinearLayout>
     </ScrollView>

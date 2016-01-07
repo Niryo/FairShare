@@ -98,8 +98,8 @@ public class BillFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        LinearLayout list = (LinearLayout) getActivity().findViewById(R.id.list_of_users);
-        etDescription = (EditText) getActivity().findViewById(R.id.description);
+        LinearLayout list = (LinearLayout) getActivity().findViewById(R.id.new_bill_list_of_users);
+        etDescription = (EditText) getActivity().findViewById(R.id.new_bill_et_description);
 
         //If we are in edit mode, we will set all the lines using the billLineInfoList
         if (editMode) {
@@ -109,11 +109,11 @@ public class BillFragment extends Fragment {
 
             for (BillLine billLineInfo : billLineInfoList) {
                 View newView = getNewGoOutRow(billLineInfo.userName);
-                EditText paid = (EditText) newView.findViewById(R.id.et_paid);
+                EditText paid = (EditText) newView.findViewById(R.id.new_bill_row_et_paid);
                 paid.setText(Double.toString(billLineInfo.paid));
                 paid.setEnabled(false);
 
-                EditText share = (EditText) newView.findViewById(R.id.et_special_share);
+                EditText share = (EditText) newView.findViewById(R.id.new_bill_row_et_share);
                 if (!Double.isNaN(billLineInfo.share)) {
                     share.setText(Double.toString(billLineInfo.share));
                 }
@@ -138,8 +138,8 @@ public class BillFragment extends Fragment {
     public void enableEdit() {
         etDescription.setEnabled(true);
         for (View view : viewsList) {
-            view.findViewById(R.id.et_paid).setEnabled(true);
-            view.findViewById(R.id.et_special_share).setEnabled(true);
+            view.findViewById(R.id.new_bill_row_et_paid).setEnabled(true);
+            view.findViewById(R.id.new_bill_row_et_share).setEnabled(true);
         }
         etDescription.requestFocus();
     }
@@ -162,13 +162,13 @@ public class BillFragment extends Fragment {
         for (int i = 0; i < viewsList.size(); i++) {
             //get amount paid:
             double paidInput = 0.0;
-            String paidInputStr = ((EditText) viewsList.get(i).findViewById(R.id.et_paid)).getText().toString();
+            String paidInputStr = ((EditText) viewsList.get(i).findViewById(R.id.new_bill_row_et_paid)).getText().toString();
             if (!paidInputStr.isEmpty()) {
                 paidInput = Double.parseDouble(paidInputStr);
             }
             //get user's share:
             double shareInput = Double.NaN;
-            String shareInputStr = ((EditText) viewsList.get(i).findViewById(R.id.et_special_share)).getText().toString();
+            String shareInputStr = ((EditText) viewsList.get(i).findViewById(R.id.new_bill_row_et_share)).getText().toString();
             if (!shareInputStr.isEmpty()) {
                 shareInput = Double.parseDouble(shareInputStr);
             }
@@ -192,9 +192,9 @@ public class BillFragment extends Fragment {
     private View getNewGoOutRow(String userName) {
         LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View newView = vi.inflate(R.layout.row_new_bill, null);
-        TextView tvUserNameText = (TextView) newView.findViewById(R.id.tv_go_out_user_name);
+        TextView tvUserNameText = (TextView) newView.findViewById(R.id.new_bill_row_tv_user_name);
         tvUserNameText.setText(userName);
-        final EditText etPaid = (EditText) newView.findViewById(R.id.et_paid);
+        final EditText etPaid = (EditText) newView.findViewById(R.id.new_bill_row_et_paid);
 
         //we create a listener that verify that the input is a valid floating point number
         etPaid.addTextChangedListener(new TextWatcher() {
@@ -225,7 +225,7 @@ public class BillFragment extends Fragment {
         });
 
         //the same validation on the paid is being done on the share:
-        final EditText share = (EditText) newView.findViewById(R.id.et_special_share);
+        final EditText share = (EditText) newView.findViewById(R.id.new_bill_row_et_share);
         share.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

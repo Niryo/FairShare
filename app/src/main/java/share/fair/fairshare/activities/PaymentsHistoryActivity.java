@@ -26,7 +26,7 @@ import share.fair.fairshare.R;
 /**
  * The actions history page
  */
-public class ActionsActivity extends Activity {
+public class PaymentsHistoryActivity extends Activity {
 
     Button btnBackToGroup; //back to group button
     LinearLayout actionList; //list of all actions
@@ -36,10 +36,10 @@ public class ActionsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_payment_history);
+        setContentView(R.layout.activity_payments_history);
         isFirstRun();
 
-        btnBackToGroup = (Button) findViewById(R.id.back_to_group_button_actions);
+        btnBackToGroup = (Button) findViewById(R.id.payments_history_btn_back);
         btnBackToGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,7 +50,7 @@ public class ActionsActivity extends Activity {
             }
         });
 
-        actionList = (LinearLayout) findViewById(R.id.list_of_actions);
+        actionList = (LinearLayout) findViewById(R.id.payments_history_list_of_actions);
         LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         String groupId = getIntent().getStringExtra("groupId");
         if (groupId.isEmpty()) {
@@ -71,9 +71,9 @@ public class ActionsActivity extends Activity {
                 }
             }
 
-            TextView tvTime = (TextView) actionRow.findViewById(R.id.action_row_time);
+            TextView tvTime = (TextView) actionRow.findViewById(R.id.payment_history_row_tv_time);
             tvTime.setText(getDate(action.getTimeStamp()));
-            TextView tvDescription = (TextView) actionRow.findViewById(R.id.action_row_description);
+            TextView tvDescription = (TextView) actionRow.findViewById(R.id.payment_history_row_tv_description);
             tvDescription.setText(action.getDescription());
             final int index = i;
 

@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fairshare = "http://schemas.android.com/apk/res/share.fair.fairshare"
-
-    android:orientation="horizontal" android:layout_width="match_parent"
+    xmlns:fairshare="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/xml_borders">
+    android:background="@drawable/xml_borders"
+    android:orientation="horizontal">
 
     <share.fair.fairshare.views.RelativeTextView
-        fairshare:landscapeFactor="45"
-        fairshare:portraitFactor="45"
-
+        android:id="@+id/alert_row_tv_description"
         android:layout_width="wrap_content"
+
         android:layout_height="wrap_content"
-        android:text="Description"
-        android:id="@+id/alert_row_description"
+        android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp" />
+        android:text="Description"
+        fairshare:landscapeFactor="45"
+        fairshare:portraitFactor="45" />
 
     <share.fair.fairshare.views.RelativeTextView
-        fairshare:landscapeFactor="45"
-        fairshare:portraitFactor="45"
-
+        android:id="@+id/alert_row_tv_username"
         android:layout_width="wrap_content"
+
         android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
         android:text="UserName"
-        android:id="@+id/alert_row_username"
-        android:layout_marginRight="10dp" />
+        fairshare:landscapeFactor="45"
+        fairshare:portraitFactor="45" />
 
     <share.fair.fairshare.views.RelativeTextView
-        fairshare:landscapeFactor="45"
-        fairshare:portraitFactor="45"
-
+        android:id="@+id/alert_row_tv_paid"
         android:layout_width="wrap_content"
+
         android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
         android:text="Paid"
-        android:id="@+id/alert_row_paid"
-        android:layout_marginRight="10dp" />
+        fairshare:landscapeFactor="45"
+        fairshare:portraitFactor="45" />
 </LinearLayout>

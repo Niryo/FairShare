@@ -54,7 +54,7 @@ public class MainOptionsMenuDialog  extends DialogFragment {
         View dialogLayout = inflater.inflate(R.layout.options_menu_main, container);
 
 //=========================== Join group with key=================================================
-        Button joinGroup = (Button) dialogLayout.findViewById(R.id.main_options_menu_join_group);
+        Button joinGroup = (Button) dialogLayout.findViewById(R.id.main_options_menu_btn_join_group);
         joinGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
