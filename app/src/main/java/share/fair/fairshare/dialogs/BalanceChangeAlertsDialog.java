@@ -79,7 +79,6 @@ public class BalanceChangeAlertsDialog extends DialogFragment {
         window.setAttributes(params);
 
 
-
         View dialogLayout = inflater.inflate(R.layout.dialog_balance_change_alert, container);
         LinearLayout alertsContainer = (LinearLayout) dialogLayout.findViewById(R.id.balance_change_alert_container);
         //show the alerts:
@@ -99,7 +98,6 @@ public class BalanceChangeAlertsDialog extends DialogFragment {
 
             getDialog().setContentView(R.layout.dialog_balance_change_alert);
         }
-
 
 
         return dialogLayout;

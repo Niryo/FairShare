@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fairshare="http://schemas.android.com/apk/res-auto"
+
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <share.fair.fairshare.views.RelativeTextView
         android:id="@+id/new_bill_row_tv_user_name"
         android:layout_width="wrap_content"
+
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="15dp"
@@ -18,42 +20,59 @@
         fairshare:portraitFactor="30" />
 
 
-    <share.fair.fairshare.views.RelativeEditText
-        android:id="@+id/new_bill_row_et_paid"
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:digits="0123456789."
-        android:gravity="center"
-        android:hint="_"
-        android:imeOptions="actionDone"
-        android:inputType="numberDecimal"
-        android:textColor="#000000"
-        android:textColorHint="#b33b3b3b"
-        android:textSize="14sp"
-        android:visibility="visible"
-        fairshare:landscapeFactor="30"
-        fairshare:placeHolderText="Amount paid"
-        fairshare:portraitFactor="30" />
+        android:layout_marginRight="20dp"
+        android:layout_toLeftOf="@+id/sum_share_frame">
 
 
-    <share.fair.fairshare.views.RelativeEditText
-        android:id="@+id/new_bill_row_et_share"
-        android:layout_width="match_parent"
+        <share.fair.fairshare.views.RelativeEditText
+            android:id="@+id/new_bill_row_et_paid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:digits="0123456789."
+            android:gravity="center"
+            android:hint="_"
+            android:imeOptions="actionDone"
+            android:inputType="numberDecimal"
+            android:textColor="#000000"
+            android:textColorHint="#b33b3b3b"
+            android:textSize="14sp"
+            android:visibility="visible"
+            fairshare:landscapeFactor="30"
+            fairshare:placeHolderText="Amount paid"
+
+            fairshare:portraitFactor="30" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/sum_share_frame"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:digits="0123456789."
-        android:focusable="true"
-        android:gravity="center"
-        android:hint="_"
-        android:imeOptions="actionDone"
-        android:inputType="numberDecimal"
-        android:textColor="#000000"
-        android:textColorHint="#b33b3b3b"
-        android:textSize="14sp"
-        fairshare:landscapeFactor="30"
-        fairshare:placeHolderText="Share"
-        fairshare:portraitFactor="30" />
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp">
 
+        <share.fair.fairshare.views.RelativeEditText
+            android:id="@+id/new_bill_row_et_share"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:background="@android:color/transparent"
+            android:digits="0123456789."
+            android:focusable="true"
+            android:gravity="center"
+            android:hint="_"
+            android:imeOptions="actionDone"
+            android:inputType="numberDecimal"
+            android:textColor="#000000"
+            android:textColorHint="#b33b3b3b"
+            android:textSize="14sp"
+            fairshare:landscapeFactor="30"
+            fairshare:placeHolderText="Share"
+            fairshare:portraitFactor="30" />
+
+    </FrameLayout>
 
 </RelativeLayout>

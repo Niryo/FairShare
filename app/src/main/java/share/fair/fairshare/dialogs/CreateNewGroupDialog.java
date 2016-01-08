@@ -36,7 +36,7 @@ public class CreateNewGroupDialog extends DialogFragment {
         getDialog().setTitle("Choose group name:");
 
 
-        final EditText etName = (EditText) dialogLayout.findViewById(R.id.create_new_group_btn_create);
+        final EditText etName = (EditText) dialogLayout.findViewById(R.id.create_new_group_et_group_name);
         final EditText specialUserNameText = (EditText) dialogLayout.findViewById(R.id.create_new_group_et_special_name);
         etName.setHint("Group's name");
         final Button btnCreate = (Button) dialogLayout.findViewById(R.id.create_new_group_btn_create);

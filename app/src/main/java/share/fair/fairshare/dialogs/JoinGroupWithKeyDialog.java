@@ -13,12 +13,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import share.fair.fairshare.FairShareGroup;
-import share.fair.fairshare.activities.MainActivity;
 import share.fair.fairshare.R;
+import share.fair.fairshare.activities.MainActivity;
 
 /**
- *  Join group with key dialog.
- *  This dialog shows up when the user click on "Join group with key" inside the groups options menu.
+ * Join group with key dialog.
+ * This dialog shows up when the user click on "Join group with key" inside the groups options menu.
  */
 public class JoinGroupWithKeyDialog extends DialogFragment {
 

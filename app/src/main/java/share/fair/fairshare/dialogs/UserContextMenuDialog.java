@@ -15,9 +15,9 @@ import android.widget.EditText;
 import java.util.List;
 
 import share.fair.fairshare.Alert;
-import share.fair.fairshare.activities.GroupActivity;
 import share.fair.fairshare.R;
 import share.fair.fairshare.User;
+import share.fair.fairshare.activities.GroupActivity;
 
 /**
  * User context menu dialog.
@@ -28,15 +28,14 @@ public class UserContextMenuDialog extends DialogFragment {
     private double paid;
     private double share;
 
+    public UserContextMenuDialog() {
+        // Empty constructor required for DialogFragment
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("user", user);
-    }
-
-
-    public UserContextMenuDialog() {
-        // Empty constructor required for DialogFragment
     }
 
     public void setUser(User user) {
@@ -45,13 +44,13 @@ public class UserContextMenuDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if(savedInstanceState!=null){
-            this.user= (User) savedInstanceState.getSerializable("user");
+        if (savedInstanceState != null) {
+            this.user = (User) savedInstanceState.getSerializable("user");
         }
 
         View dialogLayout = inflater.inflate(R.layout.context_menu_user, container);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-       getDialog().setTitle(user.getUserName());
+        getDialog().setTitle(user.getUserName());
 
         //==================================== First Item ==========================================
         final EditText etInput = (EditText) dialogLayout.findViewById(R.id.user_context_menu_et_input);
@@ -101,15 +100,15 @@ public class UserContextMenuDialog extends DialogFragment {
         //==================================== Second Item ==========================================
         Button notifyMe = (Button) dialogLayout.findViewById(R.id.user_context_menu_btn_notify_me);
         //if user is already notified, remove him from the list. else, add him to the list:
-        if(user.isNotified()){
+        if (user.isNotified()) {
             notifyMe.setText("Remove notifications");
             notifyMe.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //get the list of notified users and remove the user's ID from the list:
                     List<Alert.NotifiedId> notifiedIds = (List<Alert.NotifiedId>) Alert.NotifiedId.listAll(Alert.NotifiedId.class);
-                    for(Alert.NotifiedId notifiedId : notifiedIds){
-                        if(notifiedId.userId.equals(user.getUserId())){
+                    for (Alert.NotifiedId notifiedId : notifiedIds) {
+                        if (notifiedId.userId.equals(user.getUserId())) {
                             notifiedId.delete();
                             break;
                         }
@@ -120,8 +119,7 @@ public class UserContextMenuDialog extends DialogFragment {
                     getDialog().dismiss();
                 }
             });
-        }
-        else {
+        } else {
             notifyMe.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

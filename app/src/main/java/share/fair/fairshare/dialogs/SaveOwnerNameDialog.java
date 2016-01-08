@@ -22,6 +22,7 @@ import share.fair.fairshare.R;
 public class SaveOwnerNameDialog extends DialogFragment {
     public SaveOwnerNameDialog() {
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View dialogLayout = inflater.inflate(R.layout.dialog_save_name, container);

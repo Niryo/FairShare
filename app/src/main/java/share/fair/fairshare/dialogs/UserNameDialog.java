@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import share.fair.fairshare.activities.GroupActivity;
 import share.fair.fairshare.R;
+import share.fair.fairshare.activities.GroupActivity;
 
 /**
  * Created by Ori on 10/11/2015.
@@ -24,8 +24,6 @@ public class UserNameDialog extends DialogFragment {
     public UserNameDialog() {
         // Empty constructor required for DialogFragment
     }
-
-
 
 
     @Override

@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import share.fair.fairshare.activities.GroupActivity;
 import share.fair.fairshare.R;
+import share.fair.fairshare.activities.GroupActivity;
 
 /**
  * Invite by mail dialog.
@@ -18,6 +18,7 @@ import share.fair.fairshare.R;
 public class InviteByMailDialog extends DialogFragment {
     public InviteByMailDialog() {
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View dialogLayout = inflater.inflate(R.layout.dialog_invite_by_mail, container);
