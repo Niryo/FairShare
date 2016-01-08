@@ -12,7 +12,8 @@ import share.fair.fairshare.R;
 import share.fair.fairshare.activities.MainActivity;
 
 /**
- * The context menu of the group
+ * The context menu of the group.
+ * This dialog shows up when the user clicks and holds a groups name in the main activity
  */
 public class GroupContextMenuDialog extends DialogFragment {
     FairShareGroup.GroupNameRecord groupNameRecord;
@@ -36,11 +37,11 @@ public class GroupContextMenuDialog extends DialogFragment {
         if (savedInstanceState != null) {
             this.groupNameRecord = (FairShareGroup.GroupNameRecord) savedInstanceState.getSerializable("groupNameRecord");
         }
-        View dialogLayout = inflater.inflate(R.layout.group_context_menu_dialog, container);
+        View dialogLayout = inflater.inflate(R.layout.context_menu_group, container);
         getDialog().setTitle(groupNameRecord.getGroupName());
 
         //======================================Delete group =================================================
-        Button btnDelete = (Button) dialogLayout.findViewById(R.id.group_context_menu_remove);
+        Button btnDelete = (Button) dialogLayout.findViewById(R.id.group_context_menu_btn_remove);
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

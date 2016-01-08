@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fairshare="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <share.fair.fairshare.views.RelativeButton
+        android:id="@+id/group_options_menu_btn_payment_history"
+        android:layout_width="match_parent"
+
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/menu_item_button"
+        android:gravity="center|left"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:text="Payment history"
+        android:textAllCaps="false"
+        fairshare:landscapeTextSizeFactor="40"
+        fairshare:portraitTextSizeFactor="40" />
+
+    <share.fair.fairshare.views.RelativeButton
+        android:id="@+id/group_options_menu_btn_settle_up"
+        android:layout_width="match_parent"
+
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/menu_item_button"
+        android:gravity="center|left"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:text="Settle up"
+        android:textAllCaps="false"
+        fairshare:landscapeTextSizeFactor="40"
+        fairshare:portraitTextSizeFactor="40" />
+
+    <share.fair.fairshare.views.RelativeButton
+        android:id="@+id/group_options_menu_btn_group_key"
+        android:layout_width="match_parent"
+
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/menu_item_button"
+        android:gravity="center_vertical|left"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:text="Show group key"
+        android:textAllCaps="false"
+        fairshare:landscapeTextSizeFactor="40"
+        fairshare:portraitTextSizeFactor="40" />
+
+    <share.fair.fairshare.views.RelativeButton
+        android:id="@+id/group_options_menu_btn_invite_by_mail"
+        android:layout_width="match_parent"
+
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/menu_item_button"
+        android:gravity="center_vertical|left"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:text="Send invitation"
+        android:textAllCaps="false"
+        fairshare:landscapeTextSizeFactor="40"
+        fairshare:portraitTextSizeFactor="40" />
+</LinearLayout>

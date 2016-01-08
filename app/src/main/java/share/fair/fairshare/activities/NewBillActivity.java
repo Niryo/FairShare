@@ -31,9 +31,9 @@ public class NewBillActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_go_out);
+        setContentView(R.layout.activity_new_bill);
         isFirstRun();
-        btnBackToGroup = (Button) findViewById(R.id.back_to_group_button);
+        btnBackToGroup = (Button) findViewById(R.id.new_bill_btn_back);
         btnBackToGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,7 +56,7 @@ public class NewBillActivity extends Activity {
         ft.commit();
 
 
-        btnCalculate = (Button) findViewById(R.id.calculate_button);
+        btnCalculate = (Button) findViewById(R.id.new_bill_btn_done);
         btnCalculate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -11,39 +11,41 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-
 import share.fair.fairshare.R;
 
 /**
- * Created by Nir on 18/10/2015.
+ * Save owner name dialog.
+ * This dialog shows up when the user runs the app for the first time, and asks him for his name.
+ * The name is being saved to the sharedPreference object and will be used as the creator name of
+ * any action that the user creates.
  */
-public class SaveNameDialog extends DialogFragment {
-    public SaveNameDialog() {
+public class SaveOwnerNameDialog extends DialogFragment {
+    public SaveOwnerNameDialog() {
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View dialogLayout = inflater.inflate(R.layout.save_name_dialog, container);
-        getDialog().setContentView(R.layout.save_name_dialog);
+        View dialogLayout = inflater.inflate(R.layout.dialog_save_name, container);
+        getDialog().setContentView(R.layout.dialog_save_name);
         getDialog().setTitle("Enter your name:");
         setCancelable(false);
-        final EditText nameEditText = (EditText) dialogLayout.findViewById(R.id.name_edit_text);
-        final Button saveButton = (Button) dialogLayout.findViewById(R.id.name_save_button);
+        final EditText etName = (EditText) dialogLayout.findViewById(R.id.save_name_et_name);
+        final Button btnSave = (Button) dialogLayout.findViewById(R.id.save_name_btn_save);
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //save the name in the sharedPreferences object:
                 SharedPreferences settings = getActivity().getSharedPreferences("MAIN_PREFERENCES", 0);
                 SharedPreferences.Editor editor = settings.edit();
-                String nameToSave = nameEditText.getText().toString();
+                String nameToSave = etName.getText().toString();
                 editor.putString("name", nameToSave);
                 editor.commit();
                 getDialog().dismiss();
             }
         });
-        saveButton.setEnabled(false);
-        nameEditText.addTextChangedListener(new TextWatcher() {
+        btnSave.setEnabled(false);
+        //make shure that the save button is enable only when the user entered some text:
+        etName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -54,10 +56,10 @@ public class SaveNameDialog extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (nameEditText.getText().toString().length() > 0) {
-                    saveButton.setEnabled(true);
+                if (etName.getText().toString().length() > 0) {
+                    btnSave.setEnabled(true);
                 } else {
-                    saveButton.setEnabled(false);
+                    btnSave.setEnabled(false);
                 }
             }
         });

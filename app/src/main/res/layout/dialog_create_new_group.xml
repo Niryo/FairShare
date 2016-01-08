@@ -1,72 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fairshare = "http://schemas.android.com/apk/res/share.fair.fairshare"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:fairshare="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal">
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
     <share.fair.fairshare.views.RelativeEditText
-        fairshare:landscapeFactor="30"
-        fairshare:portraitFactor="30"
-
+        android:id="@+id/create_new_group_et_group_name"
         android:layout_width="match_parent"
+
         android:layout_height="wrap_content"
-        android:id="@+id/group_name_edit_text"
         android:layout_gravity="center_horizontal"
-        android:singleLine="true"
+        android:hint="Group's name"
         android:imeOptions="flagNoExtractUi"
         android:maxLength="15"
-        android:hint="Group's name" />
+        android:singleLine="true"
+        fairshare:landscapeFactor="30"
+        fairshare:portraitFactor="30" />
 
 
     <share.fair.fairshare.views.RelativeEditText
-        fairshare:landscapeFactor="30"
-        fairshare:portraitFactor="30"
-
+        android:id="@+id/create_new_group_et_special_name"
         android:layout_width="match_parent"
+
         android:layout_height="wrap_content"
-        android:id="@+id/special_name_edit_text"
         android:layout_gravity="center_horizontal"
-        android:singleLine="true"
+        android:hint="Your name in this group"
         android:imeOptions="flagNoExtractUi"
         android:maxLength="15"
-        android:hint="Your name in this group" />
+        android:singleLine="true"
+        fairshare:landscapeFactor="30"
+        fairshare:portraitFactor="30" />
 
     <share.fair.fairshare.views.RelativeTextView
-        fairshare:landscapeFactor="45"
-        fairshare:portraitFactor="45"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Choose a special name for yourself in this particular group, or leave it blank to use your default name"
-        android:id="@+id/speical_name_text_msg" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        fairshare:landscapeFactor="45"
+        fairshare:portraitFactor="45" />
 
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal">
-
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
 
         <share.fair.fairshare.views.RelativeButton
-            fairshare:landscapeTextSizeFactor="40"
-            fairshare:portraitTextSizeFactor="40"
+            android:id="@+id/create_new_group_btn_create"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:text="Create"
-            android:id="@+id/create_button"
-            android:layout_gravity="center_horizontal" />
+            fairshare:landscapeTextSizeFactor="40"
+            fairshare:portraitTextSizeFactor="40" />
 
         <share.fair.fairshare.views.RelativeButton
-            fairshare:landscapeTextSizeFactor="40"
-            fairshare:portraitTextSizeFactor="40"
+            android:id="@+id/create_new_group_btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:text="Cancel"
-            android:id="@+id/cancel_button"
-            android:layout_gravity="center_horizontal" />
+            fairshare:landscapeTextSizeFactor="40"
+            fairshare:portraitTextSizeFactor="40" />
     </LinearLayout>
 
 </LinearLayout>

@@ -1,94 +1,91 @@
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fairshare = "http://schemas.android.com/apk/res/share.fair.fairshare"
-
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical"
-android:id="@+id/action_edit_fragment_container">
-
-
-<LinearLayout
-    android:orientation="vertical"
+    xmlns:fairshare="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/action_edit_fragment_container"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#45da8f">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <RelativeLayout
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:background="#45da8f"
+        android:orientation="vertical">
 
-        <share.fair.fairshare.views.RelativeButton
-            fairshare:landscapeButtonSizeFactor="15"
-            fairshare:portraitButtonSizeFactor="15"
-
-
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/back_to_actions"
-            android:background="@drawable/back_button"
-            android:layout_gravity="center_vertical"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:textAllCaps="false"
-            />
+            android:orientation="horizontal">
+
+            <share.fair.fairshare.views.RelativeButton
+                android:id="@+id/action_edit_btn_back"
+                android:layout_width="wrap_content"
 
 
-        <share.fair.fairshare.views.RelativeButton
-            fairshare:landscapeTextSizeFactor="40"
-            fairshare:portraitTextSizeFactor="40"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Save"
-            android:id="@+id/save_changes_action_button"
-            android:layout_alignParentRight="true"
-            android:textAllCaps="false"
-            android:background="@drawable/round_button"
-            android:visibility="invisible" />
-
-        <share.fair.fairshare.views.RelativeButton
-            fairshare:landscapeTextSizeFactor="40"
-            fairshare:portraitTextSizeFactor="40"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Delete"
-            android:id="@+id/delete_action_button"
-            android:layout_toLeftOf="@+id/save_changes_action_button"
-            android:textAllCaps="false"
-            android:background="@drawable/round_button" />
-
-        <share.fair.fairshare.views.RelativeButton
-            fairshare:landscapeTextSizeFactor="40"
-            fairshare:portraitTextSizeFactor="40"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Edit"
-            android:id="@+id/edit_action_activity_edit_button"
-            android:layout_alignBottom="@+id/delete_action_button"
-            android:layout_alignParentRight="true"
-            android:textAllCaps="false"
-            android:background="@drawable/round_button" />
-
-        <share.fair.fairshare.views.RelativeTextView
-            fairshare:landscapeFactor="55"
-            fairshare:portraitFactor="55"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Text"
-            android:id="@+id/action_edit_created_by"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/delete_action_button"
-            android:layout_marginRight="15dp" />
-
-    </RelativeLayout>
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/xml_back_button"
+                android:textAllCaps="false"
+                fairshare:landscapeButtonSizeFactor="15"
+                fairshare:portraitButtonSizeFactor="15" />
 
 
-</LinearLayout>
+            <share.fair.fairshare.views.RelativeButton
+                android:id="@+id/action_edit_btn_save"
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/round_button"
+                android:text="Save"
+                android:textAllCaps="false"
+                android:visibility="invisible"
+                fairshare:landscapeTextSizeFactor="40"
+                fairshare:portraitTextSizeFactor="40" />
+
+            <share.fair.fairshare.views.RelativeButton
+                android:id="@+id/action_edit_btn_delete"
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/action_edit_btn_save"
+                android:background="@drawable/round_button"
+                android:text="Delete"
+                android:textAllCaps="false"
+                fairshare:landscapeTextSizeFactor="40"
+                fairshare:portraitTextSizeFactor="40" />
+
+            <share.fair.fairshare.views.RelativeButton
+                android:id="@+id/action_edit_btn_edit"
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/action_edit_btn_delete"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/round_button"
+                android:text="Edit"
+                android:textAllCaps="false"
+                fairshare:landscapeTextSizeFactor="40"
+                fairshare:portraitTextSizeFactor="40" />
+
+            <share.fair.fairshare.views.RelativeTextView
+                android:id="@+id/action_edit_tv_created_by"
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:layout_toLeftOf="@+id/action_edit_btn_delete"
+                android:text="New Text"
+                fairshare:landscapeFactor="55"
+                fairshare:portraitFactor="55" />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
 
 
 </LinearLayout>

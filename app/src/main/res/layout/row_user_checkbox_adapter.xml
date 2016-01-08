@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fairshare = "http://schemas.android.com/apk/res/share.fair.fairshare"
+    xmlns:fairshare="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="6dip" >
+    android:padding="6dip">
 
     <CheckBox
-        android:id="@+id/cb_user_row"
+        android:id="@+id/user_checkbox_adapter_cb_user_name"
+        style="@android:style/Widget.Holo.CompoundButton.CheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:buttonTint="#000000"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:longClickable="true"
-        android:textColor="#000000"
-        style="@android:style/Widget.Holo.CompoundButton.CheckBox"
-        android:buttonTint="#000000" />
+        android:textColor="#000000" />
 
 
     <share.fair.fairshare.views.RelativeTextView
-        fairshare:landscapeFactor="30"
-        fairshare:portraitFactor="30"
-
-        android:id="@+id/tv_user_balance"
+        android:id="@+id/user_checkbox_adapter_tv_balance"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/cb_user_row"
-        android:layout_alignBottom="@+id/cb_user_row"
-        android:layout_alignParentRight="true"
-        android:longClickable="true"
 
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/user_checkbox_adapter_cb_user_name"
+        android:layout_alignBottom="@+id/user_checkbox_adapter_cb_user_name"
+        android:layout_alignParentRight="true"
         android:layout_marginRight="15dp"
-        android:textColor="#000000" />
+        android:longClickable="true"
+        android:textColor="#000000"
+
+        fairshare:landscapeFactor="30"
+        fairshare:portraitFactor="30" />
 
 </RelativeLayout>

@@ -46,11 +46,11 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
 
         if (convertView == null) {
             LayoutInflater vi = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.user_check_row, null);
+            convertView = vi.inflate(R.layout.row_user_checkbox_adapter, null);
         }
         initLayoutPreferences(convertView);
-        TextView tvUserBalance = (TextView) convertView.findViewById(R.id.tv_user_balance);
-        CheckBox cbUserRow = (CheckBox) convertView.findViewById(R.id.cb_user_row);
+        TextView tvUserBalance = (TextView) convertView.findViewById(R.id.user_checkbox_adapter_tv_balance);
+        CheckBox cbUserRow = (CheckBox) convertView.findViewById(R.id.user_checkbox_adapter_cb_user_name);
         cbUserRow.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 CheckBox cb = (CheckBox) v;
@@ -136,7 +136,7 @@ public class UserCheckBoxAdapter extends ArrayAdapter {
         int height = size.y;
 
 
-        CheckBox cbUserRow = (CheckBox) convertView.findViewById(R.id.cb_user_row);
+        CheckBox cbUserRow = (CheckBox) convertView.findViewById(R.id.user_checkbox_adapter_cb_user_name);
         cbUserRow.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / fontSizeFactor));
 
 

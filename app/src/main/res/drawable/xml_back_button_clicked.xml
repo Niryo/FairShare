@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
     <item>
-        <bitmap android:src="@drawable/options_icon"/>
+        <bitmap android:src="@drawable/img_back_btn"/>
     </item>
     <item>
         <shape xmlns:android="http://schemas.android.com/apk/res/android"

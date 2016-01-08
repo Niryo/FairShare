@@ -95,13 +95,13 @@ public class GroupActivity extends FragmentActivity {
         }
         this.group = FairShareGroup.loadGroupFromStorage(groupId);
 
-        tvGroupName = (TextView) findViewById(R.id.tv_grp_name);
+        tvGroupName = (TextView) findViewById(R.id.tv_group_group_name);
         tvGroupName.setText(group.getGroupName());
         this.users = new ArrayList<>(group.getUsers());
         userListView = (ListView) findViewById(R.id.users_list_view);
-        userCheckBoxAdapter = new UserCheckBoxAdapter(getApplicationContext(), this, R.layout.user_check_row, this.users);
+        userCheckBoxAdapter = new UserCheckBoxAdapter(getApplicationContext(), this, R.layout.row_user_checkbox_adapter, this.users);
         userListView.setAdapter(userCheckBoxAdapter);
-        btnAddUser = (Button) findViewById(R.id.add_user_button);
+        btnAddUser = (Button) findViewById(R.id.group_btn_add_user);
         btnAddUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,12 +110,12 @@ public class GroupActivity extends FragmentActivity {
             }
         });
 
-        btnAlert = (Button) findViewById(R.id.group_activity_alert_button);
+        btnAlert = (Button) findViewById(R.id.group_btn_alert);
         btnAlert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (alertObjects.size() > 0) { //check if there are new alerts
-                    v.setBackgroundResource(R.drawable.popup_reminder); //set the icon back to normal
+                    v.setBackgroundResource(R.drawable.img_alert_button_off); //set the icon back to normal
                     ((Button) v).setText("");
                     BalanceChangeAlertsDialog alertsDialog = new BalanceChangeAlertsDialog();
                     int[] location = new int[2];
@@ -131,7 +131,7 @@ public class GroupActivity extends FragmentActivity {
         });
 
 
-        btnOptionsMenu = (Button) findViewById(R.id.group_activity_options_button);
+        btnOptionsMenu = (Button) findViewById(R.id.group_btn_options_menu);
         btnOptionsMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,7 +145,7 @@ public class GroupActivity extends FragmentActivity {
             }
         });
 
-        btnNewBillWithAll = (Button) findViewById(R.id.bt_go_out_all);
+        btnNewBillWithAll = (Button) findViewById(R.id.group_btn_new_bill_all);
         btnNewBillWithAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,7 +161,7 @@ public class GroupActivity extends FragmentActivity {
             }
         });
 
-        btnNewBillWithChecked = (Button) findViewById(R.id.bt_go_out_checked);
+        btnNewBillWithChecked = (Button) findViewById(R.id.group_btn_new_bill_checked);
         btnNewBillWithChecked.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,7 +184,7 @@ public class GroupActivity extends FragmentActivity {
             }
         });
 
-        btnBackToMain = (Button) findViewById(R.id.bt_back_to_info);
+        btnBackToMain = (Button) findViewById(R.id.group_btn_back);
         btnBackToMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -228,7 +228,7 @@ public class GroupActivity extends FragmentActivity {
         if (messageNum == BALANCE_CHANGED) {
             Alert.AlertObject alert = (Alert.AlertObject) object;
             alertObjects.add(alert);
-            btnAlert.setBackgroundResource(R.drawable.popup_reminder_active);
+            btnAlert.setBackgroundResource(R.drawable.img_alert_button_on);
             btnAlert.setText(Integer.toString(alertObjects.size()));
             notifyUserListChanged();
 
@@ -266,7 +266,7 @@ public class GroupActivity extends FragmentActivity {
      * Go to action activity
      */
     public void goToActionActivity() {
-        Intent actions = new Intent(getApplicationContext(), ActionsActivity.class);
+        Intent actions = new Intent(getApplicationContext(), PaymentsHistoryActivity.class);
         actions.putExtra("groupId", group.getCloudGroupKey());
         startActivity(actions);
         finish();
@@ -321,7 +321,7 @@ public class GroupActivity extends FragmentActivity {
      */
     private void clearChecked() {
         for (int i = 0; i < this.userListView.getChildCount(); i++) {
-            CheckBox checkBox = (CheckBox) this.userListView.getChildAt(i).findViewById(R.id.cb_user_row);
+            CheckBox checkBox = (CheckBox) this.userListView.getChildAt(i).findViewById(R.id.user_checkbox_adapter_cb_user_name);
             checkBox.setChecked(false);
         }
         this.userCheckBoxAdapter.clearChecked();
@@ -529,12 +529,12 @@ public class GroupActivity extends FragmentActivity {
      * Show tutorial
      */
     private void showTutorial() {
-        targetNewBill = new ViewTarget(R.id.bt_go_out_all, this);
-        targetAddPerson = new ViewTarget(R.id.add_user_button, this);
-        targetOptionsMenu = new ViewTarget(R.id.group_activity_options_button, this);
+        targetNewBill = new ViewTarget(R.id.group_btn_new_bill_all, this);
+        targetAddPerson = new ViewTarget(R.id.group_btn_add_user, this);
+        targetOptionsMenu = new ViewTarget(R.id.group_btn_options_menu, this);
         ;
         ;
-        targetAlertsIcon = new ViewTarget(R.id.group_activity_alert_button, this);
+        targetAlertsIcon = new ViewTarget(R.id.group_btn_alert, this);
         ;
 
         showcaseView = new ShowcaseView.Builder(this)

@@ -15,7 +15,8 @@ import android.widget.Toast;
 import share.fair.fairshare.R;
 
 /**
- * Shows the group's key
+ * Group key dialog.
+ * This dialog shows up when the user clicks on "show group key" inside the options menu of the gorup.
  */
 public class ShowGroupKeyDialog extends DialogFragment {
 
@@ -24,6 +25,7 @@ public class ShowGroupKeyDialog extends DialogFragment {
 
     /**
      * Set group key
+     *
      * @param groupKey
      */
     public void setGroupKey(String groupKey) {
@@ -32,6 +34,7 @@ public class ShowGroupKeyDialog extends DialogFragment {
 
     /**
      * Set group name
+     *
      * @param groupName
      */
     public void setGroupName(String groupName) {
@@ -54,15 +57,15 @@ public class ShowGroupKeyDialog extends DialogFragment {
             groupName = savedInstanceState.getString("groupName");
 
         }
-        View dialogLayout = inflater.inflate(R.layout.group_key_dialog, container);
-        getDialog().setContentView(R.layout.group_key_dialog);
+        View dialogLayout = inflater.inflate(R.layout.dialog_show_group_key, container);
+        getDialog().setContentView(R.layout.dialog_show_group_key);
         getDialog().setTitle("Group key:");
-        final TextView tvGroupKey = (TextView) dialogLayout.findViewById(R.id.group_key_dialog_text);
+        final TextView tvGroupKey = (TextView) dialogLayout.findViewById(R.id.show_group_key_tv_key);
         //concert the length to string, with leading zero if needed:
         String stringLength = groupName.length() < 9 ? "0" + groupName.length() : String.valueOf(groupName.length());
         tvGroupKey.setText(stringLength + groupName + groupKey);
         //set copy to clipboard button:
-        Button btnCopy = (Button) dialogLayout.findViewById(R.id.group_key_dialog_copy);
+        Button btnCopy = (Button) dialogLayout.findViewById(R.id.show_group_key_btn_copy);
         btnCopy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,64 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fairshare = "http://schemas.android.com/apk/res/share.fair.fairshare"
-    android:orientation="vertical"
+    xmlns:fairshare="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center_horizontal">
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
     <share.fair.fairshare.views.RelativeEditText
-        fairshare:landscapeFactor="30"
-        fairshare:portraitFactor="30"
+        android:id="@+id/new_user_et_user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/user_name_edit_text"
         android:layout_gravity="center_horizontal"
-        android:singleLine="true"
+        android:hint="User's name"
         android:imeOptions="flagNoExtractUi"
         android:maxLength="15"
-        android:hint="User's name" />
+        android:singleLine="true"
+        fairshare:landscapeFactor="30"
+        fairshare:portraitFactor="30" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <share.fair.fairshare.views.RelativeEditText
-            fairshare:landscapeFactor="30"
-            fairshare:portraitFactor="30"
-            fairshare:placeHolderText = "Optional: Invite user by email..."
+            android:id="@+id/new_user_et_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:id="@+id/user_mail_edit_text"
             android:autoText="true"
-            android:hint="Optional: Invite user by email" />
+            android:hint="Optional: Invite user by email"
+            android:inputType="textEmailAddress"
+            fairshare:landscapeFactor="30"
+            fairshare:placeHolderText="Optional: Invite user by email..."
+            fairshare:portraitFactor="30" />
 
 
     </FrameLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
         <share.fair.fairshare.views.RelativeButton
-            fairshare:landscapeTextSizeFactor="40"
-            fairshare:portraitTextSizeFactor="40"
+            android:id="@+id/new_user_btn_create"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:text="Create"
-            android:id="@+id/create_button_user"
-            android:layout_gravity="center_horizontal" />
+            fairshare:landscapeTextSizeFactor="40"
+            fairshare:portraitTextSizeFactor="40" />
 
         <share.fair.fairshare.views.RelativeButton
-            fairshare:landscapeTextSizeFactor="40"
-            fairshare:portraitTextSizeFactor="40"
+            android:id="@+id/new_user_btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:text="Cancel"
-            android:id="@+id/cancel_button_user"
-            android:layout_gravity="center_horizontal" />
+            fairshare:landscapeTextSizeFactor="40"
+            fairshare:portraitTextSizeFactor="40" />
     </LinearLayout>
 
 </LinearLayout>

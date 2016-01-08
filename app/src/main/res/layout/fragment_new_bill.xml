@@ -1,0 +1,96 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fairshare="http://schemas.android.com/apk/res-auto"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-10dp"
+        android:layout_marginRight="-10dp"
+        android:layout_marginTop="-10dp"
+        android:background="@drawable/img_green_floating_effect">
+
+        <share.fair.fairshare.views.RelativeEditText
+            android:id="@+id/new_bill_et_description"
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:gravity="center_horizontal"
+            android:hint="Enter bill title.."
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+            fairshare:landscapeFactor="15"
+            fairshare:portraitFactor="15" />
+    </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <share.fair.fairshare.views.RelativeTextView
+            android:id="@+id/new_bill_tv_user_title"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp"
+            android:text="Name"
+            android:textColor="#3399FF"
+
+
+            fairshare:landscapeFactor="30"
+            fairshare:portraitFactor="30" />
+
+        <share.fair.fairshare.views.RelativeTextView
+            android:id="@+id/new_bill_tv_sum_paid_title"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@+id/new_bill_tv_user_share_title"
+            android:text="Amount paid"
+            android:textColor="#3399FF"
+            fairshare:landscapeFactor="30"
+            fairshare:portraitFactor="30" />
+
+        <share.fair.fairshare.views.RelativeTextView
+            android:id="@+id/new_bill_tv_user_share_title"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:text="Share"
+            android:textColor="#3399FF"
+
+
+            fairshare:landscapeFactor="30"
+            fairshare:portraitFactor="30" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/new_bill_list_of_users"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

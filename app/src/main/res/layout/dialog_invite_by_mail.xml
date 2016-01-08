@@ -1,39 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fairshare = "http://schemas.android.com/apk/res/share.fair.fairshare"
+    xmlns:fairshare="http://schemas.android.com/apk/res-auto"
 
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal">
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
     <share.fair.fairshare.views.RelativeEditText
-        fairshare:landscapeFactor="30"
-        fairshare:portraitFactor="30"
-
+        android:id="@+id/invite_by_mail_dialog_et_input"
         android:layout_width="match_parent"
+
         android:layout_height="wrap_content"
-        android:id="@+id/invite_by_mail_dialog_input"
         android:layout_gravity="center_horizontal"
-        android:singleLine="true"
+        android:hint="Email address"
         android:imeOptions="flagNoExtractUi"
-        android:hint="Email address" />
+        android:singleLine="true"
+        fairshare:landscapeFactor="30"
+        fairshare:portraitFactor="30" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
         <share.fair.fairshare.views.RelativeButton
-            fairshare:landscapeTextSizeFactor="40"
-            fairshare:portraitTextSizeFactor="40"
-
+            android:id="@+id/invite_by_mail_btn_send"
             android:layout_width="wrap_content"
+
             android:layout_height="wrap_content"
-            android:text="Send invitation"
-            android:id="@+id/invite_by_mail_send"
             android:layout_gravity="center_horizontal"
-            android:textAllCaps="false"/>
+            android:text="Send invitation"
+            android:textAllCaps="false"
+            fairshare:landscapeTextSizeFactor="40"
+            fairshare:portraitTextSizeFactor="40" />
 
     </LinearLayout>
 

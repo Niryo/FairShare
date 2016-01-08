@@ -26,7 +26,7 @@ import share.fair.fairshare.R;
 import share.fair.fairshare.dialogs.GroupContextMenuDialog;
 import share.fair.fairshare.dialogs.CreateNewGroupDialog;
 import share.fair.fairshare.dialogs.MainOptionsMenuDialog;
-import share.fair.fairshare.dialogs.SaveNameDialog;
+import share.fair.fairshare.dialogs.SaveOwnerNameDialog;
 
 /**
  * Main activity
@@ -60,7 +60,7 @@ public class MainActivity extends FragmentActivity  {
         }
 
 
-        Button btnCreateNewGroup = (Button) findViewById(R.id.create_new_group_button);
+        Button btnCreateNewGroup = (Button) findViewById(R.id.main_btn_create_new_group);
         btnCreateNewGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,7 +68,7 @@ public class MainActivity extends FragmentActivity  {
             }
         });
 
-        btnOptionsMenu = (Button) findViewById(R.id.activity_main_options_menu);
+        btnOptionsMenu = (Button) findViewById(R.id.main_btn_options_menu);
         btnOptionsMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -169,8 +169,8 @@ public class MainActivity extends FragmentActivity  {
      * Shows the tutorial
      */
     private void showTutorial() {
-        targetCreateButton = new ViewTarget(R.id.create_new_group_button, this);
-        targetOptionsMenu = new ViewTarget(R.id.activity_main_options_menu, this);
+        targetCreateButton = new ViewTarget(R.id.main_btn_create_new_group, this);
+        targetOptionsMenu = new ViewTarget(R.id.main_btn_options_menu, this);
         showcaseView = new ShowcaseView.Builder(this)
                 .setTarget(Target.NONE).setContentTitle("Welcome to FaireShare!").setContentText("The best app for keeping track of group expenses!").setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -193,7 +193,7 @@ public class MainActivity extends FragmentActivity  {
                             SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
                             String name = settings.getString("name", "");
                             if (name.isEmpty()) {
-                                new SaveNameDialog().show(getSupportFragmentManager(), "save_name_dialog");
+                                new SaveOwnerNameDialog().show(getSupportFragmentManager(), "dialog_save_name");
 
                             }
                         }

@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -20,7 +19,8 @@ import share.fair.fairshare.R;
 import share.fair.fairshare.views.RelativeTextView;
 
 /**
- * An alert dialog to show all changes in user balance, if notified
+ * An alert dialog to show all changes in user balance, if notified.
+ * This dialog shows up when the user clicks on the alert btn inside the groups activity.
  */
 public class BalanceChangeAlertsDialog extends DialogFragment {
     //the position of the dialog on the screen:
@@ -79,25 +79,27 @@ public class BalanceChangeAlertsDialog extends DialogFragment {
         window.setAttributes(params);
 
 
-        View dialogLayout = inflater.inflate(R.layout.alert_dialog_layout, container);
-        LinearLayout alertsContainer = (LinearLayout) dialogLayout.findViewById(R.id.alert_dialog_container);
+
+        View dialogLayout = inflater.inflate(R.layout.dialog_balance_change_alert, container);
+        LinearLayout alertsContainer = (LinearLayout) dialogLayout.findViewById(R.id.balance_change_alert_container);
         //show the alerts:
         if (alerts != null) {
             for (Alert.AlertObject alert : alerts) {
-                View alertRow = inflater.inflate(R.layout.alert_row, null);
-                RelativeTextView description = (RelativeTextView) alertRow.findViewById(R.id.alert_row_description);
+                View alertRow = inflater.inflate(R.layout.row_balance_change_alert_dialog, null);
+                RelativeTextView description = (RelativeTextView) alertRow.findViewById(R.id.balance_change_alert_row_tv_description);
                 description.setText(alert.description);
 
-                RelativeTextView tvUserName = (RelativeTextView) alertRow.findViewById(R.id.alert_row_username);
+                RelativeTextView tvUserName = (RelativeTextView) alertRow.findViewById(R.id.balance_change_alert_row_tv_username);
                 tvUserName.setText(alert.useNrame);
 
-                RelativeTextView tvPaid = (RelativeTextView) alertRow.findViewById(R.id.alert_row_paid);
+                RelativeTextView tvPaid = (RelativeTextView) alertRow.findViewById(R.id.balance_change_alert_row_tv_paid);
                 tvPaid.setText(new DecimalFormat("##.##").format(alert.paid + 0));
                 alertsContainer.addView(alertRow);
             }
 
-            getDialog().setContentView(R.layout.alert_dialog_layout);
+            getDialog().setContentView(R.layout.dialog_balance_change_alert);
         }
+
 
 
         return dialogLayout;

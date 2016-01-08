@@ -1,17 +1,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fairshare = "http://schemas.android.com/apk/res/share.fair.fairshare"
+    xmlns:fairshare="http://schemas.android.com/apk/res-auto"
 
+    android:id="@+id/go_out_activity_fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/go_out_activity_fragment_container">
+    android:orientation="vertical">
 
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#45da8f">
+        android:background="#45da8f"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -19,30 +19,29 @@
             android:orientation="horizontal">
 
             <share.fair.fairshare.views.RelativeButton
-                fairshare:landscapeButtonSizeFactor="15"
-                fairshare:portraitButtonSizeFactor="15"
-
+                android:id="@+id/new_bill_btn_back"
                 android:layout_width="wrap_content"
+
                 android:layout_height="wrap_content"
-                android:id="@+id/back_to_group_button"
-                android:background="@drawable/back_button"
-                android:layout_gravity="center_vertical"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true" />
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/xml_back_button"
+                fairshare:landscapeButtonSizeFactor="15"
+                fairshare:portraitButtonSizeFactor="15" />
 
             <share.fair.fairshare.views.RelativeButton
-                fairshare:landscapeTextSizeFactor="40"
-                fairshare:portraitTextSizeFactor="40"
-
+                android:id="@+id/new_bill_btn_done"
                 android:layout_width="wrap_content"
+
                 android:layout_height="wrap_content"
-                android:text="Done"
-                android:id="@+id/calculate_button"
-                android:textAllCaps="false"
-                android:background="@drawable/round_button"
-                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-               />
+                android:layout_centerVertical="true"
+                android:background="@drawable/round_button"
+                android:text="Done"
+                android:textAllCaps="false"
+                fairshare:landscapeTextSizeFactor="40"
+                fairshare:portraitTextSizeFactor="40" />
         </RelativeLayout>
 
 

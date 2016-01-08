@@ -3,30 +3,29 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:background="#ffffff">
+    android:orientation="vertical">
 
     <share.fair.fairshare.views.RelativeTextView
-        fairshare:landscapeFactor="10"
-        fairshare:portraitFactor="10"
-
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+
         android:text="FareShare"
-        android:textColor="#45da8f" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#45da8f"
+        fairshare:landscapeFactor="10"
+        fairshare:portraitFactor="10" />
 
 
     <share.fair.fairshare.views.RelativeTextView
-        fairshare:landscapeFactor="25"
-        fairshare:portraitFactor="25"
-
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+
+        android:gravity="center"
         android:text="You are using an old version of FairShare.\nPlease install the latest version and try again."
-        android:id="@+id/textView2"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#45da8f"
-        android:gravity="center" />
+        fairshare:landscapeFactor="25"
+        fairshare:portraitFactor="25" />
 </LinearLayout>

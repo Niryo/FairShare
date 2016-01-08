@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fairshare = "http://schemas.android.com/apk/res/share.fair.fairshare"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:fairshare="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal">
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
     <share.fair.fairshare.views.RelativeEditText
-        fairshare:landscapeFactor="30"
-        fairshare:portraitFactor="30"
+        android:id="@+id/save_name_et_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/name_edit_text"
         android:layout_gravity="center_horizontal"
-        android:singleLine="true"
+        android:hint="Full name"
         android:imeOptions="flagNoExtractUi"
         android:maxLength="15"
-        android:hint="Full name" />
+        android:singleLine="true"
+        fairshare:landscapeFactor="30"
+        fairshare:portraitFactor="30" />
 
     <share.fair.fairshare.views.RelativeTextView
-        fairshare:landscapeFactor="45"
-        fairshare:portraitFactor="45"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Your name will be visible only to other people within your groups. please use your real name so your friends could easily know who you are."
-        android:id="@+id/textView3" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        fairshare:landscapeFactor="45"
+        fairshare:portraitFactor="45" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
         <share.fair.fairshare.views.RelativeButton
-            fairshare:landscapeTextSizeFactor="40"
-            fairshare:portraitTextSizeFactor="40"
+            android:id="@+id/save_name_btn_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save"
-            android:id="@+id/name_save_button"
             android:layout_gravity="center_horizontal"
-            android:textAllCaps="false"/>
+            android:text="Save"
+            android:textAllCaps="false"
+            fairshare:landscapeTextSizeFactor="40"
+            fairshare:portraitTextSizeFactor="40" />
 
     </LinearLayout>
 

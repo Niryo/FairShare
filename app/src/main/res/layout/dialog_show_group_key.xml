@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fairshare="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <share.fair.fairshare.views.RelativeTextView
+        android:id="@+id/show_group_key_tv_key"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        fairshare:landscapeFactor="30"
+        fairshare:portraitFactor="30" />
+
+    <share.fair.fairshare.views.RelativeButton
+        android:id="@+id/show_group_key_btn_copy"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/round_button"
+        android:text="Copy to clipboard"
+        android:textAllCaps="false"
+        fairshare:landscapeTextSizeFactor="40"
+        fairshare:portraitTextSizeFactor="40" />
+
+</LinearLayout>

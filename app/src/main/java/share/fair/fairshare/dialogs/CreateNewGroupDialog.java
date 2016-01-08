@@ -16,7 +16,8 @@ import share.fair.fairshare.R;
 import share.fair.fairshare.activities.MainActivity;
 
 /**
- * Created by Ori on 10/11/2015.
+ * New group dialog.
+ * This dialog shows up when the user click on "create new group" in the main activity
  */
 
 
@@ -30,15 +31,16 @@ public class CreateNewGroupDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View dialogLayout = inflater.inflate(R.layout.new_group_dialog_layout, container);
-        getDialog().setContentView(R.layout.new_group_dialog_layout);
+        View dialogLayout = inflater.inflate(R.layout.dialog_create_new_group, container);
+        getDialog().setContentView(R.layout.dialog_create_new_group);
         getDialog().setTitle("Choose group name:");
 
-        final EditText etName = (EditText) dialogLayout.findViewById(R.id.group_name_edit_text);
-        final EditText specialUserNameText = (EditText) dialogLayout.findViewById(R.id.special_name_edit_text);
+
+        final EditText etName = (EditText) dialogLayout.findViewById(R.id.create_new_group_btn_create);
+        final EditText specialUserNameText = (EditText) dialogLayout.findViewById(R.id.create_new_group_et_special_name);
         etName.setHint("Group's name");
-        final Button btnCreate = (Button) dialogLayout.findViewById(R.id.create_button);
-        final Button btnCancel = (Button) dialogLayout.findViewById(R.id.cancel_button);
+        final Button btnCreate = (Button) dialogLayout.findViewById(R.id.create_new_group_btn_create);
+        final Button btnCancel = (Button) dialogLayout.findViewById(R.id.create_new_group_btn_cancel);
         //sugest the default name:
         SharedPreferences settings = getActivity().getSharedPreferences("MAIN_PREFERENCES", 0);
         final String ownerName = settings.getString("name", "");
