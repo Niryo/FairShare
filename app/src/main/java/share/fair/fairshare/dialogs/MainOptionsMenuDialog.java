@@ -14,9 +14,11 @@ import android.widget.Button;
 import share.fair.fairshare.R;
 
 /**
- * Created by Nir on 07/11/2015.
+ * Main activity options menu.
+ * This dialog shows up when the user cliks on the options menu buttn in the main activity.
  */
-public class MainOptionsMenuDialog  extends DialogFragment {
+public class MainOptionsMenuDialog extends DialogFragment {
+    //position on the screen:
     private int x;
     private int y;
 
@@ -37,14 +39,15 @@ public class MainOptionsMenuDialog  extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if(savedInstanceState!=null){
-            this.x= savedInstanceState.getInt("x");
-            this.y= savedInstanceState.getInt("y");
+        if (savedInstanceState != null) {
+            this.x = savedInstanceState.getInt("x");
+            this.y = savedInstanceState.getInt("y");
         }
+
         Window window = getDialog().getWindow();
         window.requestFeature(Window.FEATURE_NO_TITLE);
         window.setGravity(Gravity.TOP | Gravity.LEFT);
-
+        //postions the dialog on the screen:
         WindowManager.LayoutParams params = window.getAttributes();
         params.x = x;
         params.y = y;
@@ -54,14 +57,13 @@ public class MainOptionsMenuDialog  extends DialogFragment {
         View dialogLayout = inflater.inflate(R.layout.options_menu_main, container);
 
 //=========================== Join group with key=================================================
-        Button joinGroup = (Button) dialogLayout.findViewById(R.id.main_options_menu_btn_join_group);
-        joinGroup.setOnClickListener(new View.OnClickListener() {
+        Button btnJoinGroup = (Button) dialogLayout.findViewById(R.id.main_options_menu_btn_join_group);
+        btnJoinGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new JoinGroupWithKeyDialog().show(getFragmentManager(), "dialog_join_group_with_key");
             }
         });
-
 
         return dialogLayout;
 
@@ -71,6 +73,7 @@ public class MainOptionsMenuDialog  extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
+        //remove the transparent-black background
         Window window = getDialog().getWindow();
         WindowManager.LayoutParams windowParams = window.getAttributes();
         windowParams.dimAmount = 0;

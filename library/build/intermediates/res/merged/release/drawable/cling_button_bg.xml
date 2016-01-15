@@ -19,4 +19,4 @@
     <item android:state_pressed="true" android:drawable="@drawable/btn_cling_pressed"/>
     <item android:drawable="@drawable/btn_cling_normal"/>
 </selector>
-<!-- From: file:/Users/niryo/AndroidStudioProjects/FairShare/library/src/main/res/drawable/cling_button_bg.xml -->
+<!-- From: file:/C:/Users/Nir/AndroidStudioProjects/FairShare/library/src/main/res/drawable/cling_button_bg.xml -->

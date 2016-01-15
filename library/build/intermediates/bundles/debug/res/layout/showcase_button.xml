@@ -18,4 +18,4 @@
 <Button xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ShowcaseButton"
     android:text="@android:string/ok"
-    android:id="@id/showcase_button" /><!-- From: file:/Users/niryo/AndroidStudioProjects/FairShare/library/src/main/res/layout/showcase_button.xml -->
+    android:id="@id/showcase_button" /><!-- From: file:/C:/Users/Nir/AndroidStudioProjects/FairShare/library/src/main/res/layout/showcase_button.xml -->

@@ -7,7 +7,7 @@
     android:orientation="horizontal">
 
     <share.fair.fairshare.views.RelativeTextView
-        android:id="@+id/alert_row_tv_description"
+        android:id="@+id/balance_change_alert_row_tv_description"
         android:layout_width="wrap_content"
 
         android:layout_height="wrap_content"
@@ -18,7 +18,7 @@
         fairshare:portraitFactor="45" />
 
     <share.fair.fairshare.views.RelativeTextView
-        android:id="@+id/alert_row_tv_username"
+        android:id="@+id/balance_change_alert_row_tv_username"
         android:layout_width="wrap_content"
 
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         fairshare:portraitFactor="45" />
 
     <share.fair.fairshare.views.RelativeTextView
-        android:id="@+id/alert_row_tv_paid"
+        android:id="@+id/balance_change_alert_row_tv_paid"
         android:layout_width="wrap_content"
 
         android:layout_height="wrap_content"

@@ -32,8 +32,8 @@ import share.fair.fairshare.FairShareReceiver;
 import share.fair.fairshare.R;
 import share.fair.fairshare.User;
 import share.fair.fairshare.UserCheckBoxAdapter;
-import share.fair.fairshare.dialogs.AlertsDialog;
-import share.fair.fairshare.dialogs.GroupKeyDialog;
+import share.fair.fairshare.dialogs.BalanceChangeAlertsDialog;
+import share.fair.fairshare.dialogs.ShowGroupKeyDialog;
 import share.fair.fairshare.dialogs.GroupOptionsMenuDialog;
 import share.fair.fairshare.dialogs.UserContextMenuDialog;
 import share.fair.fairshare.dialogs.UserNameDialog;
@@ -117,7 +117,7 @@ public class GroupActivity extends FragmentActivity {
                 if (alertObjects.size() > 0) { //check if there are new alerts
                     v.setBackgroundResource(R.drawable.img_alert_button_off); //set the icon back to normal
                     ((Button) v).setText("");
-                    AlertsDialog alertsDialog = new AlertsDialog();
+                    BalanceChangeAlertsDialog alertsDialog = new BalanceChangeAlertsDialog();
                     int[] location = new int[2];
                     v.getLocationOnScreen(location);
                     alertsDialog.setX(location[0]);
@@ -497,7 +497,7 @@ public class GroupActivity extends FragmentActivity {
      * Open group key dialog
      */
     public void showGroupKeyDialog() {
-        GroupKeyDialog dialog = new GroupKeyDialog();
+        ShowGroupKeyDialog dialog = new ShowGroupKeyDialog();
         dialog.setGroupKey(group.getCloudGroupKey());
         dialog.setGroupName(group.getGroupName());
         dialog.show(getSupportFragmentManager(), "group_key");

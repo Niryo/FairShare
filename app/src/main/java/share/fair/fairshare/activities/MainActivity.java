@@ -24,14 +24,14 @@ import share.fair.fairshare.FairShareGroup;
 import share.fair.fairshare.GroupsAdapter;
 import share.fair.fairshare.R;
 import share.fair.fairshare.dialogs.GroupContextMenuDialog;
-import share.fair.fairshare.dialogs.GroupNameDialog;
+import share.fair.fairshare.dialogs.CreateNewGroupDialog;
 import share.fair.fairshare.dialogs.MainOptionsMenuDialog;
-import share.fair.fairshare.dialogs.SaveNameDialog;
+import share.fair.fairshare.dialogs.SaveOwnerNameDialog;
 
 /**
  * Main activity
  */
-public class MainActivity extends FragmentActivity implements GroupNameDialog.GroupCreatedListener {
+public class MainActivity extends FragmentActivity  {
 
     ShowcaseView showcaseView;
     Target targetCreateButton;
@@ -64,7 +64,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
         btnCreateNewGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new GroupNameDialog().show(getSupportFragmentManager(), "add_new_group");
+                new CreateNewGroupDialog().show(getSupportFragmentManager(), "add_new_group");
             }
         });
 
@@ -122,7 +122,6 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
     /**
      * Notify the group adapter about a change int the group list
      */
-    @Override
     public void notifyGroupListChanged() {
         groupNames.clear();
         groupNames.addAll(FairShareGroup.getSavedGroupNames());
@@ -194,7 +193,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
                             SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
                             String name = settings.getString("name", "");
                             if (name.isEmpty()) {
-                                new SaveNameDialog().show(getSupportFragmentManager(), "dialog_save_name");
+                                new SaveOwnerNameDialog().show(getSupportFragmentManager(), "dialog_save_name");
 
                             }
                         }

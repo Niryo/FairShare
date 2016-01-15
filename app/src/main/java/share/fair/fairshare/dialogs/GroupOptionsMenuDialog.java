@@ -10,15 +10,20 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import share.fair.fairshare.activities.GroupActivity;
 import share.fair.fairshare.R;
+import share.fair.fairshare.activities.GroupActivity;
 
 /**
- * Created by Nir on 21/10/2015.
+ * Group's options menu dialog.
+ * This dialog shows up when the user clicks on the options menu button inside the group activity
  */
 public class GroupOptionsMenuDialog extends DialogFragment {
+    //position on the screen:
     private int x;
     private int y;
+
+    public GroupOptionsMenuDialog() {
+    }
 
     public void setX(int x) {
         this.x = x;
@@ -35,17 +40,16 @@ public class GroupOptionsMenuDialog extends DialogFragment {
         outState.putInt("y", y);
     }
 
-public GroupOptionsMenuDialog(){}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if(savedInstanceState!=null){
-            this.x= savedInstanceState.getInt("x");
-            this.y= savedInstanceState.getInt("y");
+        if (savedInstanceState != null) {
+            this.x = savedInstanceState.getInt("x");
+            this.y = savedInstanceState.getInt("y");
         }
         Window window = getDialog().getWindow();
         window.requestFeature(Window.FEATURE_NO_TITLE);
         window.setGravity(Gravity.TOP | Gravity.LEFT);
-
+        //position the dialog on the screen:
         WindowManager.LayoutParams params = window.getAttributes();
         params.x = x;
         params.y = y;
@@ -54,39 +58,42 @@ public GroupOptionsMenuDialog(){}
         getDialog().setContentView(R.layout.options_menu_group);
         View dialogLayout = inflater.inflate(R.layout.options_menu_group, container);
 //=========================== payment history=================================================
-        Button paymentHistory= (Button) dialogLayout.findViewById(R.id.group_options_menu_btn_payment_history);
-        paymentHistory.setOnClickListener(new View.OnClickListener() {
+
+        Button btnPaymentHistory = (Button) dialogLayout.findViewById(R.id.group_options_menu_btn_payment_history);
+        btnPaymentHistory.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 getDialog().dismiss();
-                ((GroupActivity)getActivity()).goToActionActivity();
+                ((GroupActivity) getActivity()).goToActionActivity();
             }
         });
 
         //=========================== settle up =================================================
-        Button settleUpButton = (Button) dialogLayout.findViewById(R.id.group_options_menu_btn_settle_up);
-        settleUpButton.setOnClickListener(new View.OnClickListener() {
+
+        Button btnSettleUp = (Button) dialogLayout.findViewById(R.id.group_options_menu_btn_settle_up);
+        btnSettleUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
-                ((GroupActivity)getActivity()).settleUp();
+                ((GroupActivity) getActivity()).settleUp();
             }
         });
         //=========================== show group key =================================================
 
-        Button showGroupKey = (Button) dialogLayout.findViewById(R.id.group_options_menu_btn_group_key);
-        showGroupKey.setOnClickListener(new View.OnClickListener() {
+        Button btnShowGroupKey = (Button) dialogLayout.findViewById(R.id.group_options_menu_btn_group_key);
+        btnShowGroupKey.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
-                ((GroupActivity)getActivity()).showGroupKeyDialog();
+                ((GroupActivity) getActivity()).showGroupKeyDialog();
             }
         });
 
         //=========================== Invite by mail =================================================
 
-        Button inviteByMail = (Button) dialogLayout.findViewById(R.id.group_options_menu_btn_invite_by_mail);
-        inviteByMail.setOnClickListener(new View.OnClickListener() {
+        Button btnInviteByMail = (Button) dialogLayout.findViewById(R.id.group_options_menu_btn_invite_by_mail);
+        btnInviteByMail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new InviteByMailDialog().show(getFragmentManager(), "InviteByMailDialog");
@@ -101,13 +108,13 @@ public GroupOptionsMenuDialog(){}
     @Override
     public void onStart() {
         super.onStart();
+        //Make background transparent:
         Window window = getDialog().getWindow();
         WindowManager.LayoutParams windowParams = window.getAttributes();
         windowParams.dimAmount = 0;
         windowParams.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         window.setAttributes(windowParams);
     }
-
 
 
 }
