@@ -69,7 +69,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> {
         FairShareGroup group = new FairShareGroup(groupName, cloudGroupKey, installationId);
         group.addUser(context, new User(userNameInGroup,null, 0.0,false));
         group.save();
-        GroupNameRecord groupNameRecord = new GroupNameRecord(groupName, cloudGroupKey);
+        GroupNameRecord groupNameRecord = new GroupNameRecord(groupName, cloudGroupKey,installationId);
         groupNameRecord.save();
         return group;
     }
@@ -119,17 +119,17 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> {
     public static void joinGroupWithKey(Context context, String name, String cloudGroupKey) {
         //check that group doesn't already exdist:
         for (GroupNameRecord groupNameRecord : getSavedGroupNames()) {
-            if (groupNameRecord.getGroupId().equals(cloudGroupKey)) {
+            if (groupNameRecord.getGroupCloudKey().equals(cloudGroupKey)) {
                 Toast.makeText(context, "Group already exist", Toast.LENGTH_LONG).show();
                 return;
             }
         }
 
 
-        GroupNameRecord groupNameRecord = new GroupNameRecord(name, cloudGroupKey);
+        String installationId = new BigInteger(130, new SecureRandom()).toString(32);
+        GroupNameRecord groupNameRecord = new GroupNameRecord(name, cloudGroupKey,installationId);
         groupNameRecord.save();
         ParsePush.subscribeInBackground(cloudGroupKey);//subscribe to the group chanel
-        String installationId = new BigInteger(130, new SecureRandom()).toString(32);
         FairShareGroup group = new FairShareGroup(name, cloudGroupKey, installationId);
         group.save();
         group.sync(context);
@@ -518,23 +518,30 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> {
      */
     public static class GroupNameRecord extends SugarRecord<GroupNameRecord> implements Serializable {
         private String groupName;
-        private String groupId;
+        private String groupCloudKey;
+        private String installationId;
 
         public GroupNameRecord() {
         }
 
-        public GroupNameRecord(String name, String groupId) {
+        public GroupNameRecord(String name, String groupCloudKey, String installationId) {
             this.groupName = name;
-            this.groupId = groupId;
+            this.groupCloudKey = groupCloudKey;
+            this.installationId= installationId;
         }
 
-        public String getGroupId() {
-            return groupId;
+        public String getGroupCloudKey() {
+            return groupCloudKey;
         }
 
         public String getGroupName() {
             return groupName;
         }
+
+        public String getInstallationId(){
+            return this.installationId;
+        }
+
 
     }
 }

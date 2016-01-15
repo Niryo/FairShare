@@ -90,7 +90,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent openGroup = new Intent(getApplicationContext(), GroupActivity.class);
-                openGroup.putExtra("groupId", groupNames.get(position).getGroupId());
+                openGroup.putExtra("groupId", groupNames.get(position).getGroupCloudKey());
                 startActivity(openGroup);
             }
         });
@@ -143,7 +143,7 @@ public class MainActivity extends FragmentActivity implements GroupNameDialog.Gr
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
                 groupNameRecord.delete();
-                FairShareGroup.loadGroupFromStorage(groupNameRecord.getGroupId()).delete();
+                FairShareGroup.loadGroupFromStorage(groupNameRecord.getGroupCloudKey()).delete();
                 notifyGroupListChanged();
                 Toast.makeText(getApplicationContext(), groupNameRecord.getGroupName() + " has been removed", Toast.LENGTH_SHORT).show();
             }

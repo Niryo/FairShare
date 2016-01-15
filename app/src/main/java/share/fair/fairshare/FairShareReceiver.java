@@ -37,6 +37,13 @@ public class FairShareReceiver extends ParsePushBroadcastReceiver {
             GroupActivity activity = ((App) context.getApplicationContext()).activity;
             if (activity == null) {//FareShare is closed so we need to create a notification
                 if (data.getString("alertType").equals("ACTION_CHANGE")) {
+                    //check if we are the ones that created this change:
+                    List<FairShareGroup.GroupNameRecord> groupNameRecords = FairShareGroup.getSavedGroupNames();
+                    for (FairShareGroup.GroupNameRecord groupName : groupNameRecords) {
+                        if (data.getString("creatorId").equals(groupName.getInstallationId())) {
+                            return;
+                        }
+                    }
                     List<Alert.NotifiedId> notifiedIds = (List<Alert.NotifiedId>) Alert.NotifiedId.listAll(Alert.NotifiedId.class);
                     //we now iterate through the notified ID's and check if the data contains a change on one or more of the notified users:
                     for (Alert.NotifiedId notifiedId : notifiedIds) {
