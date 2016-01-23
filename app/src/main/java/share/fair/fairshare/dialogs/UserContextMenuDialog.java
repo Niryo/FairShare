@@ -77,6 +77,35 @@ public class UserContextMenuDialog extends DialogFragment {
             }
 
         });
+
+        //set watcher to check for valid number (no double dot):
+        etInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //check that there is only one dot:
+                String strToValidate = etInput.getText().toString();
+
+                //count how many dots are in the string:
+                int dotCount = strToValidate.length() - strToValidate.replace(".", "").length();
+                //if we have more then one dot or we have exactly one dot but no other digits,
+                //we erase the last char:
+                if (dotCount > 1 || (dotCount == 1 && strToValidate.length() == 1)) {
+                    String newText = strToValidate.substring(0, strToValidate.length() - 1);
+                    etInput.setText(newText);
+                    etInput.setSelection(newText.length());
+                }
+            }
+
+        });
+
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -72,6 +72,10 @@ public class BillFragment extends Fragment {
 
         //now we split the share evenly between all the users without a share:
         double totalPaidWithoutShares = totalPaid - totalShare;
+        //if there isn't amount money to pay the bill, there is a problem:
+        if(totalPaid<totalShare){
+            return null;
+        }
         double splitEvenShare = 0.0;
         int numOfUsersWithoutShare = noShareUsers.size();
         if (numOfUsersWithoutShare > 0) {

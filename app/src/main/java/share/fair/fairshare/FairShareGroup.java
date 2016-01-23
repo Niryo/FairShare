@@ -480,8 +480,8 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> {
                 addGhostUser(user);
             }
             user.addToBalance(operation.getPaid() - operation.getShare());
-            //if we didn't create this action (we don't want to be notified on ouw own actions) and the ID was registered to be notified, we create an alert object:
-            if (!action.getCreatorId().equals(this.installationId) && notifiedTable.containsKey(user.getUserId())) {
+            //if we didn't create this action (we don't want to be notified on our own actions) and the ID was registered to be notified, we create an alert object:
+            if (!action.getInstallationId().equals(this.installationId) && notifiedTable.containsKey(user.getUserId())) {
                 Alert.AlertObject newAlert = new Alert.AlertObject(action.getDescription(), operation.getPaid() - operation.getShare(), user.getUserName());
                 if (groupActivity != null) {
                     groupActivity.messageHandler(GroupActivity.BALANCE_CHANGED, newAlert);

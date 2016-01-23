@@ -40,7 +40,7 @@ public class FairShareReceiver extends ParsePushBroadcastReceiver {
                     //check if we are the ones that created this change:
                     List<FairShareGroup.GroupNameRecord> groupNameRecords = FairShareGroup.getSavedGroupNames();
                     for (FairShareGroup.GroupNameRecord groupName : groupNameRecords) {
-                        if (data.getString("creatorId").equals(groupName.getInstallationId())) {
+                        if (data.getString("installationId").equals(groupName.getInstallationId())) {
                             return;
                         }
                     }

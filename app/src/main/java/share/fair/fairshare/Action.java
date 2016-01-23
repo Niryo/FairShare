@@ -150,7 +150,7 @@ public class Action extends SugarRecord<Action> implements Serializable {
         JSONObject jsonToPush = new JSONObject();
         try {
             jsonToPush.put("alertType", "ACTION_CHANGE");
-            jsonToPush.put("creatorId", creatorId);
+            jsonToPush.put("installationId", installationId);
             jsonToPush.put("groupName", groupName);
             jsonToPush.put("groupId", groupId);
         } catch (JSONException e) {
@@ -339,6 +339,19 @@ public class Action extends SugarRecord<Action> implements Serializable {
         for (Operation operation : operations) {
             operation.delete();
         }
+    }
+
+    /**
+     * Get installation id.
+     * This method returns the installation id.
+     * the installationId is a unique string that is being created for every group
+     * when we join the or create the group. if we rejoin a group we a new installationId will
+     * be created.
+     *
+     * @return installation ID
+     */
+    public String getInstallationId(){
+        return this.installationId;
     }
 }
 

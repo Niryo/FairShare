@@ -62,6 +62,7 @@ public class MainOptionsMenuDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 new JoinGroupWithKeyDialog().show(getFragmentManager(), "dialog_join_group_with_key");
+                dismiss();
             }
         });
 

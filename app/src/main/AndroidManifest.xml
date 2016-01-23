@@ -97,7 +97,7 @@
         <activity
             android:name=".activities.OldVersionScreenActivity"
             android:label="@string/title_activity_old_version_screen"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
