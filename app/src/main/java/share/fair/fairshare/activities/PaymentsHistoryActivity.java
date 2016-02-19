@@ -104,7 +104,7 @@ public class PaymentsHistoryActivity extends Activity {
         final SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
         boolean isFirstRun = settings.getBoolean("isFirstRunActionActivity", true);
         if (isFirstRun) {
-            showTutorial();
+           // showTutorial();
             SharedPreferences.Editor editor = settings.edit();
             editor.putBoolean("isFirstRunActionActivity", false);
             editor.commit();

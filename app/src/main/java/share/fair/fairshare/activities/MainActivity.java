@@ -58,7 +58,11 @@ public class MainActivity extends FragmentActivity  {
             startActivity(intent);
             finish();
         }
+        String name = settings.getString("name", "");
+        if (name.isEmpty()) {
+            new SaveOwnerNameDialog().show(getSupportFragmentManager(), "dialog_save_name");
 
+        }
 
         Button btnCreateNewGroup = (Button) findViewById(R.id.main_btn_create_new_group);
         btnCreateNewGroup.setOnClickListener(new View.OnClickListener() {
@@ -158,7 +162,7 @@ public class MainActivity extends FragmentActivity  {
         final SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
         boolean isFirstRun = settings.getBoolean("isFirstRunMainActivity", true);
         if (isFirstRun) {
-            showTutorial();
+            //showTutorial();
             SharedPreferences.Editor editor = settings.edit();
             editor.putBoolean("isFirstRunMainActivity", false);
             editor.commit();
@@ -177,8 +181,8 @@ public class MainActivity extends FragmentActivity  {
                     public void onClick(View v) {
                         if (showCaseCounter == 0) {
                             showcaseView.setShowcase(targetCreateButton, true);
-                            showcaseView.setContentTitle("Create new group button");
-                            showcaseView.setContentText("Click here if you want to create a new group");
+                            showcaseView.setContentTitle("Create new group");
+                            showcaseView.setContentText("The group will be automatically saved to the cloud so you can share it with your friends");
                         }
 
                         if (showCaseCounter == 1) {
