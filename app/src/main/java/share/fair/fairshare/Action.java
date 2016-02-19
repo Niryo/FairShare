@@ -30,7 +30,6 @@ public class Action extends SugarRecord<Action> implements Serializable {
     private String installationId; //the group's installation ID this action belongs to
     private String description; //short description of the action
     private String creatorName; //who created the action
-    private String creatorId; //the ID of the creator
     private String actionId; //Unique ction ID
     private boolean isEditable; //is the action editable or not
 
@@ -46,7 +45,7 @@ public class Action extends SugarRecord<Action> implements Serializable {
         this.description = description;
         this.actionId = new BigInteger(130, new SecureRandom()).toString(32).substring(0, 10);
         this.creatorName = creatorName;
-        this.creatorId = creatorId;
+        this.installationId = creatorId;
         this.isEditable = true;
         operations = new ArrayList<>();
     }
@@ -66,7 +65,7 @@ public class Action extends SugarRecord<Action> implements Serializable {
             this.timeStamp = jsonAction.getLong("timeStamp");
             this.actionId = jsonAction.getString("actionId");
             this.creatorName = jsonAction.getString("creatorName");
-            this.creatorId = jsonAction.getString("creatorId");
+            this.installationId = jsonAction.getString("installationId");
             JSONArray jsonOperations = jsonAction.getJSONArray("operations");
             for (int i = 0; i < jsonOperations.length(); i++) {
                 operations.add(new Operation(jsonOperations.getJSONObject(i)));
@@ -175,7 +174,7 @@ public class Action extends SugarRecord<Action> implements Serializable {
         parseGroupLog.put("action", "NEW_ACTION");
         parseGroupLog.put("jsonAction", toJSON());
         parseGroupLog.put("actionId", getActionId());
-        parseGroupLog.put("creatorId", getCreatorId());
+        parseGroupLog.put("installationId", getInstallationId());
         parseGroupLog.saveEventually(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -215,14 +214,6 @@ public class Action extends SugarRecord<Action> implements Serializable {
         operations = Operation.find(Operation.class, "belonging_action_id = ?", actionId);
     }
 
-    /**
-     * Get creator's ID
-     *
-     * @return
-     */
-    public String getCreatorId() {
-        return creatorId;
-    }
 
     /**
      * Get action's ID
@@ -295,7 +286,7 @@ public class Action extends SugarRecord<Action> implements Serializable {
             jsonObject.put("timeStamp", this.timeStamp);
             jsonObject.put("actionId", this.actionId);
             jsonObject.put("creatorName", this.creatorName);
-            jsonObject.put("creatorId", this.creatorId);
+            jsonObject.put("installationId", this.installationId);
             JSONArray jsonOperations = new JSONArray();
             for (Operation operation : operations) {
                 jsonOperations.put(operation.toJSON());

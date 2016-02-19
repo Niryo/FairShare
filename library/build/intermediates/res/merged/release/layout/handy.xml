@@ -19,4 +19,4 @@
 <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-        android:src="@drawable/hand" /><!-- From: file:/Users/niryo/AndroidStudioProjects/FairShare/library/src/main/res/layout/handy.xml -->
+        android:src="@drawable/hand" /><!-- From: file:/C:/Users/Nir/AndroidStudioProjects/FairShare/library/src/main/res/layout/handy.xml -->

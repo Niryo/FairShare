@@ -19,12 +19,12 @@ import java.util.List;
 import share.fair.fairshare.R;
 
 
-@ReportsCrashes(mailTo = "niryosef89@gmail.com",
-        mode = ReportingInteractionMode.DIALOG,
-        resDialogText = R.string.crash_dialog_text,
-        resDialogIcon = android.R.drawable.ic_dialog_info, //optional. default is a warning sign
-        resDialogTitle = R.string.crash_dialog_title // optional. default is your application name
-)
+//@ReportsCrashes(mailTo = "niryosef89@gmail.com",
+//        mode = ReportingInteractionMode.DIALOG,
+//        resDialogText = R.string.crash_dialog_text,
+//        resDialogIcon = android.R.drawable.ic_dialog_info, //optional. default is a warning sign
+//        resDialogTitle = R.string.crash_dialog_title // optional. default is your application name
+//)
 public class App extends SugarApp {
     public GroupActivity activity = null; //holds the current groupActivity. It will indicate if the groupActivity is running or not.
     private String currentVersion = "betaV1.5"; //the current version
