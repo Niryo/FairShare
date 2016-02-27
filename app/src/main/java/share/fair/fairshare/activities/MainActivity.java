@@ -8,12 +8,19 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+
+import com.firebase.client.AuthData;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.Target;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
@@ -43,7 +50,6 @@ public class MainActivity extends FragmentActivity  {
     ListView groupList;
     GroupsAdapter groupAdapter;
     List<FairShareGroup.GroupNameRecord> groupNames; //all groups' names
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

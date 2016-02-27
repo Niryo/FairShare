@@ -2,6 +2,7 @@ package share.fair.fairshare.activities;
 
 import android.content.SharedPreferences;
 
+import com.firebase.client.Firebase;
 import com.orm.SugarApp;
 import com.parse.FindCallback;
 import com.parse.Parse;
@@ -33,6 +34,7 @@ public class App extends SugarApp {
     public void onCreate() {
         super.onCreate();
         ACRA.init(this); //init the crash report library
+        Firebase.setAndroidContext(this);
         Parse.enableLocalDatastore(getApplicationContext());
         Parse.initialize(this, "nLLyqbfak5UsJbwJ086zWMCr5Ux6RvzXOM1kBpX3", "sauupds6DzHf2EroSxBjbnORMgMLbY87UKbFW0u9");
         ParseInstallation.getCurrentInstallation().saveInBackground();

@@ -2,7 +2,7 @@
 <resources>
     <declare-styleable name="CustomTheme"><attr format="reference" name="showcaseViewStyle"/></declare-styleable>
     <declare-styleable name="ShowcaseView"><attr format="color|reference" name="sv_backgroundColor"/><attr format="color|reference" name="sv_detailTextColor"/><attr format="color|reference" name="sv_titleTextColor"/><attr format="color|reference" name="sv_buttonBackgroundColor"/><attr format="color|reference" name="sv_buttonForegroundColor"/><attr format="string|reference" name="sv_buttonText"/><attr format="reference" name="sv_detailTextAppearance"/><attr format="reference" name="sv_titleTextAppearance"/><attr format="color|reference" name="sv_showcaseColor"/><attr format="boolean|reference" name="sv_tintButtonColor"/></declare-styleable>
-    <!-- From: file:/C:/Users/Nir/AndroidStudioProjects/FairShare/library/build/intermediates/bundles/debug/res/values/values.xml -->
+    <!-- From: file:/Users/niryo/AndroidStudioProjects/FairShare/library/build/intermediates/bundles/debug/res/values/values.xml -->
     <eat-comment/>
     <dimen name="action_bar_offset">66dp</dimen>
     <dimen name="button_margin">12dp</dimen>

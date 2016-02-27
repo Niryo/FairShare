@@ -203,6 +203,8 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> {
      * @param user    the user to add
      */
     private void sendUserAddedCommand(final Context context, User user) {
+        CloudCommunication.getInstance().setCurrentGroup(this);
+        CloudCommunication.getInstance().sendUserAddedCommand(user);
         ParseObject parseGroup = new ParseObject(this.cloudGroupKey);
         parseGroup.put("userId", user.getUserId());
         parseGroup.put("userName", user.getUserName());
