@@ -2,6 +2,8 @@ package share.fair.fairshare.activities;
 
 import android.content.SharedPreferences;
 
+import com.batch.android.Batch;
+import com.batch.android.Config;
 import com.firebase.client.Firebase;
 import com.orm.SugarApp;
 import com.parse.FindCallback;
@@ -38,6 +40,7 @@ public class App extends SugarApp {
         Parse.enableLocalDatastore(getApplicationContext());
         Parse.initialize(this, "nLLyqbfak5UsJbwJ086zWMCr5Ux6RvzXOM1kBpX3", "sauupds6DzHf2EroSxBjbnORMgMLbY87UKbFW0u9");
         ParseInstallation.getCurrentInstallation().saveInBackground();
+        Batch.setConfig(new Config("DEV56D9FF21D9CB177EF773466B27C"));
         verifyVersion();
     }
 

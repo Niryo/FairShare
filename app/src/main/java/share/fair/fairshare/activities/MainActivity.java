@@ -17,9 +17,11 @@ import android.widget.Toast;
 
 
 import com.firebase.client.AuthData;
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.Target;
@@ -51,13 +53,55 @@ public class MainActivity extends FragmentActivity  {
     GroupsAdapter groupAdapter;
     List<FairShareGroup.GroupNameRecord> groupNames; //all groups' names
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         isFirstRun();
-        //version check:
-        SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
+
+        Log.w("custom", "testing firebase:");
+        Firebase ref = new Firebase("https://fairshare.firebaseio.com/a3t788c5j1rkcin8ihqv7tco5o3/Actions");
+        Query queryRef= ref.orderByChild("timeStamp").startAt(1457102841461.0);
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                                        Log.w("custom", String.valueOf(dataSnapshot.getChildrenCount()));
+                                                        for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                                                            Log.w("custom", (String) snapshot.child("action").getValue());
+
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(FirebaseError firebaseError) {
+
+                                                    }
+                                                });
+
+
+                //version check:
+                SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
         boolean isLegalVersion = settings.getBoolean("isLegalVersion", true);
         if (!isLegalVersion) {
             Intent intent = new Intent(getApplicationContext(), OldVersionScreenActivity.class);

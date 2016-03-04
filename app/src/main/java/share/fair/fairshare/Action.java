@@ -125,19 +125,7 @@ public class Action extends SugarRecord<Action> implements Serializable {
      * Sends to the cloud an UNEDITABLE command
      */
     private void sendUnEditableCommandToCloud() {
-        ParseObject parseGroupLog = new ParseObject(groupId);
-        parseGroupLog.put("action", "UNEDITED_ACTION");
-        parseGroupLog.put("actionId", getActionId());
-        parseGroupLog.put("creatorId", installationId);
-
-        parseGroupLog.saveEventually(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    reportActionViaPush();
-                }
-            }
-        });
+        CloudCommunication.getInstance().sendUnEditableCommand(this);
     }
 
     /**
@@ -170,19 +158,7 @@ public class Action extends SugarRecord<Action> implements Serializable {
      * Sends a NEW-ACTION command to the cloud
      */
     public void sendActionToCloud() {
-        ParseObject parseGroupLog = new ParseObject(groupId);
-        parseGroupLog.put("action", "NEW_ACTION");
-        parseGroupLog.put("jsonAction", toJSON());
-        parseGroupLog.put("actionId", getActionId());
-        parseGroupLog.put("installationId", getInstallationId());
-        parseGroupLog.saveEventually(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    reportActionViaPush();
-                }
-            }
-        });
+        CloudCommunication.getInstance().sendAction(this);
     }
 
     /**
