@@ -31,6 +31,7 @@ import java.util.List;
 
 import share.fair.fairshare.FairShareGroup;
 import share.fair.fairshare.GroupsAdapter;
+import share.fair.fairshare.Notify;
 import share.fair.fairshare.R;
 import share.fair.fairshare.RegistrationIntentService;
 import share.fair.fairshare.dialogs.GroupContextMenuDialog;
@@ -62,9 +63,10 @@ public class MainActivity extends FragmentActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         isFirstRun();
-        Intent intentTest = new Intent(this, RegistrationIntentService.class);
-        startService(intentTest);
+       // Intent intentTest = new Intent(this, RegistrationIntentService.class);
+     //   startService(intentTest);
 
+        Notify.test(this);
         Log.w("custom", "testing firebase:");
         Firebase ref = new Firebase("https://fairshare.firebaseio.com/a3t788c5j1rkcin8ihqv7tco5o3/Actions");
         Query queryRef= ref.orderByChild("timeStamp").startAt(1457102841461.0);
