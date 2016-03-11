@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="share.fair.fairshare.permission.C2D_MESSAGE" />
 
     <permission
         android:name="share.fair.fairshare.permission.C2D_MESSAGE"
@@ -83,17 +84,35 @@
                 <action android:name="com.parse.push.intent.OPEN" />
             </intent-filter>
         </receiver>
+
         <receiver
-            android:name="com.parse.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND">
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-
-                <category android:name="share.fair.fairshare" />
+                <category android:name="com.codepath.gcmquickstart" />
             </intent-filter>
         </receiver>
 
+        <service
+            android:name=".GcmMessageHandler"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+
+
+        <service android:name=".RegistrationIntentService"
+              android:exported="false"></service>
+        <service
+            android:name=".MyInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
         <activity
             android:name=".activities.OldVersionScreenActivity"
             android:label="@string/title_activity_old_version_screen"

@@ -32,6 +32,7 @@ import java.util.List;
 import share.fair.fairshare.FairShareGroup;
 import share.fair.fairshare.GroupsAdapter;
 import share.fair.fairshare.R;
+import share.fair.fairshare.RegistrationIntentService;
 import share.fair.fairshare.dialogs.GroupContextMenuDialog;
 import share.fair.fairshare.dialogs.CreateNewGroupDialog;
 import share.fair.fairshare.dialogs.MainOptionsMenuDialog;
@@ -54,31 +55,15 @@ public class MainActivity extends FragmentActivity  {
     List<FairShareGroup.GroupNameRecord> groupNames; //all groups' names
 
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         isFirstRun();
+        Intent intentTest = new Intent(this, RegistrationIntentService.class);
+        startService(intentTest);
 
         Log.w("custom", "testing firebase:");
         Firebase ref = new Firebase("https://fairshare.firebaseio.com/a3t788c5j1rkcin8ihqv7tco5o3/Actions");
