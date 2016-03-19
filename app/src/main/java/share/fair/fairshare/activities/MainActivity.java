@@ -16,8 +16,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
-import com.firebase.client.AuthData;
-import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -31,13 +29,13 @@ import java.util.List;
 
 import share.fair.fairshare.FairShareGroup;
 import share.fair.fairshare.GroupsAdapter;
-import share.fair.fairshare.Notify;
 import share.fair.fairshare.R;
 import share.fair.fairshare.RegistrationIntentService;
 import share.fair.fairshare.dialogs.GroupContextMenuDialog;
 import share.fair.fairshare.dialogs.CreateNewGroupDialog;
 import share.fair.fairshare.dialogs.MainOptionsMenuDialog;
 import share.fair.fairshare.dialogs.SaveOwnerNameDialog;
+import share.fair.fairshare.dialogs.ShowGroupKeyDialog;
 
 /**
  * Main activity
@@ -63,10 +61,13 @@ public class MainActivity extends FragmentActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         isFirstRun();
-       // Intent intentTest = new Intent(this, RegistrationIntentService.class);
-     //   startService(intentTest);
+        final SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
+        String gcmToken = settings.getString(RegistrationIntentService.GCM_TOKEN, "");
+        if(gcmToken.equals("")){
+            Intent intentTest = new Intent(this, RegistrationIntentService.class);
+            startService(intentTest);
+        }
 
-        Notify.test(this);
         Log.w("custom", "testing firebase:");
         Firebase ref = new Firebase("https://fairshare.firebaseio.com/a3t788c5j1rkcin8ihqv7tco5o3/Actions");
         Query queryRef= ref.orderByChild("timeStamp").startAt(1457102841461.0);
@@ -88,7 +89,6 @@ public class MainActivity extends FragmentActivity  {
 
 
                 //version check:
-                SharedPreferences settings = getSharedPreferences("MAIN_PREFERENCES", 0);
         boolean isLegalVersion = settings.getBoolean("isLegalVersion", true);
         if (!isLegalVersion) {
             Intent intent = new Intent(getApplicationContext(), OldVersionScreenActivity.class);
@@ -105,7 +105,7 @@ public class MainActivity extends FragmentActivity  {
         btnCreateNewGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new CreateNewGroupDialog().show(getSupportFragmentManager(), "add_new_group");
+               new CreateNewGroupDialog().show(getSupportFragmentManager(), "add_new_group");
             }
         });
 
@@ -183,7 +183,9 @@ public class MainActivity extends FragmentActivity  {
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
                 groupNameRecord.delete();
-                FairShareGroup.loadGroupFromStorage(groupNameRecord.getGroupCloudKey()).delete();
+               FairShareGroup group= FairShareGroup.loadGroupFromStorage(groupNameRecord.getGroupCloudKey());
+                group.cloud.unsubscribe(getApplicationContext());
+                group.delete();
                 notifyGroupListChanged();
                 Toast.makeText(getApplicationContext(), groupNameRecord.getGroupName() + " has been removed", Toast.LENGTH_SHORT).show();
             }
