@@ -25,7 +25,7 @@ public class Alert {
     /**
      * This class represents a notified ID record
      */
-    public static class NotifiedId extends SugarRecord<NotifiedId> {
+    public static class NotifiedId extends SugarRecord {
         public String userId;
 
         public NotifiedId() {

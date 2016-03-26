@@ -27,6 +27,7 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import java.util.List;
 
+import share.fair.fairshare.CloudCommunication;
 import share.fair.fairshare.FairShareGroup;
 import share.fair.fairshare.GroupsAdapter;
 import share.fair.fairshare.R;
@@ -68,24 +69,12 @@ public class MainActivity extends FragmentActivity  {
             startService(intentTest);
         }
 
-        Log.w("custom", "testing firebase:");
-        Firebase ref = new Firebase("https://fairshare.firebaseio.com/a3t788c5j1rkcin8ihqv7tco5o3/Actions");
-        Query queryRef= ref.orderByChild("timeStamp").startAt(1457102841461.0);
-        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                                        Log.w("custom", String.valueOf(dataSnapshot.getChildrenCount()));
-                                                        for(DataSnapshot snapshot: dataSnapshot.getChildren()){
-                                                            Log.w("custom", (String) snapshot.child("action").getValue());
+        CloudCommunication.queryVersion(new CloudCommunication.CloudCallback() {
+            @Override
+            public void done(FirebaseError firebaseError, DataSnapshot dataSnapshot) {
 
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onCancelled(FirebaseError firebaseError) {
-
-                                                    }
-                                                });
+            }
+        });
 
 
                 //version check:

@@ -73,17 +73,6 @@
             android:process=":error_report"
             android:theme="@style/Theme.Dialog" />
 
-        <service android:name="com.parse.PushService" />
-
-        <receiver
-            android:name=".FairShareReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.parse.push.intent.RECEIVE" />
-                <action android:name="com.parse.push.intent.DELETE" />
-                <action android:name="com.parse.push.intent.OPEN" />
-            </intent-filter>
-        </receiver>
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"

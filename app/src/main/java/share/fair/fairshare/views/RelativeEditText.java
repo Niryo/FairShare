@@ -50,9 +50,7 @@ public class RelativeEditText extends EditText {
             final Rect bounds = new Rect();
             Paint textPaint = textView.getPaint();
             textPaint.getTextBounds(placeHolderText, 0, placeHolderText.length(), bounds);
-            int test = bounds.width();
             setWidth(bounds.width());
-
         }
 
         setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (height / factor));

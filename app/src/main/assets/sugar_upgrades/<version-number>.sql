@@ -1,0 +1,2 @@
+--usage: add all changes to the table in this file and update the db version. the name of this file should always be smaller then the dbversion
+--alter table ACTION add TESTME TEXT;

@@ -2,14 +2,11 @@ package share.fair.fairshare;
 
 import android.content.Context;
 import android.widget.Toast;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParsePush;
-import com.parse.ParseQuery;
-import com.parse.SaveCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.Serializable;
@@ -28,14 +25,13 @@ import share.fair.fairshare.activities.GroupActivity;
 /**
  * This class represents a group of users
  */
-public class FairShareGroup extends SugarRecord<FairShareGroup> {
+public class FairShareGroup extends SugarRecord {
     @Ignore
     public List<Action> actions = new ArrayList<>();
     private String groupName; //group name
     private String cloudGroupKey = ""; //for storing information on the cloud
     public long lastSyncTime; //for tracking when was the last sync wiht the cloud
     private String installationId = ""; //unique id for every installation of the app
-
     @Ignore
     private boolean syncLock = false; //for preventing sync clashing with multiple threads
     @Ignore
@@ -43,7 +39,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> {
     @Ignore
     public transient GroupActivity groupActivity; //for sending messages to the activity, for example when need to update the user list.
     @Ignore
-    private CloudCommunication cloud;
+    public CloudCommunication cloud;
 
     public FairShareGroup() { //must ve empty constructor
     }
@@ -66,9 +62,11 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> {
      */
     public static FairShareGroup groupBuilder(Context context, String groupName, String userNameInGroup) {
         String cloudGroupKey = "a" + new BigInteger(130, new SecureRandom()).toString(32); //the key must start with a letter.
-        ParsePush.subscribeInBackground(cloudGroupKey);//subscribe to the group chanel
         String installationId = new BigInteger(130, new SecureRandom()).toString(32);
         FairShareGroup group = new FairShareGroup(groupName, cloudGroupKey, installationId);
+        group.cloud= CloudCommunication.getInstance();
+        group.cloud.setCurrentGroup(group);
+        group.cloud.subscribe(context);
         group.addUser(context, new User(userNameInGroup,null, 0.0,false));
         group.save();
         GroupNameRecord groupNameRecord = new GroupNameRecord(groupName, cloudGroupKey,installationId);
@@ -102,7 +100,7 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> {
             }
         });
         group.setUsers(users);
-        group.cloud=CloudCommunication.getInstance();
+        group.cloud= CloudCommunication.getInstance();
         group.cloud.setCurrentGroup(group);
         List<Action> actions = Action.find(Action.class, "group_id = ?", group.getCloudGroupKey());
         for (Action action : actions) {
@@ -133,8 +131,10 @@ public class FairShareGroup extends SugarRecord<FairShareGroup> {
         String installationId = new BigInteger(130, new SecureRandom()).toString(32);
         GroupNameRecord groupNameRecord = new GroupNameRecord(name, cloudGroupKey,installationId);
         groupNameRecord.save();
-        ParsePush.subscribeInBackground(cloudGroupKey);//subscribe to the group chanel
         FairShareGroup group = new FairShareGroup(name, cloudGroupKey, installationId);
+        group.cloud= CloudCommunication.getInstance();
+        group.cloud.setCurrentGroup(group);
+        group.cloud.subscribe(context);
         group.save();
         group.sync(context);
 
@@ -187,7 +187,13 @@ public long getLastSyncTime(){
      * @param user the user to remove
      */
     private void sendRemoveUserCommand(User user) {
-        this.cloud.sendRemoveUserCommand(user);
+        this.cloud.sendRemoveUserCommand(user, new CloudCommunication.CloudCallback() {
+            @Override
+            public void done(FirebaseError firebaseError, DataSnapshot dataSnapshot) {
+                if(firebaseError==null){
+                reportUserChangeViaPush();}
+            }
+        });
     }
 
     /**
@@ -197,7 +203,13 @@ public long getLastSyncTime(){
      * @param user    the user to add
      */
     private void sendUserAddedCommand(final Context context, User user) {
-        this.cloud.sendUserAddedCommand(user);
+        this.cloud.sendUserAddedCommand(user, new CloudCommunication.CloudCallback() {
+            @Override
+            public void done(FirebaseError firebaseError, DataSnapshot dataSnapshot) {
+                if(firebaseError==null) {
+                reportUserChangeViaPush();}
+            }
+        });
     }
 
     /**
@@ -214,16 +226,18 @@ public long getLastSyncTime(){
      * Report changes in the user list via push notification
      */
     private void reportUserChangeViaPush() {
-        ParsePush push = new ParsePush();
-        push.setChannel(getCloudGroupKey());
-        JSONObject jsonToPush = new JSONObject();
+        final JSONObject jsonToPush = new JSONObject();
         try {
             jsonToPush.put("alertType", "USER_CHANGE");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        push.setMessage(jsonToPush.toString());
-        push.sendInBackground();
+        this.cloud.getSubscribers(new PushService.SubscribersCallback() {
+            @Override
+            public void processSubscribers(List<String> subscribers) {
+                PushService.sendPushNotification(subscribers, jsonToPush);
+            }
+        });
     }
 
 
@@ -282,7 +296,6 @@ public long getLastSyncTime(){
             }
         });
         sendUserAddedCommand(context, user);
-
     }
 
     /**
@@ -336,7 +349,7 @@ public long getLastSyncTime(){
             }
             user.addToBalance(operation.getPaid() - operation.getShare());
             //if we didn't create this action (we don't want to be notified on our own actions) and the ID was registered to be notified, we create an alert object:
-            if (!action.getInstallationId().equals(this.installationId) && notifiedTable.containsKey(user.getUserId())) {
+            if (!action.getCreatorInstallationId().equals(this.installationId) && notifiedTable.containsKey(user.getUserId())) {
                 Alert.AlertObject newAlert = new Alert.AlertObject(action.getDescription(), operation.getPaid() - operation.getShare(), user.getUserName());
                 if (groupActivity != null) {
                     groupActivity.messageHandler(GroupActivity.BALANCE_CHANGED, newAlert);
@@ -357,7 +370,7 @@ public long getLastSyncTime(){
      * Deletes the group
      */
     @Override
-    public void delete() {
+    public boolean delete() {
         super.delete();
         for (User user : users) {
             user.delete();
@@ -365,13 +378,13 @@ public long getLastSyncTime(){
         for (Action action : actions) {
             action.delete();
         }
-
+        return false;
     }
 
     /**
      * A class that represents a mapping between group name and a group ID
      */
-    public static class GroupNameRecord extends SugarRecord<GroupNameRecord> implements Serializable {
+    public static class GroupNameRecord extends SugarRecord implements Serializable {
         private String groupName;
         private String groupCloudKey;
         private String installationId;

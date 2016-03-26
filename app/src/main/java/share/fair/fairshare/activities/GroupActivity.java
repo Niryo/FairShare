@@ -28,7 +28,8 @@ import java.util.List;
 import share.fair.fairshare.Action;
 import share.fair.fairshare.Alert;
 import share.fair.fairshare.FairShareGroup;
-import share.fair.fairshare.FairShareReceiver;
+import share.fair.fairshare.GcmMessageHandler;
+import share.fair.fairshare.PushService;
 import share.fair.fairshare.R;
 import share.fair.fairshare.User;
 import share.fair.fairshare.UserCheckBoxAdapter;
@@ -94,7 +95,11 @@ public class GroupActivity extends FragmentActivity {
             //todo: handle problem;
         }
         this.group = FairShareGroup.loadGroupFromStorage(groupId);
-
+        final SharedPreferences groupSettings = getSharedPreferences(group.getCloudGroupKey(), 0);
+        boolean isSubscribed= groupSettings.getBoolean("IS_SUBSCRIBED", false);
+        if(!isSubscribed){
+                group.cloud.subscribe(getApplicationContext());
+        }
         tvGroupName = (TextView) findViewById(R.id.tv_group_group_name);
         tvGroupName.setText(group.getGroupName());
         this.users = new ArrayList<>(group.getUsers());
@@ -412,7 +417,7 @@ public class GroupActivity extends FragmentActivity {
     private void removeNotificationFromStatusBar() {
         String ns = Context.NOTIFICATION_SERVICE;
         NotificationManager nMgr = (NotificationManager) getApplicationContext().getSystemService(ns);
-        nMgr.cancel(FairShareReceiver.NOTIFICATION_ID);
+        nMgr.cancel(GcmMessageHandler.NOTIFICATION_ID);
     }
 
     /**

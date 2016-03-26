@@ -35,16 +35,16 @@ public class CreateNewGroupDialog extends DialogFragment {
         getDialog().setContentView(R.layout.dialog_create_new_group);
         getDialog().setTitle("Choose group name:");
 
-
+//
         final EditText etName = (EditText) dialogLayout.findViewById(R.id.create_new_group_et_group_name);
         final EditText specialUserNameText = (EditText) dialogLayout.findViewById(R.id.create_new_group_et_special_name);
-        etName.setHint("Group's name");
         final Button btnCreate = (Button) dialogLayout.findViewById(R.id.create_new_group_btn_create);
         final Button btnCancel = (Button) dialogLayout.findViewById(R.id.create_new_group_btn_cancel);
-        //sugest the default name:
+        //suggest the default name:
         SharedPreferences settings = getActivity().getSharedPreferences("MAIN_PREFERENCES", 0);
         final String ownerName = settings.getString("name", "");
-        specialUserNameText.setHint("Your name in the group: " + ownerName);
+//        specialUserNameText.setHint("Your name in the group: " + ownerName);
+        specialUserNameText.setHint(ownerName);
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

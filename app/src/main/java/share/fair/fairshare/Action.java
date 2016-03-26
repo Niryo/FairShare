@@ -1,11 +1,12 @@
 package share.fair.fairshare;
 
+import android.util.Log;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParsePush;
-import com.parse.SaveCallback;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,14 +21,14 @@ import java.util.List;
 /**
  * Created by Nir on 13/10/2015.
  */
-public class Action extends SugarRecord<Action> implements Serializable {
+public class Action extends SugarRecord implements Serializable {
     @Ignore
     public List<Operation> operations = new ArrayList<Operation>();
-
     private long timeStamp; //a time stamp for the log
     private String groupId; //the group's ID this action belongs to
     private String groupName; //the group's name this action belongs to
     private String installationId; //the group's installation ID this action belongs to
+    private String creatorInstallationId;
     private String description; //short description of the action
     private String creatorName; //who created the action
     private String actionId; //Unique ction ID
@@ -37,15 +38,16 @@ public class Action extends SugarRecord<Action> implements Serializable {
      * Constructor
      *
      * @param creatorName the name of the creator of this action
-     * @param creatorId   the ID of the creator of this action
-     * @param description short description of this action
+     * @param description short description off this action
+     * @param installationId   the InstallationId of the group this action belongs to
      */
-    public Action(String creatorName, String creatorId, String description) {
+    public Action(String creatorName, String installationId, String description) {
         this.timeStamp = System.currentTimeMillis();
         this.description = description;
         this.actionId = new BigInteger(130, new SecureRandom()).toString(32).substring(0, 10);
         this.creatorName = creatorName;
-        this.installationId = creatorId;
+        this.installationId = installationId;
+        this.creatorInstallationId = installationId;
         this.isEditable = true;
         operations = new ArrayList<>();
     }
@@ -65,7 +67,7 @@ public class Action extends SugarRecord<Action> implements Serializable {
             this.timeStamp = jsonAction.getLong("timeStamp");
             this.actionId = jsonAction.getString("actionId");
             this.creatorName = jsonAction.getString("creatorName");
-            this.installationId = jsonAction.getString("installationId");
+            this.creatorInstallationId=jsonAction.getString("installationId");
             JSONArray jsonOperations = jsonAction.getJSONArray("operations");
             for (int i = 0; i < jsonOperations.length(); i++) {
                 operations.add(new Operation(jsonOperations.getJSONObject(i)));
@@ -125,16 +127,21 @@ public class Action extends SugarRecord<Action> implements Serializable {
      * Sends to the cloud an UNEDITABLE command
      */
     private void sendUnEditableCommandToCloud() {
-        CloudCommunication.getInstance().sendUnEditableCommand(this);
+        CloudCommunication.getInstance().sendUnEditableCommand(this, new CloudCommunication.CloudCallback() {
+            @Override
+            public void done(FirebaseError firebaseError, DataSnapshot dataSnapshot) {
+                if (firebaseError == null) {
+                    reportActionViaPush();
+                }
+            }
+        });
     }
 
     /**
-     * Report the other users that an action has been done
+     * Report the other users that an action has been made
      */
     private void reportActionViaPush() {
-        ParsePush push = new ParsePush();
-        push.setChannel(groupId);
-        JSONObject jsonToPush = new JSONObject();
+        final JSONObject jsonToPush = new JSONObject();
         try {
             jsonToPush.put("alertType", "ACTION_CHANGE");
             jsonToPush.put("installationId", installationId);
@@ -150,15 +157,26 @@ public class Action extends SugarRecord<Action> implements Serializable {
                 e.printStackTrace();
             }
         }
-        push.setMessage(jsonToPush.toString());
-        push.sendInBackground();
+        CloudCommunication.getInstance().getSubscribers(new PushService.SubscribersCallback() {
+            @Override
+            public void processSubscribers(List<String> subscribers) {
+                PushService.sendPushNotification(subscribers, jsonToPush);
+            }
+        });
     }
 
     /**
      * Sends a NEW-ACTION command to the cloud
      */
     public void sendActionToCloud() {
-        CloudCommunication.getInstance().sendAction(this);
+        CloudCommunication.getInstance().sendAction(this, new CloudCommunication.CloudCallback() {
+            @Override
+            public void done(FirebaseError firebaseError, DataSnapshot dataSnapshot) {
+                if (firebaseError == null) {
+                    reportActionViaPush();
+                }
+            }
+        });
     }
 
     /**
@@ -278,13 +296,14 @@ public class Action extends SugarRecord<Action> implements Serializable {
      * Save the action and the operation inside it
      */
     @Override
-    public void save() {
+    public long save() {
         super.save();
 
         for (Operation operation : operations) {
             operation.setBelongingActionId(actionId);
             operation.save();
         }
+        return 0;
     }
 
     /**
@@ -301,11 +320,12 @@ public class Action extends SugarRecord<Action> implements Serializable {
      * Delete the action and all it's operations
      */
     @Override
-    public void delete() {
+    public boolean delete() {
         super.delete();
         for (Operation operation : operations) {
             operation.delete();
         }
+        return false;
     }
 
     /**
@@ -319,6 +339,10 @@ public class Action extends SugarRecord<Action> implements Serializable {
      */
     public String getInstallationId(){
         return this.installationId;
+    }
+
+    public String getCreatorInstallationId() {
+        return creatorInstallationId;
     }
 }
 

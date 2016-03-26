@@ -10,7 +10,7 @@ import java.security.SecureRandom;
  * This class represents a user
  */
 
-public class User extends SugarRecord<User> implements Serializable {
+public class User extends SugarRecord implements Serializable {
     private String userName; //user's name
     private double balance; //user's balance
     private String userId; //user's Id

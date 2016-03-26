@@ -10,7 +10,7 @@ import java.io.Serializable;
 /**
  * A class that represents a single operation on user balance
  */
-public class Operation extends SugarRecord<Operation> implements Serializable {
+public class Operation extends SugarRecord implements Serializable {
     public String username; //the user's name this operation will act on
     public String userId; // the user's Id
     public double paid; //how much the user paid

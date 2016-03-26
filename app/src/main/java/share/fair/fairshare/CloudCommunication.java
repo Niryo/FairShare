@@ -1,5 +1,7 @@
 package share.fair.fairshare;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.firebase.client.DataSnapshot;
@@ -25,50 +27,31 @@ import share.fair.fairshare.activities.GroupActivity;
  */
 public class CloudCommunication {
 
-    private static CloudCommunication instance = null;
-    private String ADDRESS = "https://fairshare.firebaseio.com/";
+    private static String ADDRESS = "https://fairshare.firebaseio.com/";
     private Firebase groupActionsRef;
+    private Firebase subscribersRef;
     private FairShareGroup group;
+
     private boolean syncLock = false;
+    private static CloudCommunication instance = null;
 
     private CloudCommunication() {
         final Firebase ref = new Firebase(ADDRESS);
-
-//         ref.addListenerForSingleValueEvent(new ValueEventListener() {
-//             @Override
-//             public void onDataChange(DataSnapshot dataSnapshot) {
-//                 Log.w("custom", dataSnapshot.getValue().toString());
-//             }
-//
-//             @Override
-//             public void onCancelled(FirebaseError firebaseError) {
-//                 Log.w("custom", "error reading firebase");
-//                 Log.w("custom", firebaseError.getMessage());
-//                 Log.w("custom", firebaseError.getDetails());
-//
-//             }
-//         });
     }
 
-    public static CloudCommunication getInstance() {
-        if (instance == null) {
+    public void setCurrentGroup(FairShareGroup group){
+        this.group = group;
+        this.groupActionsRef = new Firebase(ADDRESS + group.getCloudGroupKey()).child("Actions");
+        this.subscribersRef = new Firebase(ADDRESS + group.getCloudGroupKey()).child("subscribers");
+    }
+    public static CloudCommunication getInstance(){
+        if(instance==null){
             instance = new CloudCommunication();
         }
         return instance;
     }
 
-    public void setCurrentGroup(FairShareGroup group) {
-        this.group = group;
-        this.groupActionsRef = new Firebase(ADDRESS + group.getCloudGroupKey()).child("Actions");
-    }
-
-//    public void createNewGroup(String groupKey){
-//        Firebase ref = new Firebase(ADDRESS);
-//        Map<String,String> emptyGroup
-//        ref.child(groupKey).setValue();
-//    }
-
-    public void sendUserAddedCommand(User user) {
+    public void sendUserAddedCommand(User user,final CloudCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("userId", user.getUserId());
         data.put("userName", user.getUserName());
@@ -76,37 +59,136 @@ public class CloudCommunication {
         data.put("action", "USER_ADDED");
         data.put("installationId", this.group.getInstallationId());
         data.put("timeStamp", ServerValue.TIMESTAMP);
-        Firebase test = groupActionsRef.push();
-        test.setValue(data);
+        groupActionsRef.push().setValue(data, new Firebase.CompletionListener() {
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                callback.done(firebaseError,null);
+            }
+        });
     }
 
-    public void sendRemoveUserCommand(User user) {
+    public static void queryVersion(final CloudCallback callback){
+        Firebase versionRef = new Firebase(ADDRESS + "VERSION");
+        versionRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                callback.done(null, dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                callback.done(firebaseError,null);
+            }
+        });
+    }
+
+    public void getSubscribers(final PushService.SubscribersCallback callback) {
+        this.subscribersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<String> subscribers = new ArrayList<String>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Log.w("custom", snapshot.getKey());
+                    subscribers.add(snapshot.getKey());
+                    callback.processSubscribers(subscribers);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                callback.processSubscribers(null);
+            }
+        });
+    }
+
+    public void subscribe(final Context context) {
+        final SharedPreferences settings = context.getSharedPreferences("MAIN_PREFERENCES", 0);
+        String gcmToken = settings.getString(RegistrationIntentService.GCM_TOKEN, "");
+        if(gcmToken.equals("")){
+            return;
+        }
+
         Map<String, Object> data = new HashMap<>();
+        data.put(gcmToken, true);
+        this.subscribersRef.updateChildren(data, new Firebase.CompletionListener() {
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                if (firebaseError != null) {
+                    System.out.println("Data could not be saved. " + firebaseError.getMessage());
+                } else {
+                    System.out.println("Data saved successfully.");
+                    final SharedPreferences settings = context.getSharedPreferences(group.getCloudGroupKey(), 0);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putBoolean("IS_SUBSCRIBED", true);
+                    editor.commit();
+                }
+            }
+        });
+    }
+
+    public void unsubscribe(final Context context) {
+        final SharedPreferences settings = context.getSharedPreferences("MAIN_PREFERENCES", 0);
+        String gcmToken = settings.getString(RegistrationIntentService.GCM_TOKEN, "");
+        if(gcmToken.equals("")){
+            return;
+        }
+        Map<String, Object> data = new HashMap<>();
+        data.put(gcmToken, null);
+        this.subscribersRef.updateChildren(data, new Firebase.CompletionListener() {
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                if (firebaseError != null) {
+                    System.out.println("Data could not be saved. " + firebaseError.getMessage());
+                } else {
+                    System.out.println("Data saved successfully.");
+                }
+            }
+        });
+    }
+
+
+    public void sendRemoveUserCommand(User user,final CloudCallback callback) {
+        final Map<String, Object> data = new HashMap<>();
         data.put("userId", user.getUserId());
         data.put("userName", user.getUserName());
         data.put("action", "USER_REMOVED");
         data.put("installationId", this.group.getInstallationId());
         data.put("timeStamp", ServerValue.TIMESTAMP);
-        groupActionsRef.push().setValue(data);
+        groupActionsRef.push().setValue(data, new Firebase.CompletionListener() {
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                callback.done(firebaseError,null);
+            }
+        });
     }
 
-    public void sendAction(Action action) {
+    public void sendAction(Action action, final CloudCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("action", "NEW_ACTION");
         data.put("jsonAction", action.toJSON().toString());
         data.put("actionId", action.getActionId());
         data.put("installationId", this.group.getInstallationId());
         data.put("timeStamp", ServerValue.TIMESTAMP);
-        groupActionsRef.push().setValue(data);
+        groupActionsRef.push().setValue(data, new Firebase.CompletionListener() {
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                callback.done(firebaseError, null);
+            }
+        });
     }
 
-    public void sendUnEditableCommand(Action action) {
+    public void sendUnEditableCommand(Action action,final CloudCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("action", "UNEDITED_ACTION");
         data.put("actionId", action.getActionId());
         data.put("installationId", this.group.getInstallationId());
         data.put("timeStamp", ServerValue.TIMESTAMP);
-        groupActionsRef.push().setValue(data);
+        groupActionsRef.push().setValue(data, new Firebase.CompletionListener() {
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                callback.done(firebaseError,null);
+            }
+        });
     }
 
     public void fetchData() {
@@ -125,8 +207,8 @@ public class CloudCommunication {
                 boolean dirty = false; //will tell us if we need to save the group.
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String installationId= (String) snapshot.child("installationId").getValue();
-                    if(installationId.equals(group.getInstallationId())){
+                    String installationId = (String) snapshot.child("installationId").getValue();
+                    if (installationId.equals(group.getInstallationId())) {
                         continue;
                     }
                     final ArrayList<User> usersCopy = new ArrayList<>(group.getUsers());
@@ -241,6 +323,7 @@ public class CloudCommunication {
         });
 
     }
-    //todo: add an on success callback that will send a push notification
-
+    public interface CloudCallback{
+        public void done(FirebaseError firebaseError, DataSnapshot dataSnapshot);
+    }
 }
