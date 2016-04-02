@@ -62,7 +62,7 @@ public class CloudCommunication {
         groupActionsRef.push().setValue(data, new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                callback.done(firebaseError,null);
+                callback.done(firebaseError, null);
             }
         });
     }
@@ -90,8 +90,8 @@ public class CloudCommunication {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Log.w("custom", snapshot.getKey());
                     subscribers.add(snapshot.getKey());
-                    callback.processSubscribers(subscribers);
                 }
+                callback.processSubscribers(subscribers);
             }
 
             @Override
@@ -193,26 +193,35 @@ public class CloudCommunication {
 
     public void fetchData() {
         if (syncLock) {
+            Log.w("custom", "synclock activated");
             return;
         }
         syncLock = true;
+        long startTime = this.group.getLastSyncTime();
         Query query = groupActionsRef.orderByChild("timeStamp").startAt(this.group.getLastSyncTime() + 1);
+        Log.w("custom", "groupref is: "+ groupActionsRef);
+        Log.w("custom", "last sync is: "+ group.getLastSyncTime());
+
 //        Query query = groupActionsRef.orderByChild("timeStamp").startAt(0 + 1);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.w("custom", "data has been fetched!");
+                Log.w("custom", dataSnapshot.toString());
+
                 ArrayList<String> userIdToIgnore = new ArrayList<>();
                 List<User> userToSave = new ArrayList<>();
                 long lastUserSyncCopy = group.getLastSyncTime(); //we will save the changes to the real value only at the end.
                 boolean dirty = false; //will tell us if we need to save the group.
-
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String installationId = (String) snapshot.child("installationId").getValue();
+                    Log.w("custom", "time stamp: " + (long) snapshot.child("timeStamp").getValue());
                     if (installationId.equals(group.getInstallationId())) {
                         continue;
                     }
                     final ArrayList<User> usersCopy = new ArrayList<>(group.getUsers());
                     String action = (String) snapshot.child("action").getValue();
+                    Log.w("custom", "action is" + action);
                     lastUserSyncCopy = Math.max((Long) snapshot.child("timeStamp").getValue(), lastUserSyncCopy);
                     //case we need to make an action unediatable:
                     if (action.equals("UNEDITED_ACTION")) {

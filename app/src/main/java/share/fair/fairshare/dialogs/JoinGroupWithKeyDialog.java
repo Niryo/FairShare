@@ -47,7 +47,7 @@ public class JoinGroupWithKeyDialog extends DialogFragment {
                     return;
                 }
 
-                if (groupNameLength + 29 != rawKey.length()) { //group key must be 2 (first to chars)+ length of groups name+ length of key(27 chars)
+                if (groupNameLength + 29 != rawKey.length()) { //group key must be 2 (first two chars)+ length of groups name+ length of key(27 chars)
                     Toast.makeText(getContext(), "Key error: cannot join group", Toast.LENGTH_LONG).show();
                     return;
                 }

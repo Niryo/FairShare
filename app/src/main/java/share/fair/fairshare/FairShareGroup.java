@@ -61,7 +61,7 @@ public class FairShareGroup extends SugarRecord {
      * @return a new Group object
      */
     public static FairShareGroup groupBuilder(Context context, String groupName, String userNameInGroup) {
-        String cloudGroupKey = "a" + new BigInteger(130, new SecureRandom()).toString(32); //the key must start with a letter.
+        String cloudGroupKey = "a" + new BigInteger(140, new SecureRandom()).toString(32).substring(0,26); //the key must start with a letter.
         String installationId = new BigInteger(130, new SecureRandom()).toString(32);
         FairShareGroup group = new FairShareGroup(groupName, cloudGroupKey, installationId);
         group.cloud= CloudCommunication.getInstance();
