@@ -51,7 +51,7 @@ public class CloudCommunication {
 
     public static void queryVersion(final CloudCallback callback) {
         Firebase versionRef = new Firebase(ADDRESS + "VERSION");
-        versionRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        versionRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 callback.done(null, dataSnapshot);
