@@ -28,7 +28,7 @@ import share.fair.fairshare.R;
 )
 public class App extends SugarApp {
     public GroupActivity activity = null; //holds the current groupActivity. It will indicate if the groupActivity is running or not.
-    private String currentVersion = "betaV1.6"; //the current version
+    private String currentVersion = "betaV1.7"; //the current version
 
 
     @Override
@@ -80,6 +80,5 @@ public class App extends SugarApp {
                 }
             }
         });
-
     }
 }
