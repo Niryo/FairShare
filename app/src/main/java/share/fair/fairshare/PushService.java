@@ -43,7 +43,6 @@ public class PushService {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.w("custom", "the response is: " + response);
                     }
                 },
                 new Response.ErrorListener() {
@@ -65,7 +64,6 @@ public class PushService {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.w("custom",jsonObject.toString());
                 return jsonObject.toString().getBytes();
             }
 

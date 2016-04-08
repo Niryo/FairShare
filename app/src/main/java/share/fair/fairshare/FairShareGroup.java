@@ -346,6 +346,7 @@ public long getLastSyncTime(){
             if (user == null) { //if user not exist, he will come back as a ghost:
                 user = new User(operation.username, operation.getUserId(), 0,true);
                 addGhostUser(user);
+                usersTable.put(user.getUserId(),user);
             }
             user.addToBalance(operation.getPaid() - operation.getShare());
             //if we didn't create this action (we don't want to be notified on our own actions) and the ID was registered to be notified, we create an alert object:
